@@ -6,6 +6,7 @@
 #include <time.h>       // time
 //#include <gmd.h>        // LaGenMatDouble
 //#include <blas3pp.h>
+#include <cmath>        // temporary for powers
 using namespace std;
 
 void seed_random(){
@@ -25,67 +26,54 @@ int fact(int x){
     cout << y << endl;
 }
 
-//void generate_lattice(LaGenMatDouble*){
-//    for(int i = 0; i < 4; i++){
-//        for(int j = 0; j < 4; j++){ 
-//            lattice[i][j] = ran(100);
-//        }
-//    }
-    
-//    double* elements = new double[n*n]; 
-//    
-//}
-
-//void print_lattice(int lattice[4][4]){
-////    cout.length(5);
-//    for(int i = 0; i < 4; i++){
-//        for(int j = 0; j < 4; j++){ 
-//            cout << lattice [i][j] << "  ";
-//        }
-//        cout << endl;
-//    }
-    
-////    cout << "Spins matrix:" << endl << spins << endl;
-//}
-
-//void diagonalise_lattice([4][4]){
-////    LaGenMatDouble diag = LaGenMatDouble( n, n );
-////    diag = spins.diag();
-////    cout << "Diagonal matrix from spins" << endl << diag << endl;
-//}
-
-//void multiply_lattice([4][4]){
+int matrix_exponential(int matrix){
+    float partial_result = 0;
+    float result = 0;
+    // over each iteration, calculate \sum_i{matrix^n/n!}        
+    for(float i = 0; i > 10; i++){
+        partial_result = matrix;
+        result = result + partial_result;
+        cout << partial_result << endl;
+        //multiply the resulting 
+         
+        // To Do:
+           // find out how long each operation takes
+           // or find some way to decide how accurate you want to be
+    }
+    cout << result << endl;
+}
 
 int main(){
-    
+    // matrix size
     int n = 5;
+    int matrix = 5;
+    matrix_exponential(matrix);
     
-    //test
-    fact(n);
-    
-    // generate the lattice
+    // generate the elements
+    /*
     seed_random();
-//    double* elements = new double[n*n]; 
-//    for(int i = 0; i = n*n; i++){
-//        elements[i] = ran(10);
-//    }
-//    LaGenMatDouble matrix_nn = LaGenMatDouble(elements, n, n, row_ordering = true);
-//    delete [] elements; // we created a new array on the heap, so lets make sure we delete it
+    double* elements = new double[n*n];
+    for(int i = 0; i = n*n; i++){
+        elements[i] = ran(10);
+    }
     
-    // print the lattice
-//    cout << "Matrix:" << endl << matrix_nn << endl;
-//    cout.width(4);
-//    for(int i = 0; i < n; i++){
-//        for(int j = 0, j < n, j++){
-//            cout << elements[i+j];
-//        }
-//    }
-//    cout << endl;
-        
-//    print the lattice
+    // add the elements to the matrix
+    LaGenMatDouble matrix_nn = LaGenMatDouble(elements, n, n, row_ordering = true);
+    delete [] elements
+    
+    // test: print the lattice
+    cout << "Matrix:" << endl << matrix_nn << endl;
+    
+    // diagonalise the matrix
+    LaGenMatDouble diag = LaGenMatDouble( n, n );
+    diag = spins.diag();
+    
+    // test: print the diagonalised lattice
+    cout << "Diagonal matrix from spins" << endl << diag << endl;
+    */
+    
+    // calculate the exponential
 
-//    generate_lattice(lattice);
-//    print_lattice(lattice);
     
 //     this is the matrix to exponentiate
 //     to do this, we need to:
