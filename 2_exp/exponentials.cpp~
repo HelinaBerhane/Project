@@ -4,8 +4,8 @@
 #include <iostream>     // cout
 #include <stdlib.h>     // srand, rand
 #include <time.h>       // time
-//#include <gmd.h>        // LaGenMatDouble
-//#include <blas3pp.h>
+#include <gmd.h>        // LaGenMatDouble
+#include <blas3pp.h>
 using namespace std;
 
 void seed_random(){
@@ -16,15 +16,6 @@ int ran(int x){
     return rand() % x;
 }
 
-int fact(int x){
-    int y = x;
-    for(int i = x-1; i > 0; i--){
-        cout << y << endl;
-        y = y * i;
-    }
-    cout << y << endl;
-}
-
 //void generate_lattice(LaGenMatDouble*){
 //    for(int i = 0; i < 4; i++){
 //        for(int j = 0; j < 4; j++){ 
@@ -33,7 +24,8 @@ int fact(int x){
 //    }
     
 //    double* elements = new double[n*n]; 
-//    
+//    LaGenMatDouble spins = LaGenMatDouble( elements, n, n, row_ordering = true);
+//    delete [] elements; // we created a new array on the heap, so lets make sure we delete it
 //}
 
 //void print_lattice(int lattice[4][4]){
@@ -58,29 +50,18 @@ int fact(int x){
 
 int main(){
     
-    int n = 5;
-    
-    //test
-    fact(n);
-    
     // generate the lattice
+    int n = 4;
     seed_random();
-//    double* elements = new double[n*n]; 
-//    for(int i = 0; i = n*n; i++){
-//        elements[i] = ran(10);
-//    }
-//    LaGenMatDouble matrix_nn = LaGenMatDouble(elements, n, n, row_ordering = true);
-//    delete [] elements; // we created a new array on the heap, so lets make sure we delete it
+    double* elements = new double[n*n]; 
+    for(int i = 0; i = n; i++){
+        cout.width(4);
+        elements[i] = ran(10);
+        cout << elements[i]
+    }
+    cout << endl;
     
-    // print the lattice
-//    cout << "Matrix:" << endl << matrix_nn << endl;
-//    cout.width(4);
-//    for(int i = 0; i < n; i++){
-//        for(int j = 0, j < n, j++){
-//            cout << elements[i+j];
-//        }
-//    }
-//    cout << endl;
+//    LaGenMatDouble::lattice(4, 4);
         
 //    print the lattice
 
