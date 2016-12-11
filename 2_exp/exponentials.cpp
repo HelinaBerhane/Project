@@ -6,10 +6,9 @@
 #include <time.h>       // time
 //#include <gmd.h>        // LaGenMatDouble
 //#include <blas3pp.h>
-#include <cmath>        // temporary for powers
 using namespace std;
 
-void seed_random(){
+void random_seed(){
     srand(time(NULL));
 }
 
@@ -18,15 +17,31 @@ int ran(int x){
 }
 
 int fact(int x){
-    int y = x;
-    for(int i = x-1; i > 0; i--){
-        cout << y << endl;
-        y = y * i;
-    }
-    cout << y << endl;
+	if(x<=1){
+        return 1;
+	}else{
+        return x*fact(x-1);
+	}
 }
 
-int matrix_exponential(int matrix){
+long double powers(long long int x, long long int y){
+    if(y<=1){
+        return x;
+    }else{
+        y--;
+        return x * powers(x, y);
+    }
+}
+
+long double expo(long long int matrix, long long int iterations, long long int n){
+    if(iterations == 1){
+        iterations--;
+        return powers(matrix, n) / fact(n);
+    }else{
+        cout << powers(matrix, n) << ", " << fact(n) << endl;
+        return powers(matrix, n) / fact(n) + expo(matrix, iterations-1, n+1);
+    }
+    /*
     float partial_result = 0;
     float result = 0;
     // over each iteration, calculate \sum_i{matrix^n/n!}        
@@ -41,17 +56,24 @@ int matrix_exponential(int matrix){
            // or find some way to decide how accurate you want to be
     }
     cout << result << endl;
+    
+    int y = 3;
+    int powers_test = powers();
+    return powers_test;
+    */
 }
 
 int main(){
     // matrix size
-    int n = 5;
-    int matrix = 5;
-    matrix_exponential(matrix);
+    int iterations = 15;
+    int matrix = 3;
+    int n = 1;
+    cout << expo(matrix, iterations, n) << endl;
+//    matrix_exponential(matrix);
     
     // generate the elements
     /*
-    seed_random();
+    random_seed();
     double* elements = new double[n*n];
     for(int i = 0; i = n*n; i++){
         elements[i] = ran(10);
