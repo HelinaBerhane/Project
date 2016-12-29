@@ -1,11 +1,16 @@
+#define LA_COMPLEX_SUPPORT
+
 #include <iostream> //cout
-#include <cstdlib>	//rand, srand
-/* #include <gmc.h> 	//lapack++ LaGenMatComplex */
+#include <cstdlib>	//rand, sran
+#include <gmc.h> 	//LaGenMatComplex
+//#include <f2c.h>    //complex type
+//#include <complex>
 
 using namespace std;
 
 /* Testing */
-void print_matrix(int* elements, int m) {				//out of date
+/*
+void print_matrix(complex* elements, int m) {				//out of date
 	for( int i = 0; i = m*m; i++ ) {
 		cout << elements[i] << " ";
 		if( i%m == 0 ) {
@@ -13,10 +18,11 @@ void print_matrix(int* elements, int m) {				//out of date
 		}
 	}
 }
-void print_states(int* matrix){							//not sure wat does
-	cout << A.info() 
+*/
+void print_states(LaGenMatComplex* matrix){							//not sure wat does
+	cout << matrix->info();
 }
-void ideal_print_matrix(int* matrix){					//untested
+void ideal_print_matrix(LaGenMatComplex* matrix){					//untested
 	 /* documentation{
 		ostream documentation{
 			std::ostream & operator <<  ( std::ostream & , const LaGenMatComplex & ) [friend]
@@ -43,19 +49,21 @@ void ideal_print_matrix(int* matrix){					//untested
 				At the beginning of your code, call e.g. " LaPreferences::setPrintFormat( LaPreferences::MATLAB, true); "
 		}
 	} */
-	cout << matrix << endl;
+	cout << *matrix << endl;
 }
 
 /* Number generation */
-void generate_elements(int* elements, int m, int x){	//untested but should work
+void generate_elements(COMPLEX* elements, int m, int x){	//untested but should work
 	srand(time(NULL));				//seeds
     for(int i = 0; i < m*m; i++){
-        elements[i] = rand() % x;	//1-x
+        elements[i].r = rand() % x;	//1-x
+        elements[i].i = rand() % x;
 	}
 }
 
 /* Matrix manipulation */
-void matrix_powers(){
+
+//void matrix_powers(){
 	/* documentation {
 		void Blas_Mat_Mat_Mult(
 			const LaGenMatComplex &  A,
@@ -87,32 +95,35 @@ void matrix_powers(){
  ) 
 
 	} */
-}
-void solve_eignevalues(){
-	/* see laslv.h */
+//}
 
-}
+
+
+//void solve_eignevalues(LaGenMatComplex* matrix){
+	/* see laslv.h */
+//}
+
 
 /* Main Program */
 int main(){  											//untested
 	
 	/* generate the matrix */
 	int m = 10, x = 10; 	//m = matrix size, x = max element size
-	int elements = new int[m*m];
-	int diag = new int[m];
+	COMPLEX* elements = new COMPLEX[m*m];
+	LaGenMatComplex diag;
 	generate_elements(elements, m, x);
-	LaGenMatComplex* matrix = new LaGenMatComplex( *elements, m, m, row_ordering = false );
+	LaGenMatComplex* matrix = new LaGenMatComplex( elements, m, m, false );
 	diag = matrix->diag();
+	
 	/* test */
-	print_matrix( elements*, m, n );
+	//print_matrix( elements, m);
+	//print_states(matrix);
+	ideal_print_matrix(matrix);
+    ideal_print_matrix(&diag);
 	
 	/* diagonalise the matrix */
-	/* test */
-	ideal_print_matrix(matrix)
-	
 	/* when the program is done, we need to delete the things on the heap: */
 	delete [] elements;
-	delete [] diag;
 	delete matrix;
 	
 }
