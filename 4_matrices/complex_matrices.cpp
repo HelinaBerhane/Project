@@ -3,67 +3,33 @@
 #include <iostream> //cout
 #include <cstdlib>	//rand, sran
 #include <gmc.h> 	//LaGenMatComplex
-//#include <f2c.h>    //complex type
-//#include <complex>
-
+#include <string>
+#include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
+#include <lavli.h>  //LaVectorLongInt
 using namespace std;
 
 /* Testing */
-/*
-void print_matrix(complex* elements, int m) {				//out of date
-	for( int i = 0; i = m*m; i++ ) {
-		cout << elements[i] << " ";
-		if( i%m == 0 ) {
-			cout << endl;
-		}
-	}
-}
-*/
-void print_states(LaGenMatComplex* matrix){							//not sure wat does
-	cout << matrix->info();
-}
-void ideal_print_matrix(LaGenMatComplex* matrix){					//untested
-	 /* documentation{
-		ostream documentation{
-			std::ostream & operator <<  ( std::ostream & , const LaGenMatComplex & ) [friend]
-			
-			Print the matrix to the given output stream.
-			If the matrix info flag is set, then this prints only the matrix info
-				see LaGenMatDouble::info(). 
-			Otherwise all matrix elements are printed.
-		}
-		setPrintFormat documentation{
-			static void LaPreferences::setPrintFormat ( pFormat  p, bool newlines = true ) [static] 
-			Set the output display format. The default is LaPreferences::NORMAL.
-			
-			Parameters:
-				p		 - The preferred output format
-				newlines - Toggles multiline matrix output 
-					true = place a newline after each matrix row
-					false = use only the appropriate MATLAB/MAPLE delimiter
-					false = use only the appropriate MATLAB/MAPLE delimiter
-			
-			The following is how to modify the output display format to be compatible with your favourite math program:
-				Place " #include LA_PREFS_H " in the include statements, somewhere after "lafnames.h".
-				
-				At the beginning of your code, call e.g. " LaPreferences::setPrintFormat( LaPreferences::MATLAB, true); "
-		}
-	} */
-	cout << *matrix << endl;
+void print_matrix(LaGenMatComplex* matrix, const string name){					//working
+	cout << name << ":" << endl << *matrix << endl;
 }
 
-/* Number generation */
-void generate_elements(COMPLEX* elements, int m, int x){	//untested but should work
-	srand(time(NULL));				//seeds
+/* Matrix generation */
+void generate_elements(COMPLEX* elements, int m, int x){	//working
+	srand(time(NULL));				//seed
     for(int i = 0; i < m*m; i++){
-        elements[i].r = rand() % x;	//1-x
+        elements[i].r = rand() % x;	//1 to x
         elements[i].i = rand() % x;
 	}
 }
 
 /* Matrix manipulation */
-
-//void matrix_powers(){
+void matrix_eigenvalues(){
+    
+}                                                   //empty                       
+void matrix_eignevectors(LaGenMatComplex* matrix){
+	/* see laslv.h */
+}                           //empty
+void matrix_powers(){
 	/* documentation {
 		void Blas_Mat_Mat_Mult(
 			const LaGenMatComplex &  A,
@@ -95,35 +61,75 @@ void generate_elements(COMPLEX* elements, int m, int x){	//untested but should w
  ) 
 
 	} */
-//}
-
-
-
-//void solve_eignevalues(LaGenMatComplex* matrix){
-	/* see laslv.h */
-//}
-
+}                                                        //empty
+void matrix_inverse(LaGenMatComplex* matrix, int len){
+    // http://lapackpp.sourceforge.net/html/laslv_8h.html#a042c82c5b818f54e7f000d068f14189
+    LaVectorLongInt PIV = LaVectorLongInt(len);
+    LUFactorizeIP(matrix, &PIV);
+    LaLUInverseIP(matrix, &PIV);
+}                       //untested
 
 /* Main Program */
-int main(){  											//untested
+int main(){
 	
-	/* generate the matrix */
-	int m = 10, x = 10; 	//m = matrix size, x = max element size
-	COMPLEX* elements = new COMPLEX[m*m];
-	LaGenMatComplex diag;
-	generate_elements(elements, m, x);
-	LaGenMatComplex* matrix = new LaGenMatComplex( elements, m, m, false );
-	diag = matrix->diag();
-	
-	/* test */
-	//print_matrix( elements, m);
-	//print_states(matrix);
-	ideal_print_matrix(matrix);
-    ideal_print_matrix(&diag);
-	
-	/* diagonalise the matrix */
-	/* when the program is done, we need to delete the things on the heap: */
-	delete [] elements;
+    /* initialise stuff */
+     matrix;
+    
+	/* generate the matrix */           //working
+	int m = 10, x = 10;                                                     //m = matrix size, x = max
+	COMPLEX* elements = new COMPLEX[m*m];                                   //initialise elements
+	generate_elements(elements, m, x);                                      //generate random elements
+	LaGenMatComplex* matrix = new LaGenMatComplex( elements, m, m, false ); //copy the elements to a matrix
+    
+    /* save and print the matrix */     //working
+    LaGenMatComplex* initialMatrix;
+    initialMatrix = matrix->copy();
+    print_matrix(initialMatrix, "initial matrix");   
+    
+	/* calculate the eigenvalue matrix */
+//    matrix_eignevalues(matrix);
+    
+    /* save and print the eigenvalue matrix */
+//    LaGenMatComplex* eigenvalueMatrix;
+//    eigenvalueMatrix = matrix->copy();
+//    print_matrix(eigenvalueMatrix, "eigenvalue matrix");   
+//    matrix = initialMatrix->copy();                      //reset matrix
+    
+	/* calculate the eigenvector matrix */
+    
+    /* save and print the eigenvector matrix */
+//    LaGenMatComplex* eigenvectorMatrix;
+//    eigenvectorMatrix = matrix->copy();
+//    print_matrix(eigenvectorMatrix, "eigenvector matrix"); 
+//    matrix = initialMatrix->copy();                      //reset matrix
+    
+	/* calculate the transpose eigenvector matrix */
+    
+    /* save and print the transpose eigenvector matrix */
+//    LaGenMatComplex* tEigenvectorMatrix;
+//    tEigenvectorMatrix = matrix->copy();
+//    print_matrix(tEigenvectorMatrix, "transpose eigenvector matrix");
+//    matrix = initialMatrix->copy();                      //reset matrix
+    
+	/* calculate the power matrix */
+    
+    /* save and print the power matrix */
+    
+	/* calculate the exponential matrix */
+    
+    /* save and print the exponential matrix */
+    
+    /* invert the matrix */
+    matrix_inverse(matrix, m);
+    
+    /* save and print the inverse matrix */
+    LaGenMatComplex* inverseMatrix;
+    inverseMatrix = matrix->copy();
+    print_matrix(inverseMatrix, "inverse matrix");   
+    matrix = initialMatrix->copy();                      //reset matrix
+    
+	/* delete things on the heap: */
+    delete [] elements;
 	delete matrix;
 	
 }
