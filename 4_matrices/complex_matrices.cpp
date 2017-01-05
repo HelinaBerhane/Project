@@ -214,11 +214,14 @@ void test_scalar_manipulation(const int max_rand){
     
     scalar_division(compA, realB, result);                                      //division
     cout << "scalar division by scalar: " << result << endl << endl;
-    scalar_division(compA, compB, testResult);
+    scalar_division(compA, compB, result);
     cout << "scalar division by complex: " << result << endl << endl;
     
-    scalar_powers(compA, compB, result);
-    cout << "scalar powers: " << result << endl << endl;
+    for(int i = 1; i < 5; i++){
+        scalar_powers(compA, i, result);
+        cout << "scalar powers - A^" << i << " = " << result << endl;
+    }
+    
 }                                       //to test
 void test_inverse(const LaGenMatComplex& initialMatrix, const int size){
     LaGenMatComplex inverseMatrix;
@@ -230,19 +233,21 @@ void test_inverse(const LaGenMatComplex& initialMatrix, const int size){
 /* Main Program */
 int main(){
     //m = matrix size, x = max
-	int matrix_size = 3, max_rand = 10;                                                              
-    int matrix_volume = matrix_size * matrix_size
+	int matrix_size = 3, max_rand = 9;                                                              
+    int matrix_volume = matrix_size * matrix_size;
+    
 	/* generate the matrix */
     COMPLEX elements[matrix_volume];
-    generate_array(elements, matrix_volume, x);
-	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, m, m, false );
+    generate_array(elements, matrix_volume, max_rand);
+	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+    
     print_matrix(initialMatrix, "initial matrix");
     
     /* test eigenvalues */
     test_eigenvalues(initialMatrix, matrix_size);
     
     /* test scalar manipulation */
-    test_scalar_manipulation(x);
+    test_scalar_manipulation(max_rand);
 
     /* test inversion */
     test_inverse(initialMatrix, matrix_size);
