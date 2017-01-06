@@ -146,12 +146,34 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     result = laResult.toCOMPLEX();
 }             //to test
 void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
-    /*
+    COMPLEX power;
+    COMPLEX division;
+    result.r = 0;
+    result.i = 0;
     for(int i = 0; i < iter; i++){
-        powerStep
+        scalar_powers(number, i, power);
+        scalar_division(power, factorial(i), division);
+        scalar_addition(result, division)
     }
-    */
 }         //empty
+COMPLEX rec_scalar_exp_step(const COMPLEX& number, const int step){
+	if(step <= 1){
+        return 1;
+	}else{
+        return number / step * rec_scalar_exp_step(step-1);
+	}
+}
+void recursive_scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
+    COMPLEX power;
+    COMPLEX division;
+    result.r = 0;
+    result.i = 0;
+    for(int i = 0; i < iter; i++){
+        scalar_powers(number, i, power);
+        scalar_division(power, factorial(i), division);
+        scalar_addition(result, division)
+    }
+} //empty
 
 /* array manipulation [0/1] */
 void array_powers(COMPLEX array[], const int len, const int power){
@@ -176,21 +198,15 @@ void matrix_inverse(LaGenMatComplex& matrix, int len){
     LUFactorizeIP(matrix, PIV);
     LaLUInverseIP(matrix, PIV);
 }                                   //working
+void matrix_exp_step(){
+    
+}
 void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatComplex& eigenvalues){
     //LaGenMatComplex step = LaGenMatComplex
+    
 } //empty
 
 /* Testing [3/3] */
-void test_eigenvalues(const LaGenMatComplex& initialMatrix, const int size){
-    LaVectorComplex eigenvalueVec = LaVectorComplex(size);             //initialise eigenstuff
-    LaGenMatComplex eigenvalues = LaGenMatComplex::zeros(size, size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(size, size);
-    matrix_eigenvstuff(initialMatrix, eigenvalueVec, eigenvectors); //calculate eigenstuff
-    print_matrix(eigenvalueVec, "eigenvalue vector");               //print eigenstuff
-    vec_to_diag(eigenvalueVec, size, eigenvalues);
-    print_matrix(eigenvalues, "eigenvalue matrix");
-    print_matrix(eigenvectors, "eigenvector matrix");
-}             //to test
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;                                                              //initialisation
     generate_scalar(compA, max_rand);
@@ -223,13 +239,35 @@ void test_scalar_manipulation(const int max_rand){
     }
     
 }                                       //to test
+void test_eigenvalues(const LaGenMatComplex& initialMatrix, const int size){
+    LaVectorComplex eigenvalueVec = LaVectorComplex(size);             //initialise eigenstuff
+    LaGenMatComplex eigenvalues = LaGenMatComplex::zeros(size, size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(size, size);
+    matrix_eigenvstuff(initialMatrix, eigenvalueVec, eigenvectors); //calculate eigenstuff
+    print_matrix(eigenvalueVec, "eigenvalue vector");               //print eigenstuff
+    vec_to_diag(eigenvalueVec, size, eigenvalues);
+    print_matrix(eigenvalues, "eigenvalue matrix");
+    print_matrix(eigenvectors, "eigenvector matrix");
+}             //to test
 void test_inverse(const LaGenMatComplex& initialMatrix, const int size){
     LaGenMatComplex inverseMatrix;
     inverseMatrix = initialMatrix.copy();
     matrix_inverse(inverseMatrix, size);
     print_matrix(inverseMatrix, "inverse matrix");
-}                                                                     //to test
-
+}                 //to test
+void test_scalar_exponential(const int step){
+    int max_rand = 9;
+    COMPLEX number;
+    generate_scalar(number, max_rand);
+    cout << "scalar exponential test number : " << number << endl << endl;
+    for(int i = 0; i < step; i++){
+        cout << rec_scalar_exp_step(number, i) << endl;
+    }
+}
+void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
+    
+    
+}
 /* Main Program */
 int main(){
     //m = matrix size, x = max
@@ -248,6 +286,9 @@ int main(){
     
     /* test scalar manipulation */
     test_scalar_manipulation(max_rand);
+    
+    /* test scalar exponentials */
+    test_scalar_exponential(10);
 
     /* test inversion */
     test_inverse(initialMatrix, matrix_size);
