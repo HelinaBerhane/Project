@@ -1,18 +1,22 @@
-#include <cstdlib>  //rand, srand
+#include <random>   //random_device, mt19937
 #include <iostream> //cout
 #include <ctime>    //time(NULL)
 
 using namespace std;
 
-void random_seed(){
-    srand(time(NULL));
+int rand(int a, int b){
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dist(a, b);
+    return dist(gen);
 }
 
 void generate_lattice(int array[10][10]){
+    int test = 0;
     for(int i = 0; i < 10; i++){
         for(int j = 0; j < 10; j++){
-            int ran = (rand() % 2)*2 - 1;
-            array[i][j] = ran;
+            array[i][j] = 2*rand(0, 1)-1;
+            test += array[i][j];
         }
     }
 }
@@ -29,9 +33,9 @@ void print_lattice(int array[10][10]){
 
 int main(){
     int lattice [10][10];
-    random_seed();
     generate_lattice(lattice);
     print_lattice(lattice);
+
 }
 
 /*
