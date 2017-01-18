@@ -1,10 +1,10 @@
 #include <iostream> //cout
 #include <cstdlib>	//rand, sran
-#include <gmc.h> 	//LaGenMatComplex
 #include <string>
+#include "complex_matrices.h"
+#include <gmc.h> 	//LaGenMatComplex
 #include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
 #include <blas3pp.h>
-#include "complex_matrices.h"
 
 using namespace std;
 
@@ -111,17 +111,16 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     }
     result = laResult.toCOMPLEX();
 }             //to test
-void scalar_exponential_1(const COMPLEX& number, const double step){
-    double division, total_division = 1, sum = 1;
+void scalar_exponential_1(const COMPLEX& number, const double step, const COMPLEX& result){
+    double division, total_division = 1, result = 1;
     for(int n = 1; n <= iterations; n++){   //sum (from 1 to n)
         total_division = 1;
         for(int i = 1; i <= n; i++){        //    ( num^n / n!)
             scalar_division(number, i, division);     //
             scalar_multiplication(total_division, division, total_division);
         }
-        scalar_addition(sum, total_division, sum)
+        scalar_addition(result, total_division, result)
     }
-    return C;
 }
 void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
     COMPLEX power;
@@ -163,7 +162,7 @@ void array_powers(COMPLEX array[], const int len, const int power){/**/
 }                       //empty
 
 /* Matrix manipulation [2/4] */
-void diagonal_matrix_powers(){                                                                                       //empty
+void diagonal_matrix_powers(){      //empty
   ...
 }
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){ //working
@@ -176,7 +175,7 @@ void matrix_inverse(LaGenMatComplex& matrix, int len){                          
     LUFactorizeIP(matrix, PIV);
     LaLUInverseIP(matrix, PIV);
 }
-void matrix_exp_step(){                                                                                       //empty
+void matrix_exp_step(){                                 //empty
     //
 }
 void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatComplex& eigenvalues){
@@ -241,6 +240,10 @@ void test_scalar_exponential(const int step){
     for(int i = 0; i < step; i++){
         cout << rec_scalar_exp_step(number, i) << endl;
     }
+
+    //test accuracy
+        for()
+
 }
 void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
 
