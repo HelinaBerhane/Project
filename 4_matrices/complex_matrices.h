@@ -4,17 +4,18 @@
 
 #include <gmc.h> 	//LaGenMatComplex
 #include <lavc.h> //LaVectorComplex
+#include <string>
 
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors);
 void matrix_inverse(LaGenMatComplex& matrix, int len);
 void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatComplex& eigenvalues);
 void vec_to_diag(const LaVectorComplex& vector, const int len, LaGenMatComplex& diag);
 void print_scalar(const COMPLEX scalar);
-void print_scalar(const COMPLEX scalar, const string name);
+void print_scalar(const COMPLEX scalar, const std::string name);
 void print_array(const COMPLEX array[], int len);
-void print_array(const COMPLEX array[], int len, const string name);
+void print_array(const COMPLEX array[], int len, const std::string name);
 void print_matrix(const LaGenMatComplex& matrix);
-void print_matrix(const LaGenMatComplex& matrix, const string name);
+void print_matrix(const LaGenMatComplex& matrix, const std::string name);
 void test_eigenvalues(const LaGenMatComplex& initialMatrix, const int size);
 void test_scalar_manipulation(const int max_rand);
 void test_inverse(const LaGenMatComplex& initialMatrix, const int size);
