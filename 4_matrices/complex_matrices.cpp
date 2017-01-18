@@ -285,7 +285,7 @@ int main(){
     B.r = 1; B.i = 1;
     for(int i = 0; i < 4; i++){
         scalar_addition(A, B, C); // A + B = C
-        A = C
+        A = C;
     }
 
     /* test scalar product */
