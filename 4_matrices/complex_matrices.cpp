@@ -250,10 +250,11 @@ void test_inverse(const LaGenMatComplex& initialMatrix, const int size){
     print_matrix(inverseMatrix, "inverse matrix");
 }                 //to test
 void test_scalar_sum(const int max_rand, const int iterations){
-    COMPLEX number;
+    COMPLEX number, step;
     generate_scalar(number, max_rand);
     for(int i = 0; i < iterations; i++){
-        cout << number << endl;
+        step = number;
+        cout << step << endl;
         scalar_addition(number, number);
     }
     cout << number << endl;
