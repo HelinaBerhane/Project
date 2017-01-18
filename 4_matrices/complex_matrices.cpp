@@ -1,46 +1,12 @@
-#define LA_COMPLEX_SUPPORT
-
 #include <iostream> //cout
 #include <cstdlib>	//rand, sran
 #include <gmc.h> 	//LaGenMatComplex
 #include <string>
 #include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
 #include <blas3pp.h>
-using namespace std;
+#include "complex_matrices.h"
 
-/* function primitives */
-void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors);
-void matrix_inverse(LaGenMatComplex& matrix, int len);
-void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatComplex& eigenvalues);
-void vec_to_diag(const LaVectorComplex& vector, const int len, LaGenMatComplex& diag);
-void print_scalar(const COMPLEX scalar);
-void print_scalar(const COMPLEX scalar, const string name);
-void print_array(const COMPLEX array[], int len);
-void print_array(const COMPLEX array[], int len, const string name);
-void print_matrix(const LaGenMatComplex& matrix);
-void print_matrix(const LaGenMatComplex& matrix, const string name);
-void test_eigenvalues(const LaGenMatComplex& initialMatrix, const int size);
-void test_scalar_manipulation(const int max_rand);
-void test_inverse(const LaGenMatComplex& initialMatrix, const int size);
-void generate_scalar(COMPLEX& A, const int x);
-void generate_scalar(int A, const int x);
-void generate_array(COMPLEX array[], const int len, const int x);
-void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[ ]);
-void array_to_diag(COMPLEX array[], const int len, LaGenMatComplex& diag);
-void vec_to_diag(const LaVectorComplex& vector, const int len, LaGenMatComplex& diag);
-int factorial(int x);
-void scalar_addition(const COMPLEX& A, const COMPLEX& B , COMPLEX& result);
-void scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result);
-void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result);
-void scalar_division(const COMPLEX& A, const int B, COMPLEX& result);
-void scalar_division(const COMPLEX& A, const COMPLEX& B, COMPLEX& result);
-void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result);
-void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result);
-void array_power(COMPLEX array[], const int len, const int power);
-void diagonal_matrix_powers();
-void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors);
-void matrix_inverse(LaGenMatComplex& matrix, int len);
-void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatComplex& eigenvalues);
+using namespace std;
 
 /* Total [13/20] */
 
@@ -94,7 +60,7 @@ void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[ ]
 void array_to_diag(COMPLEX array[], const int len, LaGenMatComplex& diag){
     diag = 0;
     for(int i = 0; i < len; i++){
-        diag(i, i) = array[i];        
+        diag(i, i) = array[i];
     }
 }               //working
 void vec_to_diag(const LaVectorComplex& vector, const int len, LaGenMatComplex& diag){
@@ -145,6 +111,18 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     }
     result = laResult.toCOMPLEX();
 }             //to test
+void scalar_exponential_1(const COMPLEX& number, const double step){
+    double division, total_division = 1, sum = 1;
+    for(int n = 1; n <= iterations; n++){   //sum (from 1 to n)
+        total_division = 1;
+        for(int i = 1; i <= n; i++){        //    ( num^n / n!)
+            scalar_division(number, i, division);     //
+            scalar_multiplication(total_division, division, total_division);
+        }
+        scalar_addition(sum, total_division, sum)
+    }
+    return C;
+}
 void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
     COMPLEX power;
     COMPLEX division;
@@ -176,7 +154,7 @@ void recursive_scalar_exponential(const COMPLEX& number, const int iter, COMPLEX
 } //empty
 
 /* array manipulation [0/1] */
-void array_powers(COMPLEX array[], const int len, const int power){
+void array_powers(COMPLEX array[], const int len, const int power){/**/
     /*
     for(int i = 0; i < len; i++){
         array[i] = complex_power(array[i], power, result);
@@ -185,25 +163,25 @@ void array_powers(COMPLEX array[], const int len, const int power){
 }                       //empty
 
 /* Matrix manipulation [2/4] */
-void diagonal_matrix_powers(){
-    
-}                                                           //empty
-void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){
+void diagonal_matrix_powers(){                                                                                       //empty
+  ...
+}
+void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){ //working
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
-} //working
-void matrix_inverse(LaGenMatComplex& matrix, int len){
+}
+void matrix_inverse(LaGenMatComplex& matrix, int len){                                                               //working
     // LaLUInverseIP: http://lapackpp.sourceforge.net/html/laslv_8h.html#a042c82c5b818f54e7f000d068f14189
     LaVectorLongInt PIV = LaVectorLongInt(len);
     LUFactorizeIP(matrix, PIV);
     LaLUInverseIP(matrix, PIV);
-}                                   //working
-void matrix_exp_step(){
-    
+}
+void matrix_exp_step(){                                                                                       //empty
+    //
 }
 void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatComplex& eigenvalues){
     //LaGenMatComplex step = LaGenMatComplex
-    
+
 } //empty
 
 /* Testing [3/3] */
@@ -215,29 +193,29 @@ void test_scalar_manipulation(const int max_rand){
     int realB;
     generate_scalar(realB, max_rand);
     COMPLEX result;
-    
+
     for(int i = 1; i < 5; i++){                                                 //factorials
         cout << "factorial(" << i << "): " << factorial(i) << endl;
     }
-    
+
     scalar_addition(compA, compB, result);                                      //addition/subtraction
     cout << "scalar addition: " << result << endl << endl;
-    
+
     scalar_multiplication(compA, realB, result);                                //multiplication
     cout << "scalar multiplication by scalar: " << result << endl << endl;
     scalar_multiplication(compA, compB, result);
     cout << "scalar multiplication by complex: " << result << endl << endl;
-    
+
     scalar_division(compA, realB, result);                                      //division
     cout << "scalar division by scalar: " << result << endl << endl;
     scalar_division(compA, compB, result);
     cout << "scalar division by complex: " << result << endl << endl;
-    
+
     for(int i = 1; i < 5; i++){
         scalar_powers(compA, i, result);
         cout << "scalar powers - A^" << i << " = " << result << endl;
     }
-    
+
 }                                       //to test
 void test_eigenvalues(const LaGenMatComplex& initialMatrix, const int size){
     LaVectorComplex eigenvalueVec = LaVectorComplex(size);             //initialise eigenstuff
@@ -265,28 +243,28 @@ void test_scalar_exponential(const int step){
     }
 }
 void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
-    
-    
+
+
 }
 /* Main Program */
 int main(){
     //m = matrix size, x = max
-	int matrix_size = 3, max_rand = 9;                                                              
+	int matrix_size = 3, max_rand = 9;
     int matrix_volume = matrix_size * matrix_size;
-    
+
 	/* generate the matrix */
     COMPLEX elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
 	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
-    
+
     print_matrix(initialMatrix, "initial matrix");
-    
+
     /* test eigenvalues */
     test_eigenvalues(initialMatrix, matrix_size);
-    
+
     /* test scalar manipulation */
     test_scalar_manipulation(max_rand);
-    
+
     /* test scalar exponentials */
     test_scalar_exponential(10);
 
