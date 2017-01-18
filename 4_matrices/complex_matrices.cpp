@@ -81,6 +81,9 @@ void scalar_addition(const COMPLEX& A, const COMPLEX& B , COMPLEX& result){
     result.r = A.r + B.r;
     result.i = A.i + B.i;
 }              //working
+void scalar_sum(){
+    //...
+}
 void scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result){
     result.r = A.r * B;
     result.i = A.i * B;
@@ -274,10 +277,21 @@ int main(){
 //    test_eigenvalues(initialMatrix, matrix_size);
 
     /* test scalar manipulation */
-//    test_scalar_manipulation(max_rand);
+//    test_scalar_manipulation(4);
+
+    /* test scalar sum */
+    COMPLEX A, B, C;
+    A.r = 2; A.i = 1;
+    B.r = 1; B.i = 1;
+    for(int i = 0; i < 4; i++){
+        scalar_addition(A, B, C); // A + B = C
+        A = C
+    }
+
+    /* test scalar product */
 
     /* test scalar exponentials */
-    test_scalar_exponential(5,9);
+//    test_scalar_exponential(3,4);
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
