@@ -120,7 +120,9 @@ void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& 
         total_division.r = 0;
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
             scalar_division(number, i, division);     //
+            cout << "division = " << division << endl;
             scalar_multiplication(total_division, division, total_division);
+            cout << "total_division = " << total_division << endl;
         }
         scalar_addition(result, total_division, result);
         cout << "sum = " << result << endl;
@@ -254,7 +256,6 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
 
 /* Main Program */
 int main(){
-    //m = matrix size, x = max
 //	int matrix_size = 3, max_rand = 9;
 //    int matrix_volume = matrix_size * matrix_size;
 
@@ -272,7 +273,7 @@ int main(){
 //    test_scalar_manipulation(max_rand);
 
     /* test scalar exponentials */
-    test_scalar_exponential(100,9);
+    test_scalar_exponential(5,9);
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
