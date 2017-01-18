@@ -249,7 +249,7 @@ void test_inverse(const LaGenMatComplex& initialMatrix, const int size){
     matrix_inverse(inverseMatrix, size);
     print_matrix(inverseMatrix, "inverse matrix");
 }                 //to test
-void test_scalar_sum(const int rand_max, const int iterations){
+void test_scalar_sum(const int max_rand, const int iterations){
     COMPLEX number;
     generate_scalar(number, max_rand);
     for(int i = 0; i < iterations; i++){
@@ -289,7 +289,7 @@ int main(){
 //    test_scalar_manipulation(4);
 
     /* test scalar sum */
-    test_scalar_sum(4,3)
+    test_scalar_sum(4,3);
 
 
     /* test scalar product */
