@@ -136,7 +136,7 @@ void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
     //    scalar_addition(result, division, result);
     //}
 }         //empty
-COMPLEX rec_scalar_exp_step(const COMPLEX& number, const int step){
+//COMPLEX rec_scalar_exp_step(const COMPLEX& number, const int step){
 //    COMPLEX result, division, multiplication;
 //	if(step <= 1){
 //        result.r = 1;
@@ -146,7 +146,7 @@ COMPLEX rec_scalar_exp_step(const COMPLEX& number, const int step){
 //        scalar_multiplication(division, rec_scalar_exp_step(step-1),  multiplication);
 //        return multiplication;
 //	}
-}
+//}
 void recursive_scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
     //COMPLEX power;
     //COMPLEX division;
@@ -271,8 +271,8 @@ int main(){
 //    test_scalar_manipulation(max_rand);
 
     /* test scalar exponentials */
-    test_scalar_exponential(10);
+    test_scalar_exponential(10,9);
 
     /* test inversion */
-    test_inverse(initialMatrix, matrix_size);
+//    test_inverse(initialMatrix, matrix_size);
 }
