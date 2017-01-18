@@ -81,8 +81,9 @@ void scalar_addition(const COMPLEX& A, const COMPLEX& B , COMPLEX& result){
     result.r = A.r + B.r;
     result.i = A.i + B.i;
 }              //working
-void scalar_sum(){
-    //...
+void scalar_addition(COMPLEX& result, const COMPLEX addition){
+    result.r += addition.r;
+    result.i += addition.i;
 }
 void scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result){
     result.r = A.r * B;
@@ -115,7 +116,7 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     result = laResult.toCOMPLEX();
 }             //to test
 void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& result){
-    COMPLEX division, total_division, A, B;
+    COMPLEX division, total_division, A;
     result.r = 1;
     result.i = 1;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
@@ -130,8 +131,7 @@ void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& 
             scalar_division(number, i, division);
             scalar_multiplication(A, division, total_division);
         }
-        B = result;
-        scalar_addition(B, total_division, result);
+        scalar_addition(result, total_division);
         cout << "sum = " << result << endl;
     }
 }
@@ -280,18 +280,7 @@ int main(){
 //    test_scalar_manipulation(4);
 
     /* test scalar sum */
-    COMPLEX A, B, C;
-    A.r = 0; A.i = 0;
-    B.r = 1; B.i = 1;
-    cout << "A = " << A << endl;
-    cout << "B = " << B << endl;
-    for(int i = 0; i < 4; i++){
-        scalar_addition(A, B, C); // A + B = C
-        A = C;
-        B.r++;
-    }
-    cout << "r = 1 + 2 + 3 + 4 = " << C.r << endl;
-    cout << "i = 1 + 1 + 1 + 1 = " << C.i << endl;
+
 
 
     /* test scalar product */
