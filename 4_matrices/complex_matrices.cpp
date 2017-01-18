@@ -290,7 +290,9 @@ int main(){
         A = C;
         B.r++;
     }
-    cout << "A + 4B = " << C << endl;
+    cout << "r = 1 + 2 + 3 + 4 = " << C.r << endl;
+    cout << "i = 1 + 1 + 1 + 1 = " << C.i << endl;
+
 
     /* test scalar product */
 
