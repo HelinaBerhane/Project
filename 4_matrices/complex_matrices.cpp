@@ -239,11 +239,12 @@ void test_inverse(const LaGenMatComplex& initialMatrix, const int size){
     matrix_inverse(inverseMatrix, size);
     print_matrix(inverseMatrix, "inverse matrix");
 }                 //to test
-void test_scalar_exponential(const int step){
-    int max_rand = 9;
-    COMPLEX number;
+void test_scalar_exponential(const int iterations, const int max_rand){
+    COMPLEX number, result;
     generate_scalar(number, max_rand);
     cout << "scalar exponential test number : " << number << endl << endl;
+    scalar_exponential_1(number, iterations, result);
+    cout << "e^" << number << " = " << result;
 }
 void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
     //...
@@ -254,20 +255,20 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
 int main(){
     //m = matrix size, x = max
 	int matrix_size = 3, max_rand = 9;
-    int matrix_volume = matrix_size * matrix_size;
+//    int matrix_volume = matrix_size * matrix_size;
 
 	/* generate the matrix */
-    COMPLEX elements[matrix_volume];
-    generate_array(elements, matrix_volume, max_rand);
-	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+//    COMPLEX elements[matrix_volume];
+//    generate_array(elements, matrix_volume, max_rand);
+//	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
 
-    print_matrix(initialMatrix, "initial matrix");
+//    print_matrix(initialMatrix, "initial matrix");
 
     /* test eigenvalues */
-    test_eigenvalues(initialMatrix, matrix_size);
+//    test_eigenvalues(initialMatrix, matrix_size);
 
     /* test scalar manipulation */
-    test_scalar_manipulation(max_rand);
+//    test_scalar_manipulation(max_rand);
 
     /* test scalar exponentials */
     test_scalar_exponential(10);
