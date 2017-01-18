@@ -112,19 +112,21 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     result = laResult.toCOMPLEX();
 }             //to test
 void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& result){
-    COMPLEX division, total_division;
+    COMPLEX division, total_division, A, B;
     result.r = 1;
     result.i = 1;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
         total_division.r = 1;
         total_division.r = 0;
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
-            scalar_division(number, i, division);     //
             cout << "division = " << division << endl;
-            scalar_multiplication(total_division, division, total_division);
             cout << "total_division = " << total_division << endl;
+            A = total_division;
+            scalar_division(number, i, division);
+            scalar_multiplication(A, division, total_division);
         }
-        scalar_addition(result, total_division, result);
+        B = result;
+        scalar_addition(B, total_division, result);
         cout << "sum = " << result << endl;
     }
 }
