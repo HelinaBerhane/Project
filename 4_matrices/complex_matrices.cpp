@@ -116,6 +116,8 @@ void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& 
     result.r = 1;
     result.i = 1;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
+        division.r = 0;
+        division.i = 0;
         total_division.r = 1;
         total_division.i = 0;
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
@@ -247,7 +249,7 @@ void test_inverse(const LaGenMatComplex& initialMatrix, const int size){
 void test_scalar_exponential(const int iterations, const int max_rand){
     COMPLEX number, result;
     generate_scalar(number, max_rand);
-    cout << "scalar exponential test number : " << number << endl << endl;
+    cout << endl << "scalar exponential test no.: " << number << endl << endl;
     scalar_exponential_1(number, iterations, result);
     cout << "e^" << number << " = " << result << endl;
 }
