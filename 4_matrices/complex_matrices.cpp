@@ -123,6 +123,7 @@ void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& 
             scalar_multiplication(total_division, division, total_division);
         }
         scalar_addition(result, total_division, result);
+        cout << "sum = " << result << endl;
     }
 }
 void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
@@ -244,7 +245,7 @@ void test_scalar_exponential(const int iterations, const int max_rand){
     generate_scalar(number, max_rand);
     cout << "scalar exponential test number : " << number << endl << endl;
     scalar_exponential_1(number, iterations, result);
-    cout << "e^" << number << " = " << result;
+    cout << "e^" << number << " = " << result << endl;
 }
 void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
     //...
@@ -254,7 +255,7 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
 /* Main Program */
 int main(){
     //m = matrix size, x = max
-	int matrix_size = 3, max_rand = 9;
+//	int matrix_size = 3, max_rand = 9;
 //    int matrix_volume = matrix_size * matrix_size;
 
 	/* generate the matrix */
@@ -271,7 +272,7 @@ int main(){
 //    test_scalar_manipulation(max_rand);
 
     /* test scalar exponentials */
-    test_scalar_exponential(10,9);
+    test_scalar_exponential(100,9);
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
