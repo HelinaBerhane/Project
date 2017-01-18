@@ -283,10 +283,13 @@ int main(){
     COMPLEX A, B, C;
     A.r = 2; A.i = 1;
     B.r = 1; B.i = 1;
+    cout << "A = " << A << endl;
+    cout << "B = " << B << endl;
     for(int i = 0; i < 4; i++){
         scalar_addition(A, B, C); // A + B = C
         A = C;
     }
+    cout << "A + 4B = " << C << endl;
 
     /* test scalar product */
 
