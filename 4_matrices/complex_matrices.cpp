@@ -117,7 +117,7 @@ void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& 
     result.i = 1;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
         total_division.r = 1;
-        total_division.r = 0;
+        total_division.i = 0;
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
             cout << "division = " << division << endl;
             cout << "total_division = " << total_division << endl;
