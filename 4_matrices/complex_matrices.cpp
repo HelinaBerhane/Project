@@ -111,11 +111,13 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     }
     result = laResult.toCOMPLEX();
 }             //to test
-void scalar_exponential_1(const COMPLEX& number, const double step, const COMPLEX& result){
-    double division, total_division = 1, result = 1;
-    for(int n = 1; n <= iterations; n++){   //sum (from 1 to n)
-        total_division = 1;
-        for(int i = 1; i <= n; i++){        //    ( num^n / n!)
+void scalar_exponential_1(const COMPLEX& number, const int iterations, const COMPLEX& result){
+    COMPLEX division, total_division = 1;
+    result.r = 1;
+    result.i = 1;
+    const int step;
+    for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
+        for(int i = 1; i <= step; i++){        //    ( num^n / n!)
             scalar_division(number, i, division);     //
             scalar_multiplication(total_division, division, total_division);
         }
