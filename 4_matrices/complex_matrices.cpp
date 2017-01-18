@@ -112,10 +112,12 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     result = laResult.toCOMPLEX();
 }             //to test
 void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& result){
-    COMPLEX division, total_division.r = 1;
+    COMPLEX division, total_division;
     result.r = 1;
     result.i = 1;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
+        total_division.r = 1;
+        total_division.r = 0;
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
             scalar_division(number, i, division);     //
             scalar_multiplication(total_division, division, total_division);
@@ -135,15 +137,15 @@ void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
     //}
 }         //empty
 COMPLEX rec_scalar_exp_step(const COMPLEX& number, const int step){
-    COMPLEX result, division, multiplication;
-	if(step <= 1){
-        result.r = 1;
-        return result;
-	}else{
-        scalar_division(number,step,division);
-        scalar_multiplication(division, rec_scalar_exp_step(step-1),  multiplication);
-        return multiplication;
-	}
+//    COMPLEX result, division, multiplication;
+//	if(step <= 1){
+//        result.r = 1;
+//        return result;
+//	}else{
+//        scalar_division(number,step,division);
+//        scalar_multiplication(division, rec_scalar_exp_step(step-1),  multiplication);
+//        return multiplication;
+//	}
 }
 void recursive_scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
     //COMPLEX power;
