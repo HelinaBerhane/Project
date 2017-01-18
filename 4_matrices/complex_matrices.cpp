@@ -111,47 +111,50 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     }
     result = laResult.toCOMPLEX();
 }             //to test
-void scalar_exponential_1(const COMPLEX& number, const int iterations, const COMPLEX& result){
-    COMPLEX division, total_division = 1;
+void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& result){
+    COMPLEX division, total_division.r = 1;
     result.r = 1;
     result.i = 1;
-    const int step;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
             scalar_division(number, i, division);     //
             scalar_multiplication(total_division, division, total_division);
         }
-        scalar_addition(result, total_division, result)
+        scalar_addition(result, total_division, result);
     }
 }
 void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
-    COMPLEX power;
-    COMPLEX division;
-    result.r = 0;
-    result.i = 0;
-    for(int i = 0; i < iter; i++){
-        scalar_powers(number, i, power);
-        scalar_division(power, factorial(i), division);
-        scalar_addition(result, division)
-    }
+    //COMPLEX power;
+    //COMPLEX division;
+    //result.r = 0;
+    //result.i = 0;
+    //for(int i = 0; i < iter; i++){
+    //    scalar_powers(number, i, power);
+    //    scalar_division(power, factorial(i), division);
+    //    scalar_addition(result, division, result);
+    //}
 }         //empty
 COMPLEX rec_scalar_exp_step(const COMPLEX& number, const int step){
+    COMPLEX result, division, multiplication;
 	if(step <= 1){
-        return 1;
+        result.r = 1;
+        return result;
 	}else{
-        return number / step * rec_scalar_exp_step(step-1);
+        scalar_division(number,step,division);
+        scalar_multiplication(division, rec_scalar_exp_step(step-1),  multiplication);
+        return multiplication;
 	}
 }
 void recursive_scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
-    COMPLEX power;
-    COMPLEX division;
-    result.r = 0;
-    result.i = 0;
-    for(int i = 0; i < iter; i++){
-        scalar_powers(number, i, power);
-        scalar_division(power, factorial(i), division);
-        scalar_addition(result, division)
-    }
+    //COMPLEX power;
+    //COMPLEX division;
+    //result.r = 0;
+    //result.i = 0;
+    //for(int i = 0; i < iter; i++){
+    //    scalar_powers(number, i, power);
+    //    scalar_division(power, factorial(i), division);
+    //    scalar_addition(result, division, result);
+    //}
 } //empty
 
 /* array manipulation [0/1] */
@@ -165,7 +168,7 @@ void array_powers(COMPLEX array[], const int len, const int power){/**/
 
 /* Matrix manipulation [2/4] */
 void diagonal_matrix_powers(){      //empty
-  ...
+  //...
 }
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){ //working
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
@@ -239,18 +242,12 @@ void test_scalar_exponential(const int step){
     COMPLEX number;
     generate_scalar(number, max_rand);
     cout << "scalar exponential test number : " << number << endl << endl;
-    for(int i = 0; i < step; i++){
-        cout << rec_scalar_exp_step(number, i) << endl;
-    }
-
-    //test accuracy
-        for()
-
 }
 void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
-
-
+    //...
 }
+
+
 /* Main Program */
 int main(){
     //m = matrix size, x = max
