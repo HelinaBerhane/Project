@@ -340,6 +340,7 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     matrix_multiplication(matrixA, matrixB, result);
     print_matrix(result, "Matrix A * Matrix B");
     /* A * B^T */
+    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     print_matrix(matrixA, "matrixA");
     print_matrix(matrixB, "matrixB");
     matrix_multiplication_trans(matrixA, matrixB, result);
