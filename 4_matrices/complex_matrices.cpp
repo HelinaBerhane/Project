@@ -145,9 +145,9 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
 //            cout << "total_division = " << total_division << endl;
             cout << "total_division = " << total_division << endl;
         }
-        cout << endl;
         scalar_addition(result, total_division);
         cout << "sum = " << result << endl;
+        cout << endl;
     }
     cout << endl;
 }
@@ -341,7 +341,7 @@ int main(){
     /* test scalar product */
 
     /* test scalar exponentials */
-    test_scalar_exponential(5,4);
+    test_scalar_exponential(500,4);
 //    test_idenpotent_exponential();
 
     /* test inversion */
