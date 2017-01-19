@@ -334,6 +334,7 @@ void test_idenpotent_exponential(){
     LaGenMatComplex initialMatrix = LaGenMatComplex(comp, 3, 3, false );
     cout << "initialMatrix = " << endl << initialMatrix << endl;
 
+    test_matrix_exponential(initialMatrix, 3)
     //calculate the exponential
 }
 
