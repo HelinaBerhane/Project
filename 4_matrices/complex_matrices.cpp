@@ -190,6 +190,9 @@ void array_powers(COMPLEX array[], const int len, const int power){/**/
 void diagonal_matrix_powers(){      //empty
   //...
 }
+void matrix_multiplication(){
+
+}
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){ //working
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
@@ -316,7 +319,9 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
     array_to_diag(eigenexp, size, diagonaleigenexp);
     print_matrix(diagonaleigenexp, "exponential matrix");
     print_matrix(eigenvectors, "eigenvector matrix");}
+void test_matrix_multiplication(matrix_size){
 
+}
 void test_idenpotent_exponential(){
 
     // Generate the matrix
@@ -352,10 +357,10 @@ int main(){
 
     /* test scalar exponentials */
 //    test_scalar_exponential(5000,40);
-//    test_idenpotent_exponential();
+    test_idenpotent_exponential();
 
     /* test matrix exponentials */
-    test_matrix_exponential(initialMatrix, matrix_size);
+    //test_matrix_exponential(initialMatrix, matrix_size);
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
