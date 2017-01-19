@@ -47,7 +47,7 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 void generate_scalar(COMPLEX& A, const int x){
     A.r = ran(1, x);	//1 to x
     A.i = ran(1, x);
-}                                           //working
+}               //working
 void generate_scalar(int number, const int x){
     number = ran(1, x);	//1 to x
 }                                                //working
@@ -301,7 +301,16 @@ void test_scalar_exponential(const int iterations, const int max_rand){
 void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
     //...
 }
-
+void test_idenpotent_exponential(){
+    int elements [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
+    COMPLEX comp[9];
+    for(int i = 0; i < 9, i++){
+        comp[i].r = elements[i];
+        comp[i].i = 0;
+    }
+    LaGenMatComplex initialMatrix = LaGenMatComplex(comp, 9, 9, false );
+    cout << "initialMatrix = " << initialMatrix << endl;
+}
 
 /* Main Program */
 int main(){
@@ -319,13 +328,13 @@ int main(){
 //    test_eigenvalues(initialMatrix, matrix_size);
 
     /* test scalar manipulation */
-    test_scalar_manipulation(4);
+//    test_scalar_manipulation(4);
 
     /* test scalar product */
 
     /* test scalar exponentials */
 //    test_scalar_exponential(3,4);
-
+    test_idenpotent_exponential();
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
 }
