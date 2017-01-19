@@ -295,7 +295,7 @@ void test_scalar_exponential(const int iterations, const int max_rand){
     cout << "e^" << number << " = " << result << endl;
 }
 void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
-    //cout << "intial matrix = " << endl << initialMatrix << endl;
+    test_eigenvalues(initialMatrix, size);
 }
 void test_idenpotent_exponential(){
 
@@ -338,6 +338,7 @@ int main(){
 
     /* test matrix exponentials */
     test_matrix_exponential(initialMatrix, matrix_size);
+
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
 }
