@@ -139,15 +139,15 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
             scalar_division(number, i, division);
 //            cout << number << " / " << i << " = " <<  division << endl;
-            cout << total_division << " * " << division << " = ";
+//            cout << total_division << " * " << division << " = ";
             scalar_product(total_division, division);
 //            cout << "division = " << division << endl;
 //            cout << "total_division = " << total_division << endl;
-            cout << total_division << endl;
+            cout << "total_division = " << total_division << endl;
         }
         cout << endl;
         scalar_addition(result, total_division);
-//        cout << "sum = " << result << endl;
+        cout << "sum = " << result << endl;
     }
     cout << endl;
 }
