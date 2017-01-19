@@ -55,7 +55,7 @@ void generate_scalar(int number, const int x){
 void generate_array(COMPLEX array[], const int len, const int x){
     for(int i = 0; i < len; i++){
         array[i].r = ran(1, x);	//1 to x
-        array[i].i = 0;//ran(1, x);
+        array[i].i = ran(1, x);
 	}
 }                        //working
 
@@ -190,12 +190,6 @@ void array_powers(COMPLEX array[], const int len, const int power){/**/
 //void diagonal_matrix_powers(){      //empty
   //...
 //}
-void matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, LaGenMatComplex& result){
-    Blas_Mat_Mat_Mult(matrixA, matrixB, result);
-}
-void matrix_multiplication_trans(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, LaGenMatComplex& result){
-    Blas_Mat_Trans_Mat_Mult(matrixA, matrixB, result);
-}
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){ //working
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
@@ -337,14 +331,14 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     /* initial result */
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     /* A * B */
-    matrix_multiplication(matrixA, matrixB, result);
+    Blas_Mat_Mat_Mult(matrixA, matrixB, result);
     print_matrix(result, "Matrix A * Matrix B");
+    /* A^T * B */
+    Blas_Mat_Trans_Mat_Mult(matrixA, matrixB, result);
+    print_matrix(result, "Matrix A^T * Matrix B^T");
     /* A * B^T */
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    print_matrix(matrixA, "matrixA");
-    print_matrix(matrixB, "matrixB");
-    matrix_multiplication_trans(matrixA, matrixB, result);
-    print_matrix(result, "Matrix A * Matrix B^T");
+    Blas_Mat_Mat_Trans_Mult(matrix_size, matrix_size);
+    print_matrix(result, "Matrix A^T * Matrix B^T");
 }
 void test_idenpotent_exponential(){
 
