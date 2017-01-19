@@ -294,7 +294,7 @@ void test_scalar_exponential(const int iterations, const int max_rand){
     scalar_exponential_main(number, iterations, result);
     cout << "e^" << number << " = " << result << endl;
 }
-void test_scalar_exponential(COMPLEX& number; const int iterations, COMPLEX& result){
+void test_scalar_exponential(COMPLEX& number, const int iterations, COMPLEX& result){
     scalar_exponential_main(number, iterations, result);
     cout << "e^" << number << " = " << result << endl;
 }
