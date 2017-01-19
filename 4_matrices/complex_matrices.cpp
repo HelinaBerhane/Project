@@ -96,6 +96,12 @@ void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     laResult = laA * laB;
     result = laResult.toCOMPLEX();
 }         //to test
+scalar_product(const COMPLEX& total, const COMPLEX& number){
+    COMPLEX part;
+    part.r = (total.r * number.r) - (total.i * number.i);
+    part.i = (total.r * number.i) + (total.i * number.r);
+    total = part;
+}
 void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
     result.r = A.r / B;
     result.i = A.i / B;
@@ -115,7 +121,7 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     }
     result = laResult.toCOMPLEX();
 }             //to test
-void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& result){
+void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLEX& result){
     COMPLEX division, total_division, A;
     result.r = 1;
     result.i = 1;
@@ -127,9 +133,8 @@ void scalar_exponential_1(const COMPLEX& number, const int iterations, COMPLEX& 
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
             cout << "division = " << division << endl;
             cout << "total_division = " << total_division << endl;
-            A = total_division;
             scalar_division(number, i, division);
-            scalar_multiplication(A, division, total_division);
+            scalar_product(total_division, division);
         }
         scalar_addition(result, total_division);
         cout << "sum = " << result << endl;
@@ -202,7 +207,7 @@ void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatCompl
 
 /* Testing [3/3] */
 void test_scalar_manipulation(const int max_rand){
-    COMPLEX compA;                                                              //initialisation
+    COMPLEX compA;
     generate_scalar(compA, max_rand);
     COMPLEX compB;
     generate_scalar(compB, max_rand);
@@ -232,6 +237,15 @@ void test_scalar_manipulation(const int max_rand){
         cout << "scalar powers - A^" << i << " = " << result << endl;
     }
 
+    COMPLEX sum;
+    sum.r = 0;
+    sum.i = 0;
+    for(int i = 0; i < 5; i++){
+        cout << "sum(" << i << ") = " << sum << endl;
+        test_scalar_sum(COMPLEX sum, const COMPLEX compA);
+    }
+    cout << "sum = " << sum << endl;
+
 }                                       //to test
 void test_eigenvalues(const LaGenMatComplex& initialMatrix, const int size){
     LaVectorComplex eigenvalueVec = LaVectorComplex(size);             //initialise eigenstuff
@@ -255,15 +269,16 @@ void test_scalar_sum(const int max_rand, const int iterations){
     step = number;
     for(int i = 0; i < iterations; i++){
         cout << step << endl;
-        scalar_addition(number, number);
+        scalar_addition(number, step);
     }
     cout << number << endl;
 }
+void test_scalar_product(const int max_rand, const int iterations){
 void test_scalar_exponential(const int iterations, const int max_rand){
     COMPLEX number, result;
     generate_scalar(number, max_rand);
     cout << endl << "scalar exponential test no.: " << number << endl << endl;
-    scalar_exponential_1(number, iterations, result);
+    scalar_exponential_main(number, iterations, result);
     cout << "e^" << number << " = " << result << endl;
 }
 void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
@@ -287,11 +302,7 @@ int main(){
 //    test_eigenvalues(initialMatrix, matrix_size);
 
     /* test scalar manipulation */
-//    test_scalar_manipulation(4);
-
-    /* test scalar sum */
-    test_scalar_sum(4,3);
-
+    test_scalar_manipulation(4);
 
     /* test scalar product */
 
