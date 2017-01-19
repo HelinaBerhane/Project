@@ -371,6 +371,7 @@ int main(){
     /* test scalar manipulation */
 //    test_scalar_manipulation(4);
 
+    /* test matrix multiplication */
     test_matrix_multiplication(matrix_size, max_rand);
 
     /* test scalar exponentials */
