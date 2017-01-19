@@ -134,8 +134,6 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
     result.r = 1;
     result.i = 1;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
-        division.r = 0;
-        division.i = 0;
         total_division.r = 1;
         total_division.i = 0;
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
@@ -147,6 +145,7 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
         scalar_addition(result, total_division);
         cout << "sum = " << result << endl;
     }
+    cout << endl;
 }
 void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
     //COMPLEX power;
@@ -309,7 +308,7 @@ void test_idenpotent_exponential(){
         comp[i].r = elements[i];
         comp[i].i = 0;
     }
-    LaGenMatComplex initialMatrix = LaGenMatComplex(comp, 9, 9, false );
+    LaGenMatComplex initialMatrix = LaGenMatComplex(comp, 3, 3, false );
     cout << "initialMatrix = " << initialMatrix << endl;
 }
 
