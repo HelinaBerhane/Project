@@ -11,7 +11,6 @@ using namespace std;
 
 /* Total [13/20] */
 
-
 int ran(int a, int b){
     random_device rd;
     mt19937 gen(rd());
@@ -46,16 +45,16 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 
 /* Number generation [2/2] */
 void generate_scalar(COMPLEX& A, const int x){
-    A.r = ran() % x;	//1 to x
-    A.i = ran() % x;
+    A.r = ran(1, x);	//1 to x
+    A.i = ran(1, x);
 }                                           //working
 void generate_scalar(int number, const int x){
-    number = ran() % x;	//1 to x
+    number = ran(1, x);	//1 to x
 }                                                //working
 void generate_array(COMPLEX array[], const int len, const int x){
     for(int i = 0; i < len; i++){
-        array[i].r = ran() % x;	//1 to x
-        array[i].i = ran() % x;
+        array[i].r = ran(1, x);	//1 to x
+        array[i].i = ran(1, x);
 	}
 }                        //working
 
