@@ -187,11 +187,11 @@ void array_powers(COMPLEX array[], const int len, const int power){/**/
 }                       //empty
 
 /* Matrix manipulation [2/4] */
-void diagonal_matrix_powers(){      //empty
+//void diagonal_matrix_powers(){      //empty
   //...
-}
-void matrix_multiplication(){
-
+//}
+void matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, LaGenMatComplex& result){
+    Blas_Mat_Mat_Mult(matrixA, matrixB, result);
 }
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){ //working
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
@@ -319,9 +319,24 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
     array_to_diag(eigenexp, size, diagonaleigenexp);
     print_matrix(diagonaleigenexp, "exponential matrix");
     print_matrix(eigenvectors, "eigenvector matrix");}
-//void test_matrix_multiplication(matrix_size){
-
-//}
+void test_matrix_multiplication(const int matrix_size, const int max_rand){
+    int matrix_volume = matrix_size * matrix_size;
+    /* generate matrix A */
+    COMPLEX elementsA[matrix_volume];
+    generate_array(elementsA, matrix_volume, max_rand);
+	LaGenMatComplex matrixA = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+    print_matrix(matrixA, "Matrix A");
+    /* generate matrix B */
+    COMPLEX elementsB[matrix_volume];
+    generate_array(elementsB, matrix_volume, max_rand);
+	LaGenMatComplex matrixB = LaGenMatComplex(elementsB, matrix_size, matrix_size, false );
+    print_matrix(matrixB, "Matrix B");
+    /* initial result */
+    LaGenMatComplex result = LaGenMatComplex::zeros(size, size);
+    /* multiply */
+    matrix_multiplication(matrixA, matrixB, result);
+    print_matrix(result, "Matrix A * Matrix B");
+}
 void test_idenpotent_exponential(){
 
     // Generate the matrix
@@ -334,13 +349,13 @@ void test_idenpotent_exponential(){
     LaGenMatComplex initialMatrix = LaGenMatComplex(comp, 3, 3, false );
     cout << "initialMatrix = " << endl << initialMatrix << endl;
 
-    test_matrix_exponential(initialMatrix, 3);
     //calculate the exponential
+    test_matrix_exponential(initialMatrix, 3);
 }
 
 /* Main Program */
 int main(){
-//	int matrix_size = 3, max_rand = 9;
+	int matrix_size = 3, max_rand = 9;
 //    int matrix_volume = matrix_size * matrix_size;
 
 	/* generate the matrix */
@@ -356,9 +371,11 @@ int main(){
     /* test scalar manipulation */
 //    test_scalar_manipulation(4);
 
+    test_matrix_multiplication(matrix_size, max_rand);
+
     /* test scalar exponentials */
 //    test_scalar_exponential(5000,40);
-    test_idenpotent_exponential();
+//    test_idenpotent_exponential();
 
     /* test matrix exponentials */
     //test_matrix_exponential(initialMatrix, matrix_size);
