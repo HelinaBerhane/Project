@@ -96,7 +96,7 @@ void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     laResult = laA * laB;
     result = laResult.toCOMPLEX();
 }         //to test
-scalar_product(const COMPLEX& total, const COMPLEX& number){
+void scalar_product(const COMPLEX& total, const COMPLEX& number){
     COMPLEX part;
     part.r = (total.r * number.r) - (total.i * number.i);
     part.i = (total.r * number.i) + (total.i * number.r);
@@ -122,7 +122,7 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     result = laResult.toCOMPLEX();
 }             //to test
 void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLEX& result){
-    COMPLEX division, total_division, A;
+    COMPLEX division, total_division;
     result.r = 1;
     result.i = 1;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
@@ -242,7 +242,7 @@ void test_scalar_manipulation(const int max_rand){
     sum.i = 0;
     for(int i = 0; i < 5; i++){
         cout << "sum(" << i << ") = " << sum << endl;
-        test_scalar_sum(COMPLEX sum, const COMPLEX compA);
+        scalar_addition(COMPLEX sum, const COMPLEX compA);
     }
     cout << "sum = " << sum << endl;
 
@@ -274,6 +274,8 @@ void test_scalar_sum(const int max_rand, const int iterations){
     cout << number << endl;
 }
 void test_scalar_product(const int max_rand, const int iterations){
+    //...
+}
 void test_scalar_exponential(const int iterations, const int max_rand){
     COMPLEX number, result;
     generate_scalar(number, max_rand);
