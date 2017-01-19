@@ -5,7 +5,7 @@
 #include <gmc.h> 	//LaGenMatComplex
 #include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
 #include <blas3pp.h>
-#include <random>   //random_device, mt19937
+//#include <random>   //random_device, mt19937
 
 using namespace std;
 
@@ -334,8 +334,9 @@ int main(){
     /* test scalar product */
 
     /* test scalar exponentials */
-//    test_scalar_exponential(3,4);
+     test_scalar_exponential(3,4);
     test_idenpotent_exponential();
+
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
 }
