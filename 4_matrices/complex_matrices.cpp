@@ -138,18 +138,10 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
         total_division.i = 0;
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
             scalar_division(number, i, division);
-//            cout << number << " / " << i << " = " <<  division << endl;
-//            cout << total_division << " * " << division << " = ";
             scalar_product(total_division, division);
-//            cout << "division = " << division << endl;
-//            cout << "total_division = " << total_division << endl;
-            cout << "total_division = " << total_division << endl;
         }
         scalar_addition(result, total_division);
-        cout << "sum = " << result << endl;
-        cout << endl;
     }
-    cout << endl;
 }
 void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
     //COMPLEX power;
@@ -341,7 +333,7 @@ int main(){
     /* test scalar product */
 
     /* test scalar exponentials */
-    test_scalar_exponential(500,4);
+    test_scalar_exponential(5000,40);
 //    test_idenpotent_exponential();
 
     /* test inversion */
