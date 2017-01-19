@@ -355,7 +355,7 @@ void test_idenpotent_exponential(){
 
 /* Main Program */
 int main(){
-	int matrix_size = 3, max_rand = 9;
+	int matrix_size = 2, max_rand = 9;
 //    int matrix_volume = matrix_size * matrix_size;
 
 	/* generate the matrix */
