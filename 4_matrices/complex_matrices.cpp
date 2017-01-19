@@ -350,8 +350,6 @@ int main(){
     /* test scalar manipulation */
 //    test_scalar_manipulation(4);
 
-    /* test scalar product */
-
     /* test scalar exponentials */
 //    test_scalar_exponential(5000,40);
 //    test_idenpotent_exponential();
