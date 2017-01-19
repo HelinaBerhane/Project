@@ -305,7 +305,7 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
 void test_idenpotent_exponential(){
     int elements [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
     COMPLEX comp[9];
-    for(int i = 0; i < 9, i++){
+    for(int i = 0; i < 9; i++){
         comp[i].r = elements[i];
         comp[i].i = 0;
     }
