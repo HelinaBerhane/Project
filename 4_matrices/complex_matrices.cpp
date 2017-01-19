@@ -193,6 +193,9 @@ void array_powers(COMPLEX array[], const int len, const int power){/**/
 void matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, LaGenMatComplex& result){
     Blas_Mat_Mat_Mult(matrixA, matrixB, result);
 }
+void matrix_multiplication_trans(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, LaGenMatComplex& result){
+    Blas_Mat_Trans_Mat_Mult(matrixA, matrixB, result);
+}
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){ //working
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
@@ -333,9 +336,12 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     print_matrix(matrixB, "Matrix B");
     /* initial result */
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    /* multiply */
+    /* A * B */
     matrix_multiplication(matrixA, matrixB, result);
     print_matrix(result, "Matrix A * Matrix B");
+    /* A * B^T */
+    matrix_multiplication_trans(matrixA, matrixB, result);
+    print_matrix(result, "Matrix A * Matrix B^T");
 }
 void test_idenpotent_exponential(){
 
