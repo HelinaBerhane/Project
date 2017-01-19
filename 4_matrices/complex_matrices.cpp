@@ -294,6 +294,10 @@ void test_scalar_exponential(const int iterations, const int max_rand){
     scalar_exponential_main(number, iterations, result);
     cout << "e^" << number << " = " << result << endl;
 }
+void test_scalar_exponential(COMPLEX& number; const int iterations, COMPLEX& result){
+    scalar_exponential_main(number, iterations, result);
+    cout << "e^" << number << " = " << result << endl;
+}
 void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int size){
 
     LaVectorComplex eigenvalueVec = LaVectorComplex(size);             //initialise eigenstuff
@@ -301,9 +305,12 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(size, size);
     matrix_eigenvstuff(initialMatrix, eigenvalueVec, eigenvectors); //calculate eigenstuff
     print_matrix(eigenvalueVec, "eigenvalue vector");               //print eigenstuff
+    COMPLEX result;
     for(int i = 0; i < size; i++){
-        cout << "eigenvalue(" << i << ") = " <<  eigenvalueVec(i) << endl;
+        test_scalar_exponential(eigenvalueVec(i), 5000, result);
     }
+    cout << endl;
+
     vec_to_diag(eigenvalueVec, size, eigenvalues);
     print_matrix(eigenvalues, "eigenvalue matrix");
     print_matrix(eigenvectors, "eigenvector matrix");}
