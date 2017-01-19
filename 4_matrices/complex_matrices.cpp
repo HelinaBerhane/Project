@@ -96,7 +96,7 @@ void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     laResult = laA * laB;
     result = laResult.toCOMPLEX();
 }         //to test
-void scalar_product(const COMPLEX& total, const COMPLEX& number){
+void scalar_product(COMPLEX& total, const COMPLEX& number){
     COMPLEX part;
     part.r = (total.r * number.r) - (total.i * number.i);
     part.i = (total.r * number.i) + (total.i * number.r);
@@ -242,7 +242,7 @@ void test_scalar_manipulation(const int max_rand){
     sum.i = 0;
     for(int i = 0; i < 5; i++){
         cout << "sum(" << i << ") = " << sum << endl;
-        scalar_addition(COMPLEX sum, const COMPLEX compA);
+        scalar_addition(sum, compA);
     }
     cout << "sum = " << sum << endl;
 
