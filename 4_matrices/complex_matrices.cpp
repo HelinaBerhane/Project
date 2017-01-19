@@ -10,6 +10,14 @@ using namespace std;
 
 /* Total [13/20] */
 
+
+int ran(int a, int b){
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dist(a, b);
+    return dist(gen);
+}
+
 /* Printing [6/9] */
 void print_scalar(const COMPLEX scalar){
     cout << scalar << endl;
@@ -37,17 +45,16 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 
 /* Number generation [2/2] */
 void generate_scalar(COMPLEX& A, const int x){
-    A.r = rand() % x;	//1 to x
-    A.i = rand() % x;
+    A.r = ran() % x;	//1 to x
+    A.i = ran() % x;
 }                                           //working
-void generate_scalar(int A, const int x){
-    A = rand() % x;	//1 to x
+void generate_scalar(int number, const int x){
+    number = ran() % x;	//1 to x
 }                                                //working
 void generate_array(COMPLEX array[], const int len, const int x){
-	srand(time(NULL));				//seed
     for(int i = 0; i < len; i++){
-        array[i].r = rand() % x;	//1 to x
-        array[i].i = rand() % x;
+        array[i].r = ran() % x;	//1 to x
+        array[i].i = ran() % x;
 	}
 }                        //working
 
