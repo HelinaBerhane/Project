@@ -215,6 +215,11 @@ void test_scalar_manipulation(const int max_rand){
     generate_scalar(realB, max_rand);
     COMPLEX result;
 
+    cout << "compA = " << compA << endl;
+    cout << "compB = " << compB << endl;
+    cout << "realB = " << realB << endl;
+    cout << endl;
+
     for(int i = 1; i < 5; i++){                                                 //factorials
         cout << "factorial(" << i << "): " << factorial(i) << endl;
     }
@@ -224,11 +229,13 @@ void test_scalar_manipulation(const int max_rand){
 
     scalar_multiplication(compA, realB, result);                                //multiplication
     cout << "scalar multiplication by scalar: " << result << endl << endl;
+
     scalar_multiplication(compA, compB, result);
     cout << "scalar multiplication by complex: " << result << endl << endl;
 
-    scalar_division(compA, realB, result);                                      //division
+    scalar_division(compA, realB, result);         //division
     cout << "scalar division by scalar: " << result << endl << endl;
+
     scalar_division(compA, compB, result);
     cout << "scalar division by complex: " << result << endl << endl;
 
@@ -236,6 +243,7 @@ void test_scalar_manipulation(const int max_rand){
         scalar_powers(compA, i, result);
         cout << "scalar powers - A^" << i << " = " << result << endl;
     }
+    cout << endl;
 
     COMPLEX sum;
     sum.r = 0;
