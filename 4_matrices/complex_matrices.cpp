@@ -309,7 +309,7 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
     //calculate exponentials
     COMPLEX eigenexp[size];
     for(int i = 0; i < size; i++){
-        test_scalar_exponential(eigenvalueVec(i), 5000, eigenexp(i));
+        test_scalar_exponential(eigenvalueVec(i), 5000, eigenexp[i];
     }
     cout << endl;
     // save to diagonal
