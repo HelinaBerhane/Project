@@ -324,7 +324,7 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     /* generate matrix A */
     COMPLEX elementsA[matrix_volume];
     generate_array(elementsA, matrix_volume, max_rand);
-	LaGenMatComplex matrixA = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+	LaGenMatComplex matrixA = LaGenMatComplex(elementsA, matrix_size, matrix_size, false );
     print_matrix(matrixA, "Matrix A");
     /* generate matrix B */
     COMPLEX elementsB[matrix_volume];
@@ -332,7 +332,7 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
 	LaGenMatComplex matrixB = LaGenMatComplex(elementsB, matrix_size, matrix_size, false );
     print_matrix(matrixB, "Matrix B");
     /* initial result */
-    LaGenMatComplex result = LaGenMatComplex::zeros(size, size);
+    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     /* multiply */
     matrix_multiplication(matrixA, matrixB, result);
     print_matrix(result, "Matrix A * Matrix B");
