@@ -319,9 +319,9 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
     array_to_diag(eigenexp, size, diagonaleigenexp);
     print_matrix(diagonaleigenexp, "exponential matrix");
     print_matrix(eigenvectors, "eigenvector matrix");}
-void test_matrix_multiplication(matrix_size){
+//void test_matrix_multiplication(matrix_size){
 
-}
+//}
 void test_idenpotent_exponential(){
 
     // Generate the matrix
