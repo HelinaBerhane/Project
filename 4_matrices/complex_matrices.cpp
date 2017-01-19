@@ -132,7 +132,7 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
 void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLEX& result){
     COMPLEX division, total_division;
     result.r = 1;
-    result.i = 1;
+    result.i = 0 ;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
         total_division.r = 1;
         total_division.i = 0;
@@ -302,6 +302,8 @@ void test_matrix_exponential(const LaGenMatComplex& initialMatrix, const int siz
     //...
 }
 void test_idenpotent_exponential(){
+
+    // Generate the matrix
     int elements [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
     COMPLEX comp[9];
     for(int i = 0; i < 9; i++){
@@ -309,7 +311,9 @@ void test_idenpotent_exponential(){
         comp[i].i = 0;
     }
     LaGenMatComplex initialMatrix = LaGenMatComplex(comp, 3, 3, false );
-    cout << "initialMatrix = " << initialMatrix << endl;
+    cout << "initialMatrix = " << endl << initialMatrix << endl;
+
+    //calculate the exponential
 }
 
 /* Main Program */
@@ -333,8 +337,8 @@ int main(){
     /* test scalar product */
 
     /* test scalar exponentials */
-     test_scalar_exponential(3,4);
-    test_idenpotent_exponential();
+    test_scalar_exponential(3,4);
+//    test_idenpotent_exponential();
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
