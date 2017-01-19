@@ -12,10 +12,11 @@ using namespace std;
 /* Total [13/20] */
 
 int ran(int a, int b){
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> dist(a, b);
-    return dist(gen);
+//    random_device rd;
+//    mt19937 gen(rd());
+//    uniform_int_distribution<> dist(a, b);
+//    return dist(gen);
+    return rand() % b;
 }
 
 /* Printing [6/9] */
