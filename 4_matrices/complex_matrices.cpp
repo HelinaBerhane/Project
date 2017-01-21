@@ -55,7 +55,7 @@ void generate_scalar(int number, const int x){
 void generate_array(COMPLEX array[], const int len, const int x){
     for(int i = 0; i < len; i++){
         array[i].r = ran(1, x);	//1 to x
-        array[i].i = 0;//ran(1, x);
+        array[i].i = 1;//ran(1, x);
 	}
 }                        //working
 
@@ -337,14 +337,14 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     print_matrix(result, "0");
     Blas_Mat_Trans_Mat_Mult(matrixA, matrixB, result);
-    print_matrix(result, "Matrix A^T * Matrix B^T");
+    print_matrix(result, "Matrix A^T * Matrix B");
     /* A * B^T */
     print_matrix(matrixA, "Matrix A");
     print_matrix(matrixB, "Matrix B");
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     print_matrix(result, "0");
     Blas_Mat_Mat_Trans_Mult(matrixA, matrixB, result);
-    print_matrix(result, "Matrix A^T * Matrix B^T");
+    print_matrix(result, "Matrix A * Matrix B^T");
 }
 void test_idenpotent_exponential(){
 
