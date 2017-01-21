@@ -1,4 +1,7 @@
-#include <iostream> //cout
+int main(int argc, char const *argv[]) {
+    /* code */
+    return 0;
+}#include <iostream> //cout
 #include <cstdlib>	//rand, sran
 #include <string>
 #include "complex_matrices.h"
@@ -187,7 +190,7 @@ void array_powers(COMPLEX array[], const int len, const int power){/**/
 }                       //empty
 
 /* Matrix manipulation [2/4] */
-//void diagonal_matrix_powers(){      //empty
+//void diagonal_matrix_powers(){
   //...
 //}
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){ //working
@@ -339,6 +342,8 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     Blas_Mat_Trans_Mat_Mult(matrixA, matrixB, result);
     print_matrix(result, "Matrix A^T * Matrix B^T");
     /* A * B^T */
+    print_matrix(matrixA, "Matrix A");
+    print_matrix(matrixB, "Matrix B");
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     print_matrix(result, "0");
     Blas_Mat_Mat_Trans_Mult(matrixA, matrixB, result);
