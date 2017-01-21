@@ -418,6 +418,7 @@ int main(){
 //    test_scalar_exponential(5000,40);
 //    test_idenpotent_exponential();
 
+
     /* test matrix exponentials */
     test_matrix_exponential(matrix_size, max_rand);
 
