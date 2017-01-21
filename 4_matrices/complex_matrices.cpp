@@ -363,7 +363,7 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     Blas_Mat_Mat_Mult(transposeA, transposeB, result);
     print_matrix(result, "Matrix A^T * Matrix B^T");
 }
-void test_matrix_exponential(const int size, const int max_rand){
+void test_matrix_exponential(const int matrix_size, const int max_rand){
     int matrix_volume = matrix_size * matrix_size;
     LaGenMatComplex matrix;
     LaGenMatComplex result;
@@ -372,9 +372,9 @@ void test_matrix_exponential(const int size, const int max_rand){
     generate_array(elements, matrix_volume, max_rand);
 	matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
     print_matrix(matrix, "initial matrix");
-    result = LaGenMatComplex::zeros(size, size);
+    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     /* calculate exponential */
-    matrix_exponential(matrix, size, result);
+    matrix_exponential(matrix, matrix_size, result);
     print_matrix(result, "e^(matrix)");
 }
 void test_idenpotent_exponential(){
@@ -388,12 +388,12 @@ void test_idenpotent_exponential(){
     LaGenMatComplex initialMatrix = LaGenMatComplex(comp, 3, 3, false );
     cout << "initialMatrix = " << endl << initialMatrix << endl;
     //calculate the exponential
-    test_matrix_exponential(initialMatrix, 3);
+    matrix_exponential(initialMatrix, 3);
 }
 
 /* Main Program */
 int main(){
-//	int matrix_size = 2, max_rand = 9;
+	int matrix_size = 2, max_rand = 9;
 //    int matrix_volume = matrix_size * matrix_size;
 
 	/* generate the matrix */
@@ -416,7 +416,7 @@ int main(){
 //    test_idenpotent_exponential();
 
     /* test matrix exponentials */
-    test_matrix_exponential(initialMatrix, matrix_size);
+    test_matrix_exponential(matrix_size, max_rand);
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
