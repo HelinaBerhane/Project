@@ -1,7 +1,4 @@
-int main(int argc, char const *argv[]) {
-    /* code */
-    return 0;
-}#include <iostream> //cout
+#include <iostream> //cout
 #include <cstdlib>	//rand, sran
 #include <string>
 #include "complex_matrices.h"
@@ -190,7 +187,7 @@ void array_powers(COMPLEX array[], const int len, const int power){/**/
 }                       //empty
 
 /* Matrix manipulation [2/4] */
-//void diagonal_matrix_powers(){
+//void diagonal_matrix_powers(){      //empty
   //...
 //}
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){ //working
