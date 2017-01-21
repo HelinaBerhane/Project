@@ -350,7 +350,7 @@ void test_matrix_exponential(const LaGenMatComplex& matrix, const int size){
     LaGenMatComplex UTD = LaGenMatComplex::zeros(size, size);
     LaGenMatComplex result = LaGenMatComplex::zeros(size, size);
     //calculate eigenstuff
-    matrix_eigenvstuff(initialMatrix, eigenvalueVec, eigenvectors);
+    matrix_eigenvstuff(matrix, eigenvalueVec, eigenvectors);
     print_matrix(eigenvalueVec, "eigenvalue vector");
     //calculate exponentials
     COMPLEX eigenexp[size];
