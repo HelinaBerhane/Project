@@ -200,12 +200,34 @@ void matrix_inverse(LaGenMatComplex& matrix, int len){                          
     LUFactorizeIP(matrix, PIV);
     LaLUInverseIP(matrix, PIV);
 }
-void matrix_exp_step(){                                 //empty
-    //
-}
-void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatComplex& eigenvalues){
-    //LaGenMatComplex step = LaGenMatComplex
-
+void matrix_exponential(const LaGenMatComplex& matrix, const int size, LaGenMatComplex& result){
+    //initialise eigenstuff
+    LaVectorComplex eigenvalueVec = LaVectorComplex(size);
+    LaGenMatComplex diagonaleigenexp = LaGenMatComplex::zeros(size, size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(size, size);
+    LaGenMatComplex eigenvectortrans = LaGenMatComplex::zeros(size, size);
+    LaGenMatComplex UTD = LaGenMatComplex::zeros(size, size);
+    //calculate eigenstuff
+    matrix_eigenvstuff(matrix, eigenvalueVec, eigenvectors);
+    print_matrix(eigenvalueVec, "eigenvalue vector");
+    //calculate exponentials
+    COMPLEX eigenexp[size];
+    for(int i = 0; i < size; i++){
+        test_scalar_exponential(eigenvalueVec(i), 5000, eigenexp[i]);
+    }
+    cout << endl;
+    // save to diagonal
+    array_to_diag(eigenexp, size, diagonaleigenexp);
+    print_matrix(diagonaleigenexp, "exponential matrix");
+    print_matrix(eigenvectors, "eigenvector matrix");
+    /* calculate U^T */
+    matrix_transpose(eigenvectors, size, eigenvectortrans);
+    print_matrix(eigenvectortrans, "transpose eigenvector matrix");
+    /* multiply results */
+    Blas_Mat_Mat_Mult(eigenvectortrans, diagonaleigenexp, UTD);
+    print_matrix(UTD, "UTD");
+    Blas_Mat_Mat_Mult(UTD, eigenvectors, result);
+    print_matrix(result, "result");
 } //empty
 void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -341,38 +363,21 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     Blas_Mat_Mat_Mult(transposeA, transposeB, result);
     print_matrix(result, "Matrix A^T * Matrix B^T");
 }
-void test_matrix_exponential(const LaGenMatComplex& matrix, const int size){
-    //initialise eigenstuff
-    LaVectorComplex eigenvalueVec = LaVectorComplex(size);
-    LaGenMatComplex diagonaleigenexp = LaGenMatComplex::zeros(size, size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(size, size);
-    LaGenMatComplex eigenvectortrans = LaGenMatComplex::zeros(size, size);
-    LaGenMatComplex UTD = LaGenMatComplex::zeros(size, size);
-    LaGenMatComplex result = LaGenMatComplex::zeros(size, size);
-    //calculate eigenstuff
-    matrix_eigenvstuff(matrix, eigenvalueVec, eigenvectors);
-    print_matrix(eigenvalueVec, "eigenvalue vector");
-    //calculate exponentials
-    COMPLEX eigenexp[size];
-    for(int i = 0; i < size; i++){
-        test_scalar_exponential(eigenvalueVec(i), 5000, eigenexp[i]);
-    }
-    cout << endl;
-    // save to diagonal
-    array_to_diag(eigenexp, size, diagonaleigenexp);
-    print_matrix(diagonaleigenexp, "exponential matrix");
-    print_matrix(eigenvectors, "eigenvector matrix");
-    /* calculate U^T */
-    matrix_transpose(eigenvectors, size, eigenvectortrans);
-    print_matrix(eigenvectortrans, "transpose eigenvector matrix");
-    /* multiply results */
-    Blas_Mat_Mat_Mult(eigenvectortrans, diagonaleigenexp, UTD);
-    print_matrix(UTD, "UTD");
-    Blas_Mat_Mat_Mult(UTD, eigenvectors, result);
-    print_matrix(result, "result");
+void test_matrix_exponential(const int size, const int max_rand){
+    int matrix_volume = matrix_size * matrix_size;
+    LaGenMatComplex matrix;
+    LaGenMatComplex result;
+    COMPLEX elements[matrix_volume];
+    /* initialise stuff */
+    generate_array(elements, matrix_volume, max_rand);
+	matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+    print_matrix(matrix, "initial matrix");
+    result = LaGenMatComplex::zeros(size, size);
+    /* calculate exponential */
+    matrix_exponential(matrix, size, result);
+    print_matrix(result, "e^(matrix)");
 }
 void test_idenpotent_exponential(){
-
     // Generate the matrix
     int elements [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
     COMPLEX comp[9];
@@ -382,22 +387,20 @@ void test_idenpotent_exponential(){
     }
     LaGenMatComplex initialMatrix = LaGenMatComplex(comp, 3, 3, false );
     cout << "initialMatrix = " << endl << initialMatrix << endl;
-
     //calculate the exponential
     test_matrix_exponential(initialMatrix, 3);
 }
 
 /* Main Program */
 int main(){
-	int matrix_size = 2, max_rand = 9;
-    int matrix_volume = matrix_size * matrix_size;
+//	int matrix_size = 2, max_rand = 9;
+//    int matrix_volume = matrix_size * matrix_size;
 
 	/* generate the matrix */
-    COMPLEX elements[matrix_volume];
-    generate_array(elements, matrix_volume, max_rand);
-	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
-
-    print_matrix(initialMatrix, "initial matrix");
+//    COMPLEX elements[matrix_volume];
+//    generate_array(elements, matrix_volume, max_rand);
+//	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+//    print_matrix(initialMatrix, "initial matrix");
 
     /* test eigenvalues */
 //    test_eigenvalues(initialMatrix, matrix_size);
