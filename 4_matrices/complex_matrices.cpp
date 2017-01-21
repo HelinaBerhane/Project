@@ -361,15 +361,16 @@ void test_matrix_exponential(const LaGenMatComplex& matrix, const int size){
     // save to diagonal
     array_to_diag(eigenexp, size, diagonaleigenexp);
     print_matrix(diagonaleigenexp, "exponential matrix");
-    print_matrix(eigenvectors, "eigenvector matrix");}
+    print_matrix(eigenvectors, "eigenvector matrix");
     /* calculate U^T */
     matrix_transpose(eigenvectors, size, eigenvectortrans);
     print_matrix(eigenvectortrans, "transpose eigenvector matrix");
     /* multiply results */
-    //Blas_Mat_Mat_Mult(eigenvectortrans, diagonaleigenexp, UTD);
+    Blas_Mat_Mat_Mult(eigenvectortrans, diagonaleigenexp, UTD);
     print_matrix(UTD, "UTD");
-    //Blas_Mat_Mat_Mult(UTD, eigenvectors, result);
+    Blas_Mat_Mat_Mult(UTD, eigenvectors, result);
     print_matrix(result, "result");
+}
 void test_idenpotent_exponential(){
 
     // Generate the matrix
