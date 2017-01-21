@@ -1,11 +1,3 @@
-#ifndef COM_MAT_H
-#define COM_MAT_H
-#define LA_COMPLEX_SUPPORT
-
-#include <gmc.h> 	//LaGenMatComplex
-#include <lavc.h> //LaVectorComplex
-#include <string>
-
 void print_scalar(const COMPLEX scalar);
 void print_scalar(const COMPLEX scalar, const string name);
 void print_array(const COMPLEX array[], int len);
@@ -45,6 +37,3 @@ void test_scalar_exponential(COMPLEX& number, const int iterations, COMPLEX& res
 void test_matrix_multiplication(const int matrix_size, const int max_rand);
 void test_matrix_exponential(const int size, const int max_rand);
 void test_idenpotent_exponential();
-
-
-#endif
