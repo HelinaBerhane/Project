@@ -209,14 +209,11 @@ void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatCompl
 } //empty
 void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    cout << result << endl;
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
             result(i, j) = matrix(j, i);
-            cout << result(i, j) << " ";
         }
     }
-    cout << endl << matrix << endl;
 }
 
 /* Testing [3/3] */
@@ -334,10 +331,6 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     generate_array(elementsA, matrix_volume, max_rand);
 	LaGenMatComplex matrixA = LaGenMatComplex(elementsA, matrix_size, matrix_size, false );
     print_matrix(matrixA, "Matrix A");
-    /* transpose test */
-    LaGenMatComplex transpose;
-    matrix_transpose(matrixA, matrix_size, transpose);
-    print_matrix(transpose, "transpose A");
     /* generate matrix B */
     COMPLEX elementsB[matrix_volume];
     generate_array(elementsB, matrix_volume, max_rand);
@@ -345,22 +338,24 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     print_matrix(matrixB, "Matrix B");
     LaComplex alpha = 1.0;
     LaComplex beta = 0.0;
-    /* initial result */
+    /* generate matrix A^T */
+    LaGenMatComplex transposeA;
+    matrix_transpose(matrixA, matrix_size, transposeA);
+    print_matrix(transposeA, "transpose A");
+    /* generate matrix B^T */
+    LaGenMatComplex transposeB;
+    matrix_transpose(matrixB, matrix_size, transposeB);
+    print_matrix(transposeB, "transpose B");
+    /* initialise result */
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     /* A * B */
     Blas_Mat_Mat_Mult(matrixA, matrixB, result);
     print_matrix(result, "Matrix A * Matrix B");
     /* A^T * B */
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    print_matrix(result, "0");
-    Blas_Mat_Trans_Mat_Mult(matrixA, matrixB, result);
+    Blas_Mat_Mat_Mult(transposeA, matrixB, result);
     print_matrix(result, "Matrix A^T * Matrix B");
     /* A * B^T */
-    print_matrix(matrixA, "Matrix A");
-    print_matrix(matrixB, "Matrix B");
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    print_matrix(result, "0");
-    Blas_Mat_Mat_Trans_Mult(matrixA, matrixB, result);
+    Blas_Mat_Mat_Mult(matrixA, transposeB, result);
     print_matrix(result, "Matrix A * Matrix B^T");
 }
 void test_idenpotent_exponential(){
