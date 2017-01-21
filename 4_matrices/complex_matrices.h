@@ -7,11 +7,11 @@
 #include <string>
 
 void print_scalar(const COMPLEX scalar);
-void print_scalar(const COMPLEX scalar, const string name);
+void print_scalar(const COMPLEX scalar, const std::string name);
 void print_array(const COMPLEX array[], int len);
-void print_array(const COMPLEX array[], int len, const string name);
+void print_array(const COMPLEX array[], int len, const std::string name);
 void print_matrix(const LaGenMatComplex& matrix);
-void print_matrix(const LaGenMatComplex& matrix, const string name);
+void print_matrix(const LaGenMatComplex& matrix, const std::string name);
 void generate_scalar(COMPLEX& A, const int x);
 void generate_scalar(int number, const int x);
 void generate_array(COMPLEX array[], const int len, const int x);
