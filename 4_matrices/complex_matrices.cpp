@@ -328,22 +328,24 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     generate_array(elementsB, matrix_volume, max_rand);
 	LaGenMatComplex matrixB = LaGenMatComplex(elementsB, matrix_size, matrix_size, false );
     print_matrix(matrixB, "Matrix B");
+    LaComplex alpha = 1.0;
+    LaComplex beta = 0.0;
     /* initial result */
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     /* A * B */
-    Blas_Mat_Mat_Mult(matrixA, matrixB, result, false, false, 1.0, 0.0);
+    Blas_Mat_Mat_Mult(matrixA, matrixB, result, false, false, alpha, beta);
     print_matrix(result, "Matrix A * Matrix B");
     /* A^T * B */
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     print_matrix(result, "0");
-    Blas_Mat_Trans_Mat_Mult(matrixA, matrixB, result, false, false, 1.0, 0.0);
+    Blas_Mat_Trans_Mat_Mult(matrixA, matrixB, result, false, false, alpha, beta);
     print_matrix(result, "Matrix A^T * Matrix B");
     /* A * B^T */
     print_matrix(matrixA, "Matrix A");
     print_matrix(matrixB, "Matrix B");
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     print_matrix(result, "0");
-    Blas_Mat_Mat_Trans_Mult(matrixA, matrixB, result, false, false, 1.0, 0.0);
+    Blas_Mat_Mat_Trans_Mult(matrixA, matrixB, result, false, false, alpha, beta);
     print_matrix(result, "Matrix A * Matrix B^T");
 }
 void test_idenpotent_exponential(){
