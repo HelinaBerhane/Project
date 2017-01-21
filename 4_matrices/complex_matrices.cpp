@@ -357,6 +357,9 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     /* A * B^T */
     Blas_Mat_Mat_Mult(matrixA, transposeB, result);
     print_matrix(result, "Matrix A * Matrix B^T");
+    /* A^T * B^T */
+    Blas_Mat_Mat_Mult(transposeA, transposeB, result);
+    print_matrix(result, "Matrix A^T * Matrix B^T");
 }
 void test_idenpotent_exponential(){
 
