@@ -385,10 +385,13 @@ void test_idenpotent_exponential(){
         comp[i].r = elements[i];
         comp[i].i = 0;
     }
-    LaGenMatComplex initialMatrix = LaGenMatComplex(comp, 3, 3, false );
-    cout << "initialMatrix = " << endl << initialMatrix << endl;
-    //calculate the exponential
-    matrix_exponential(initialMatrix, 3);
+    LaGenMatComplex matrix = LaGenMatComplex(comp, 3, 3, false );
+    print_matrix(matrix, "initial matrix");
+    /* calculate the exponential */
+    LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
+    matrix_exponential(matrix, 3, result);
+    print_matrix(result, "result");
+
 }
 
 /* Main Program */
