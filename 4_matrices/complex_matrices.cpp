@@ -207,7 +207,7 @@ void matrix_exponential(const LaGenMatComplex& eigenvectors, const LaGenMatCompl
     //LaGenMatComplex step = LaGenMatComplex
 
 } //empty
-void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, const LaGenMatComplex& result){
+void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     cout << result << endl;
     for(int i = 0; i < matrix_size; i++){
