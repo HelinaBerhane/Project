@@ -218,7 +218,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int size, const int
     cout << endl;
     // save to diagonal
     array_to_diag(eigenexp, size, diagonaleigenexp);
-    //print_matrix(diagonaleigenexp, "exponential matrix");
+    print_matrix(diagonaleigenexp, "exponential matrix");
     //print_matrix(eigenvectors, "eigenvector matrix");
     /* calculate U^T */
     matrix_transpose(eigenvectors, size, eigenvectortrans);
