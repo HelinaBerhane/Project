@@ -223,7 +223,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int size, const int
     matrix_transpose(eigenvectors, size, eigenvectortrans);
     /* print steps */
     print_matrix(eigenvectortrans, "U^T");
-    print_array(eigenexp, "D");
+    print_array(eigenexp, size, "D");
     print_matrix(eigenvectors, "U");
     /* multiply results */
     Blas_Mat_Mat_Mult(eigenvectortrans, diagonaleigenexp, UTD);
