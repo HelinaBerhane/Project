@@ -194,7 +194,7 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
     */
 //}                       //empty
 
-/* Matrix manipulation [4/4] */
+/* Matrix manipulation [6/6] */
 //void diagonal_matrix_powers(){      //empty
   //...
 //}
@@ -252,26 +252,26 @@ void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){
     Blas_Mat_Mat_Mult(product, matrix, result);
     product = result.copy();
 }//working
-void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, LaGenMatComplex& result){//WIP
+void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, LaGenMatComplex& result){
     result = matrixA.copy();
-    print_matrix(result, "A");
+    //print_matrix(result, "A");
     /* AB */
-    print_matrix(matrixB, "B");
+    //print_matrix(matrixB, "B");
     matrix_product(matrixB, result);
-    print_matrix(result, "AB");
+    //print_matrix(result, "AB");
     /* ABC */
-    print_matrix(matrixC, "C");
+    //print_matrix(matrixC, "C");
     matrix_product(matrixC, result);
-    print_matrix(result, "ABC");
+    //print_matrix(result, "ABC");
     /* ABCD */
-    print_matrix(matrixD, "D");
+    //print_matrix(matrixD, "D");
     matrix_product(matrixD, result);
-    print_matrix(result, "ABCD");
+    //print_matrix(result, "ABCD");
     /* ABCDE */
-    print_matrix(matrixE, "E");
+    //print_matrix(matrixE, "E");
     matrix_product(matrixE, result);
-    print_matrix(result, "ABCDE");
-}
+    //print_matrix(result, "ABCDE");
+}//working
 
 /* Testing [9/11] */
 void test_scalar_manipulation(const int max_rand){
@@ -427,6 +427,7 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     generate_matrix(matrix_size, max_rand, matrixE);
     /* ABCDE */
     five_matrix_multiplication(matrixA, matrixB, matrixC, matrixD, matrixE, result);
+    print_matrix(result, "ABCDE")
 }
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
     int matrix_volume = matrix_size * matrix_size;
