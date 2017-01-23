@@ -387,7 +387,10 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     LaGenMatComplex matrixE = LaGenMatComplex(elements, matrix_size, matrix_size, false);
     print_matrix(matrixE, "Matrix E");
     /* A^T B^T C */
+    print_matrix(result, "A^T B^T");
+    print_matrix(matrixC, "C");
     matrix_product(matrixE, result);
+    print_matrix(result, "A^T B^T C");
     //five_matrix_multiplication(matrixA, matrixB, matrixC, matrixD, matrixE, result);
 }//working
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
