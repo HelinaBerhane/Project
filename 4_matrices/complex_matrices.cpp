@@ -16,7 +16,7 @@ int ran(int a, int b){//WIP
     //mt19937 gen(rd());
     //uniform_int_distribution<> dist(a, b);
     //return dist(gen);
-    //return rand() % b;
+    return rand() % b;
 }
 
 /* Printing [6/6] */
@@ -241,14 +241,14 @@ void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGe
         }
     }
 }//working
-void matrix_product(const LaGenMatComplex& matrix, const LaGenMatComplex& product){//to test
+void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){//to test
     LaGenMatComplex result = matrix.copy();
     Blas_Mat_Mat_Mult(matrix, product, result);
     product = result.copy();
 }
 void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, const LaGenMatComplex& result){
     /* AB */
-    Blas_Mat_Mat_Mult()
+    //Blas_Mat_Mat_Mult()
     /* ABC */
     /* ABCD */
     /* ABCDE */
@@ -346,14 +346,13 @@ void test_scalar_exponential(COMPLEX& number, const int iterations, COMPLEX& res
 void test_matrix_multiplication(const int matrix_size, const int max_rand){
     int matrix_volume = matrix_size * matrix_size;
     /* generate matrix A */
-    COMPLEX elementsA[matrix_volume];
-    generate_array(elementsA, matrix_volume, max_rand);
-	LaGenMatComplex matrixA = LaGenMatComplex(elementsA, matrix_size, matrix_size, false );
+    COMPLEX elements[matrix_volume];
+    generate_array(elements, matrix_volume, max_rand);
+	LaGenMatComplex matrixA = LaGenMatComplex(elements, matrix_size, matrix_size, false );
     print_matrix(matrixA, "Matrix A");
     /* generate matrix B */
-    COMPLEX elementsB[matrix_volume];
-    generate_array(elementsB, matrix_volume, max_rand);
-	LaGenMatComplex matrixB = LaGenMatComplex(elementsB, matrix_size, matrix_size, false );
+    generate_array(elements, matrix_volume, max_rand);
+	LaGenMatComplex matrixB = LaGenMatComplex(elements, matrix_size, matrix_size, false );
     print_matrix(matrixB, "Matrix B");
     /* generate matrix A^T */
     LaGenMatComplex transposeA;
@@ -377,6 +376,18 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     /* A^T * B^T */
     Blas_Mat_Mat_Mult(transposeA, transposeB, result);
     print_matrix(result, "Matrix A^T * Matrix B^T");
+    /* generate matrix CDE */
+    generate_array(elements, matrix_volume, max_rand);
+	LaGenMatComplex matrixC = LaGenMatComplex(elements, matrix_size, matrix_size, false);
+    print_matrix(matrixC, "Matrix C");
+    generate_array(elements, matrix_volume, max_rand);
+    LaGenMatComplex matrixD = LaGenMatComplex(elements, matrix_size, matrix_size, false);
+    print_matrix(matrixD, "Matrix D");
+    generate_array(elements, matrix_volume, max_rand);
+    LaGenMatComplex matrixE = LaGenMatComplex(elements, matrix_size, matrix_size, false);
+    print_matrix(matrixE, "Matrix E");
+    /* ABCDE */
+
 }//working
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
     int matrix_volume = matrix_size * matrix_size;
