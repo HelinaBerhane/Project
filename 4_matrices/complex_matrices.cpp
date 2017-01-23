@@ -256,15 +256,19 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     result = matrixA.copy();
     print_matrix(result, "A");
     /* AB */
+    print_matrix(matrixB, "B");
     matrix_product(matrixB, result);
     print_matrix(result, "AB");
     /* ABC */
+    print_matrix(matrixC, "C");
     matrix_product(matrixC, result);
     print_matrix(result, "ABC");
     /* ABCD */
+    print_matrix(matrixD, "D");
     matrix_product(matrixD, result);
     print_matrix(result, "ABCD");
     /* ABCDE */
+    print_matrix(matrixE, "E");
     matrix_product(matrixE, result);
     print_matrix(result, "ABCDE");
 }
