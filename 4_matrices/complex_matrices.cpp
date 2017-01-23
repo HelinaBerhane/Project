@@ -259,7 +259,7 @@ void test_scalar_manipulation(const int max_rand){
     generate_scalar(compA, max_rand);
     COMPLEX compB;
     generate_scalar(compB, max_rand);
-    int realB;
+    int realB = 0;
     generate_scalar(realB, max_rand);
     COMPLEX result;
 
@@ -441,11 +441,11 @@ int main(){
 //    test_scalar_manipulation(4);
 
     /* test matrix multiplication */
-//    test_matrix_multiplication(matrix_size, max_rand);
+    test_matrix_multiplication(matrix_size, max_rand);
 
     /* test scalar exponentials */
 //    test_scalar_exponential(5000,40);
-    test_idenpotent_exponential(10);
+//    test_idenpotent_exponential(10);
 
 
     /* test matrix exponentials */
