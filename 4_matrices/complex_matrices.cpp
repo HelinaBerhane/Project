@@ -247,12 +247,12 @@ void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGe
         }
     }
 }//working
-void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){//to test
+void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){
     LaGenMatComplex result = matrix.copy();
     Blas_Mat_Mat_Mult(matrix, product, result);
     product = result.copy();
     print_matrix(product, "product");
-}
+}//working
 void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, const LaGenMatComplex& result){
     /* AB */
     //matrix_product()
@@ -397,7 +397,7 @@ void test_matrix_product(const int matrix_size, const int max_rand){
     /* matrix product */
     matrix_product(matrixA, matrixB);
     print_matrix(matrixB, "result");
-}
+}//working
 void test_five_matrix_multiplication(const int matrix_size, const int max_rand){//WIP
     /* initialise everything */
     LaGenMatComplex matrixA;
