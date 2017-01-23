@@ -249,10 +249,10 @@ void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGe
 }//working
 void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){
     LaGenMatComplex result = matrix.copy();
-    Blas_Mat_Mat_Mult(matrix, product, result);
+    Blas_Mat_Mat_Mult(product, matrix, result);
     product = result.copy();
 }//working
-void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, LaGenMatComplex& result){
+void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, LaGenMatComplex& result){//WIP
     result = matrixA.copy();
     print_matrix(result, "A");
     /* AB */
@@ -273,7 +273,7 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     print_matrix(result, "ABCDE");
 }
 
-/* Testing [8/9] */
+/* Testing [9/11] */
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
