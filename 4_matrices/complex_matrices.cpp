@@ -46,7 +46,7 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }//working
 
-/* Number generation [3/3] */
+/* Number generation [4/4] */
 void generate_scalar(COMPLEX& A, const int x){
     A.r = ran(1, x);	//1 to x
     A.i = ran(1, x);
@@ -60,6 +60,12 @@ void generate_array(COMPLEX array[], const int len, const int x){
         array[i].i = ran(1, x);
 	}
 }//working
+void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
+    int matrix_volume = matrix_size*matrix_size
+    COMPLEX elements[matrix_volume];
+    generate_array(elements, matrix_volume, max_rand);
+    matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
+}
 
 /* Matrix conversion [3/3] */
 void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[ ]){
@@ -245,6 +251,7 @@ void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){//t
     LaGenMatComplex result = matrix.copy();
     Blas_Mat_Mat_Mult(matrix, product, result);
     product = result.copy();
+    print_matrix(product, "product")
 }
 void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, const LaGenMatComplex& result){
     /* AB */
@@ -376,23 +383,38 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     /* A^T * B^T */
     Blas_Mat_Mat_Mult(transposeA, transposeB, result);
     print_matrix(result, "Matrix A^T * Matrix B^T");
-    /* generate matrix CDE */
-    generate_array(elements, matrix_volume, max_rand);
-	LaGenMatComplex matrixC = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-    print_matrix(matrixC, "Matrix C");
-    generate_array(elements, matrix_volume, max_rand);
-    LaGenMatComplex matrixD = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-    print_matrix(matrixD, "Matrix D");
-    generate_array(elements, matrix_volume, max_rand);
-    LaGenMatComplex matrixE = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-    print_matrix(matrixE, "Matrix E");
-    /* A^T B^T C */
-    print_matrix(result, "A^T B^T");
-    print_matrix(matrixC, "C");
-    matrix_product(matrixE, result);
-    print_matrix(result, "A^T B^T C");
-    //five_matrix_multiplication(matrixA, matrixB, matrixC, matrixD, matrixE, result);
 }//working
+void test_matrix_product(const int matrix_size, const int max_rand){
+    /* initialise everything */
+    LaGenMatComplex matrixA;
+    LaGenMatComplex matrixB;
+    /* generate everything */
+    generate_matrix(matrix_size, max_rand, matrixA);
+    generate_matrix(matrix_size, max_rand, matrixB);
+    /* print everything */
+    print_matrix(matrixA, "Matrix A");
+    print_matrix(matrixB, "Matrix B");
+    /* matrix product */
+    matrix_product(matrixA, matrixB);
+    print_matrix(matrixB, "result");
+}
+void test_five_matrix_multiplication(const int matrix_size, const int max_rand){//WIP
+    /* initialise everything */
+    LaGenMatComplex matrixA;
+    LaGenMatComplex matrixB;
+    LaGenMatComplex matrixC;
+    LaGenMatComplex matrixD;
+    LaGenMatComplex matrixE;
+    LaGenMatComplex result;
+    /* generate everything */
+    generate_matrix(matrix_size, max_rand, matrixA);
+    generate_matrix(matrix_size, max_rand, matrixB);
+    generate_matrix(matrix_size, max_rand, matrixC);
+    generate_matrix(matrix_size, max_rand, matrixD);
+    generate_matrix(matrix_size, max_rand, matrixE);
+    /* ABCDE */
+    //five_matrix_multiplication(matrixA, matrixB, matrixC, matrixD, matrixE, result);
+}
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
     int matrix_volume = matrix_size * matrix_size;
     LaGenMatComplex matrix;
@@ -408,7 +430,6 @@ void test_matrix_exponential(const int matrix_size, const int max_rand, const in
     print_matrix(result, "e^(matrix)");
 }//working
 void test_idenpotent_exponential(const int iterations){//in progress
-    //started 16:37 - 16:53
     // Generate the matrix
     int elements [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
     COMPLEX comp[9];
@@ -445,7 +466,8 @@ int main(){
 //    test_scalar_manipulation(4);
 
     /* test matrix multiplication */
-    test_matrix_multiplication(2, 9);
+//    test_matrix_multiplication(2, 9);
+    test_matrix_product(2, 9);
 
     /* test scalar exponentials */
 //    test_scalar_exponential(5000,40);
