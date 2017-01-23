@@ -253,7 +253,7 @@ void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){
     product = result.copy();
     print_matrix(product, "product");
 }//working
-void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, const LaGenMatComplex& result){
+void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, LaGenMatComplex& result){
     result = matrixA.copy();
     print_matrix(result, "A");
     /* AB */
