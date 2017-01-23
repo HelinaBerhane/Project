@@ -61,7 +61,7 @@ void generate_array(COMPLEX array[], const int len, const int x){
 	}
 }//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
-    int matrix_volume = matrix_size*matrix_size
+    int matrix_volume = matrix_size*matrix_size;
     COMPLEX elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
