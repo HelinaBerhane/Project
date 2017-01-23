@@ -251,7 +251,7 @@ void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){//t
     LaGenMatComplex result = matrix.copy();
     Blas_Mat_Mat_Mult(matrix, product, result);
     product = result.copy();
-    print_matrix(product, "product")
+    print_matrix(product, "product");
 }
 void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, const LaGenMatComplex& result){
     /* AB */
