@@ -254,12 +254,22 @@ void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){
     print_matrix(product, "product");
 }//working
 void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, const LaGenMatComplex& result){
+    result = matrixA.copy();
+    print_matrix(result, "A");
     /* AB */
-    //matrix_product()
+    matrix_product(matrixB, result);
+    print_matrix(result, "AB");
     /* ABC */
+    matrix_product(matrixC, result);
+    print_matrix(result, "ABC");
     /* ABCD */
+    matrix_product(matrixD, result);
+    print_matrix(result, "ABCD");
     /* ABCDE */
+    matrix_product(matrixE, result);
+    print_matrix(result, "ABCDE");
 }
+
 /* Testing [8/9] */
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
@@ -413,7 +423,7 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     generate_matrix(matrix_size, max_rand, matrixD);
     generate_matrix(matrix_size, max_rand, matrixE);
     /* ABCDE */
-    //five_matrix_multiplication(matrixA, matrixB, matrixC, matrixD, matrixE, result);
+    five_matrix_multiplication(matrixA, matrixB, matrixC, matrixD, matrixE, result);
 }
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
     int matrix_volume = matrix_size * matrix_size;
