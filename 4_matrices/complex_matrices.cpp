@@ -477,12 +477,12 @@ int main(){
 
     /* test matrix multiplication */
 //    test_matrix_multiplication(2, 9);
-    test_matrix_product(2, 9);
+//    test_matrix_product(2, 9);
+    test_five_matrix_multiplication(2, 9);
 
     /* test scalar exponentials */
 //    test_scalar_exponential(5000,40);
 //    test_idenpotent_exponential(10);
-
 
     /* test matrix exponentials */
 //    test_matrix_exponential(matrix_size, max_rand, iterations);
