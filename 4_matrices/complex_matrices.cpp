@@ -30,12 +30,14 @@ void print_array(const COMPLEX array[], int len){
     for(int i = 0; i < len; i++){
         cout << array[i] << endl;
     }
+    cout << endl;
 }//working
 void print_array(const COMPLEX array[], int len, const string name){
 	cout << name << ":" << endl;
     for(int i = 0; i < len; i++){
         cout << array[i] << endl;
     }
+    cout << endl;
 }//working
 void print_matrix(const LaGenMatComplex& matrix){
 	cout << matrix << endl;
@@ -239,7 +241,18 @@ void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGe
         }
     }
 }//working
-
+void matrix_product(const LaGenMatComplex& matrix, const LaGenMatComplex& product){//to test
+    LaGenMatComplex result = matrix.copy();
+    Blas_Mat_Mat_Mult(matrix, product, result);
+    product = result.copy();
+}
+void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, const LaGenMatComplex& result){
+    /* AB */
+    Blas_Mat_Mat_Mult()
+    /* ABC */
+    /* ABCD */
+    /* ABCDE */
+}
 /* Testing [8/9] */
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
