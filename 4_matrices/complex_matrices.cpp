@@ -230,8 +230,19 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
     /* initialise everything */
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    COMPLEX eigenExponential[matrix_size];
     /* calculate eigenstuff */
     matrix_eigenvstuff(matrix, eigenvalues, eigenvectors);
+    /* calculate exponentials */
+    for(int i = 0; i < matrix_size; i++){
+        scalar_exponential_main(eigenvalues(i), iterations, eigenExponential[i]);
+    }
+    print_array(eigenExponential, "exponential eigenvalues");
+
+    /* multiply them back together to get the matrix */
+//    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenvalues, result);
+
+
 
     //LaGenMatComplex diagonaleigenexp = LaGenMatComplex::zeros(matrix_size, matrix_size);
 
@@ -241,10 +252,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
 
     //print_matrix(eigenvalueVector, "eigenvalue vector");
     //calculate exponentials
-    //COMPLEX eigenexp[matrix_size];
-    //for(int i = 0; i < matrix_size; i++){
-    //    scalar_exponential_main(eigenvalueVector(i), iterations, eigenexp[i]);
-    //}
+    //
     //cout << endl;
     // save to diagonal
     //array_to_diag(eigenexp, matrix_size, diagonaleigenexp);
@@ -345,7 +353,7 @@ void test_scalar_manipulation(const int max_rand){
     cout << "sum = " << sum << endl;
 
 }//working
-void test_eigenvalues(const int matrix_size, const int max_rand){//not working
+void test_eigenvalues(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrix;
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
@@ -460,13 +468,13 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     //{{1+7i, 5+7i},{7i, 1+3i}}*{{6+i, 5+7i},{5+4i, 5+4i}}*{{6, 8+8i},{7+i, 6+6i}}*{{8+8i, 1+i},{8+4i, 5}}*{{3, 1+7i},{5+3i, 4+7i}}
 }//working
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){//not working
+    /* initialise everything */
     int matrix_volume = matrix_size * matrix_size;
     LaGenMatComplex matrix;
     LaGenMatComplex result;
     COMPLEX elements[matrix_volume];
-    /* initialise stuff */
-    generate_array(elements, matrix_volume, max_rand);
-	matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+    /* generate matrix */
+    generate_matrix(matrix_size, max_rand, matrix);
     print_matrix(matrix, "initial matrix");
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     /* calculate exponential */
@@ -504,7 +512,7 @@ int main(){
 //    print_matrix(initialMatrix, "initial matrix");
 
     /* test eigenvalues */
-    test_eigenvalues(2, 9);
+//    test_eigenvalues(2, 9);
 
     /* test scalar manipulation */
 //    test_scalar_manipulation(4);
@@ -519,7 +527,7 @@ int main(){
 //    test_idenpotent_exponential(10);
 
     /* test matrix exponentials */
-//    test_matrix_exponential(matrix_size, max_rand, iterations);
+    test_matrix_exponential(3, 9, 1000);
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
