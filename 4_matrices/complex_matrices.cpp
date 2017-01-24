@@ -227,7 +227,7 @@ void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eig
     matrix_product(result, eigenvalueMatrix);
     matrix_product(result, eigenvectors);
     /* print results */
-    print_matrix(result, "U^T D U");
+    print_matrix(result, "U D U^-1");
 }//working
 void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
     // LaLUInverseIP: http://lapackpp.sourceforge.net/html/laslv_8h.html#a042c82c5b818f54e7f000d068f14189
@@ -235,7 +235,7 @@ void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
     LUFactorizeIP(matrix, PIV);
     LaLUInverseIP(matrix, PIV);
 }//working
-void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){//not working
+void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){
     /* initialise everything */
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -250,28 +250,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
     print_vector(eigenExponential, "exponential eigenvalues");
     /* multiply them back together to get the matrix */
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
-
-    //
-    //LaGenMatComplex eigenvectortrans = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    //LaGenMatComplex UTD = LaGenMatComplex::zeros(matrix_size, matrix_size);
-
-    /* calculate eigenstuff */
-    //print_matrix(eigenvalueVector, "eigenvalue vector");
-
-
-    //print_matrix(diagonaleigenexp, "exponential matrix");
-    /* calculate U^T */
-    //matrix_transpose(eigenvectors, matrix_size, eigenvectortrans);
-    /* print steps */
-    //print_matrix(eigenvectortrans, "U^T");
-    //print_array(eigenexp, matrix_size, "D");
-    //print_matrix(eigenvectors, "U");
-    /* multiply results */
-    //Blas_Mat_Mat_Mult(eigenvectortrans, diagonaleigenexp, UTD);
-    //print_matrix(UTD, "UTD");
-    //Blas_Mat_Mat_Mult(UTD, eigenvectors, result);
-    //print_matrix(result, "result");
-}//working
+}//should be working
 void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -472,30 +451,28 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
 }//working
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){//not working
     /* initialise everything */
-//    int matrix_volume = matrix_size * matrix_size;
     LaGenMatComplex matrix;
     LaGenMatComplex result;
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-//    COMPLEX elements[matrix_volume];
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
     print_matrix(matrix, "initial matrix");
     /* calculate exponential */
     matrix_exponential(matrix, matrix_size, iterations, result);
     print_matrix(result, "e^(matrix)");
-}//working
+}//should be working
 void test_idenpotent_exponential(const int iterations){//in progress
-    // Generate the matrix
-    int elements [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
-    COMPLEX comp[9];
+    /* generate the matrix */
+    int numbers [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
+    COMPLEX elements[9];
     for(int i = 0; i < 9; i++){
-        comp[i].r = elements[i];
+        comp[i].r = numbers[i];
         comp[i].i = 0;
     }
-    LaGenMatComplex matrix = LaGenMatComplex(comp, 3, 3, false );
+    LaGenMatComplex matrix = LaGenMatComplex(elements, 3, 3, false );
+    LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
     print_matrix(matrix, "initial matrix");
     /* calculate the exponential */
-    LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
     for(int j = 1; j <= iterations; j++){
         matrix_exponential(matrix, 3, j, result);
         cout << j << " iterations:" << endl;
@@ -527,10 +504,10 @@ int main(){
 
     /* test scalar exponentials */
 //    test_scalar_exponential(5000,40);
-//    test_idenpotent_exponential(10);
 
     /* test matrix exponentials */
-    test_matrix_exponential(3, 9, 1000);
+//    test_matrix_exponential(3, 9, 1000);
+    test_idenpotent_exponential(10);
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
