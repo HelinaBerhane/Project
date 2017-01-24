@@ -427,7 +427,7 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     generate_matrix(matrix_size, max_rand, matrixE);
     /* ABCDE */
     five_matrix_multiplication(matrixA, matrixB, matrixC, matrixD, matrixE, result);
-    print_matrix(result, "ABCDE")
+    print_matrix(result, "ABCDE");
     //{{1+7i, 5+7i},{7i, 1+3i}}*{{6+i, 5+7i},{5+4i, 5+4i}}*{{6, 8+8i},{7+i, 6+6i}}*{{8+8i, 1+i},{8+4i, 5}}*{{3, 1+7i},{5+3i, 4+7i}}
 }//working
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
