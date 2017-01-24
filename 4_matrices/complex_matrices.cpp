@@ -209,10 +209,10 @@ void recombine_diagonalised_matrices(const int matrix_size, const LaGenMatComple
     /* process matrices */
     vec_to_diag(eigenvalues, matrix_size, eigenvalueMatrix);
     matrix_transpose(eigenvectors, matrix_size, transposeEigenvectors);
-    result = transposeEigenvectors.copy();
+    result = eigenvectors.copy();
     /* multiply results */
     matrix_product(result, eigenvalueMatrix);
-    matrix_product(result, eigenvectors);
+    matrix_product(result, transposeEigenvectors);
     /* print everything */
     print_matrix(eigenvalues, "eigenvalues (vector)");
     print_matrix(eigenvectors, "eigenvectors (row based?)");
