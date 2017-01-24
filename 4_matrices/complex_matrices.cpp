@@ -39,6 +39,9 @@ void print_array(const COMPLEX array[], int len, const string name){
     }
     cout << endl;
 }//working
+void print_vector(const LaVectorComplex& vector, const string name){
+    cout << name << ":" << endl << vector << endl;
+}
 void print_matrix(const LaGenMatComplex& matrix){
 	cout << matrix << endl;
 }                                        //working
@@ -197,7 +200,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
     for(int i = 0; i < matrix_size; i++){
         scalar_exponential_main(vector(i), iterations, result(i));
     }
-    cout << "vector exponential:" << endl << result << endl;
+    print_vector(result, "vector exponential")
 }
 
 /* Matrix manipulation [6/6] */
@@ -241,21 +244,12 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
     /* calculate eigenstuff */
     matrix_eigenvstuff(matrix, eigenvalues, eigenvectors);
     print_matrix(eigenvectors, "eigenvectors");
+    print_vector(eigenvalues, "eigenvalues");
     /* calculate exponentials */
     vector_exponential(eigenvalues, matrix_size, eigenExponential);
-    print_array(eigenExponential, matrix_size, "exponential eigenvalues");
-    /* process matrices */
-    array_to_diag(eigenExponential, matrix_size, diagonalEigenExp);
-
-//
-
-    /* print matrices */
-    print_matrix(eigenvectors, "U - eigenvectors");
-    print_matrix(diagonalEigenExp, "D - eigenvalues");
-
-
+    print_vector(eigenExponential, "exponential eigenvalues");
     /* multiply them back together to get the matrix */
-    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenvalues, result);
+    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 
     //
     //LaGenMatComplex eigenvectortrans = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -481,11 +475,11 @@ void test_matrix_exponential(const int matrix_size, const int max_rand, const in
     int matrix_volume = matrix_size * matrix_size;
     LaGenMatComplex matrix;
     LaGenMatComplex result;
-    COMPLEX elements[matrix_volume];
+    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+//    COMPLEX elements[matrix_volume];
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
     print_matrix(matrix, "initial matrix");
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     /* calculate exponential */
     matrix_exponential(matrix, matrix_size, iterations, result);
     print_matrix(result, "e^(matrix)");
