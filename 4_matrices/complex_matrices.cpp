@@ -214,9 +214,9 @@ void recombine_diagonalised_matrices(const int matrix_size, const LaGenMatComple
     matrix_product(result, eigenvalueMatrix);
     matrix_product(result, transposeEigenvectors);
     /* print everything */
-    print_matrix(eigenvalues, "eigenvalues (vector)");
-    print_matrix(eigenvectors, "eigenvectors (row based?)");
-    print_matrix(transposeEigenvectors, "eigenvector (column based?)");
+    print_matrix(eigenvalueMatrix, "eigenvalues (vector)");
+    print_matrix(eigenvectors, "U^T - eigenvectors (row based?)");
+    print_matrix(transposeEigenvectors, "U - eigenvectors (column based?)");
     print_matrix(result, "U^T D U");
 }
 void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
