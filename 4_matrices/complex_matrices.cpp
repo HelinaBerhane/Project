@@ -273,7 +273,7 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     //print_matrix(result, "ABCDE");
 }//working
 
-/* Testing [9/11] */
+/* Testing [10/11] */
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
@@ -411,7 +411,7 @@ void test_matrix_product(const int matrix_size, const int max_rand){
     matrix_product(matrixA, matrixB);
     print_matrix(matrixB, "result");
 }//working
-void test_five_matrix_multiplication(const int matrix_size, const int max_rand){//WIP
+void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrixA;
     LaGenMatComplex matrixB;
@@ -428,7 +428,8 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     /* ABCDE */
     five_matrix_multiplication(matrixA, matrixB, matrixC, matrixD, matrixE, result);
     print_matrix(result, "ABCDE")
-}
+    //{{1+7i, 5+7i},{7i, 1+3i}}*{{6+i, 5+7i},{5+4i, 5+4i}}*{{6, 8+8i},{7+i, 6+6i}}*{{8+8i, 1+i},{8+4i, 5}}*{{3, 1+7i},{5+3i, 4+7i}}
+}//working
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
     int matrix_volume = matrix_size * matrix_size;
     LaGenMatComplex matrix;
@@ -464,17 +465,17 @@ void test_idenpotent_exponential(const int iterations){//in progress
 
 /* Main Program */
 int main(){
-//	int matrix_size = 3, max_rand = 9;
-//    int matrix_volume = matrix_size * matrix_size;
+	int matrix_size = 3, max_rand = 9;
+    int matrix_volume = matrix_size * matrix_size;
 
 	/* generate the matrix */
-//    COMPLEX elements[matrix_volume];
-//    generate_array(elements, matrix_volume, max_rand);
-//	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
-//    print_matrix(initialMatrix, "initial matrix");
+    COMPLEX elements[matrix_volume];
+    generate_array(elements, matrix_volume, max_rand);
+	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+    print_matrix(initialMatrix, "initial matrix");
 
     /* test eigenvalues */
-//    test_eigenvalues(initialMatrix, matrix_size);
+    test_eigenvalues(initialMatrix, matrix_size);
 
     /* test scalar manipulation */
 //    test_scalar_manipulation(4);
@@ -482,7 +483,7 @@ int main(){
     /* test matrix multiplication */
 //    test_matrix_multiplication(2, 9);
 //    test_matrix_product(2, 9);
-    test_five_matrix_multiplication(2, 9);
+//    test_five_matrix_multiplication(2, 9);
 
     /* test scalar exponentials */
 //    test_scalar_exponential(5000,40);
