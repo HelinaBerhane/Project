@@ -39,7 +39,7 @@ void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGe
 void matrix_product(LaGenMatComplex& product, const LaGenMatComplex& matrix);
 void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, LaGenMatComplex& result);
 void test_scalar_manipulation(const int max_rand);
-void test_eigenvalues((const int matrix_size, const int max_rand));
+void test_eigenvalues(const int matrix_size, const int max_rand);
 void test_inverse(const LaGenMatComplex& initialMatrix, const int matrix_size);
 void test_scalar_sum(const int max_rand, const int iterations);
 void test_scalar_product(const int max_rand, const int iterations);

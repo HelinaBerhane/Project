@@ -274,19 +274,19 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     //print_matrix(result, "A");
     /* AB */
     //print_matrix(matrixB, "B");
-    matrix_product(matrixB, result);
+    matrix_product(result, matrixB);
     //print_matrix(result, "AB");
     /* ABC */
     //print_matrix(matrixC, "C");
-    matrix_product(matrixC, result);
+    matrix_product(result, matrixC);
     //print_matrix(result, "ABC");
     /* ABCD */
     //print_matrix(matrixD, "D");
-    matrix_product(matrixD, result);
+    matrix_product(result, matrixD);
     //print_matrix(result, "ABCD");
     /* ABCDE */
     //print_matrix(matrixE, "E");
-    matrix_product(matrixE, result);
+    matrix_product(result, matrixE);
     //print_matrix(result, "ABCDE");
 }//working
 
