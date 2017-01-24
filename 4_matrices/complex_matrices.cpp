@@ -57,7 +57,7 @@ void generate_scalar(int number, const int x){
 void generate_array(COMPLEX array[], const int len, const int x){
     for(int i = 0; i < len; i++){
         array[i].r = ran(1, x);	//1 to x
-        array[i].i = ran(1, x);
+        array[i].i = 0;//ran(1, x);
 	}
 }//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
@@ -198,11 +198,11 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
 //void diagonal_matrix_powers(){      //empty
   //...
 //}
-void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){
+void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){//unknown result
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
 }//working
-void recombine_diagonalised_matrices(const int matrix_size, const LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){
+void recombine_diagonalised_matrices(const int matrix_size, const LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){//not working
     /* initialise  everything */
     LaGenMatComplex eigenvalueMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaGenMatComplex transposeEigenvectors;
@@ -225,7 +225,7 @@ void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
     LUFactorizeIP(matrix, PIV);
     LaLUInverseIP(matrix, PIV);
 }//working
-void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){
+void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){//not working
     //initialise eigenstuff
     LaVectorComplex eigenvalueVector = LaVectorComplex(matrix_size);
     LaGenMatComplex diagonaleigenexp = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -340,7 +340,7 @@ void test_scalar_manipulation(const int max_rand){
     cout << "sum = " << sum << endl;
 
 }//working
-void test_eigenvalues(const int matrix_size, const int max_rand){
+void test_eigenvalues(const int matrix_size, const int max_rand){//not working
     /* initialise everything */
     LaGenMatComplex matrix;
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
@@ -454,7 +454,7 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     print_matrix(result, "ABCDE");
     //{{1+7i, 5+7i},{7i, 1+3i}}*{{6+i, 5+7i},{5+4i, 5+4i}}*{{6, 8+8i},{7+i, 6+6i}}*{{8+8i, 1+i},{8+4i, 5}}*{{3, 1+7i},{5+3i, 4+7i}}
 }//working
-void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
+void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){//not working
     int matrix_volume = matrix_size * matrix_size;
     LaGenMatComplex matrix;
     LaGenMatComplex result;
