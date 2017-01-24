@@ -202,7 +202,7 @@ void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenval
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
 }//working
-void recombine_diagonalised_matrices(const LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, const LaGenMatComplex& result){
+void recombine_diagonalised_matrices(const int matrix_size, const LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){
     /* initialise  everything */
     LaGenMatComplex eigenvalueMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaGenMatComplex transposeEigenvectors;
@@ -213,6 +213,10 @@ void recombine_diagonalised_matrices(const LaGenMatComplex& eigenvectors, const 
     /* multiply results */
     matrix_product(result, eigenvalueMatrix);
     matrix_product(result, eigenvectors);
+    /* print everything */
+    print_matrix(eigenvalues, "eigenvalues (vector)");
+    print_matrix(eigenvectors, "eigenvectors (row based?)");
+    print_matrix(transposeEigenvectors, "eigenvector (column based?)");
     print_matrix(result, "U^T D U");
 }
 void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
@@ -347,16 +351,11 @@ void test_eigenvalues(const int matrix_size, const int max_rand){
     print_matrix(matrix, "initial matrix");
     /* calculate eigenstuff */
     matrix_eigenvstuff(matrix, eigenvalues, eigenvectors);
-    /* print everything */
-    print_matrix(eigenvalues, "eigenvalues (vector)");
-    print_matrix(eigenvectors, "eigenvectors (row based?)");
-    print_matrix(transposeEigenvectors, "eigenvector (column based?)");
-    /* multiply them back together to get the matris */
-    recombine_diagonalised_matrices(eigenvectors, eigenvalues, result);
-
+    /* multiply them back together to get the matrix */
+    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenvalues, result);
     /* wolfram test */
-    // 2x2 real:
-    // 3x3 complex: {{1+7i, 1+3i, 5+7i},{7i, 6+i, 5+4i},{5+7i, 5+4i, 6}}
+        // 2x2 real:
+        // 3x3 complex: {{1+7i, 1+3i, 5+7i},{7i, 6+i, 5+4i},{5+7i, 5+4i, 6}}
 }//working
 void test_inverse(const LaGenMatComplex& initialMatrix, const int matrix_size){
     LaGenMatComplex inverseMatrix;
