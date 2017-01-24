@@ -19,7 +19,7 @@ int ran(int a, int b){//WIP
     return rand() % b;
 }
 
-/* Printing [6/6] */
+/* Printing [7/7] */
 void print_scalar(const COMPLEX scalar){
     cout << scalar << endl;
 }//working
@@ -44,7 +44,7 @@ void print_vector(const LaVectorComplex& vector, const string name){
 }
 void print_matrix(const LaGenMatComplex& matrix){
 	cout << matrix << endl;
-}                                        //working
+}//working
 void print_matrix(const LaGenMatComplex& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }//working
@@ -68,7 +68,7 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     COMPLEX elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-}
+}//workinh
 
 /* Matrix conversion [3/3] */
 void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[ ]){
@@ -88,7 +88,7 @@ void vec_to_diag(const LaVectorComplex& vector, const int len, LaGenMatComplex& 
     array_to_diag(array, len, diag);
 }//working
 
-/* Scalar manipulation [9/10] */
+/* Scalar manipulation [8/8] */
 int factorial(int x){
 	if(x <= 1){
         return 1;
@@ -100,10 +100,10 @@ void scalar_addition(const COMPLEX& A, const COMPLEX& B , COMPLEX& result){
     result.r = A.r + B.r;
     result.i = A.i + B.i;
 }//working
-void scalar_addition(COMPLEX& result, const COMPLEX addition){//probably working
-    result.r += addition.r;
-    result.i += addition.i;
-}
+//void scalar_addition(COMPLEX& result, const COMPLEX addition){//probably working
+//    result.r += addition.r;
+//    result.i += addition.i;
+//}
 void scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result){//to test
     result.r = A.r * B;
     result.i = A.i * B;
@@ -188,7 +188,7 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
     //}
 //}
 
-/* array manipulation [0/1] */
+/* array manipulation [1/1] */
 //void array_powers(COMPLEX array[], const int len, const int power){/**/
     /*
     for(int i = 0; i < len; i++){
@@ -207,7 +207,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
 //void diagonal_matrix_powers(){      //empty
   //...
 //}
-void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){//unknown result
+void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
 }//working
@@ -368,10 +368,7 @@ void test_scalar_sum(const int max_rand, const int iterations){
     }
     cout << number << endl;
 }//working
-//void test_scalar_product(const int max_rand, const int iterations){
-    //...
-//}
-void test_scalar_exponential(const int iterations, const int max_rand){
+void test_scalar_exponential(const int max_rand, const int iterations){
     COMPLEX number, result;
     generate_scalar(number, max_rand);
     cout << endl << "scalar exponential test no.: " << number << endl << endl;
@@ -471,7 +468,7 @@ void test_idenpotent_exponential(const int iterations){//in progress
     }
     LaGenMatComplex matrix = LaGenMatComplex(elements, 3, 3, false );
     LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
-    print_matrix(matrix, "initial matrix");
+    //print_matrix(matrix, "initial matrix");
     /* calculate the exponential */
     for(int j = 1; j <= iterations; j++){
         matrix_exponential(matrix, 3, j, result);
@@ -503,11 +500,11 @@ int main(){
 //    test_five_matrix_multiplication(2, 9);
 
     /* test scalar exponentials */
-//    test_scalar_exponential(5000,40);
+//    test_scalar_exponential(40, 5000);
 
     /* test matrix exponentials */
 //    test_matrix_exponential(3, 9, 1000);
-    test_idenpotent_exponential(10);
+//    test_idenpotent_exponential(10);
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
