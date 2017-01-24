@@ -202,9 +202,9 @@ void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenval
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
 }//working
-void matrix_inverse(LaGenMatComplex& matrix, int len){
+void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
     // LaLUInverseIP: http://lapackpp.sourceforge.net/html/laslv_8h.html#a042c82c5b818f54e7f000d068f14189
-    LaVectorLongInt PIV = LaVectorLongInt(len);
+    LaVectorLongInt PIV = LaVectorLongInt(matrix_size);
     LUFactorizeIP(matrix, PIV);
     LaLUInverseIP(matrix, PIV);
 }//working
@@ -323,15 +323,24 @@ void test_scalar_manipulation(const int max_rand){
     cout << "sum = " << sum << endl;
 
 }//working
-void test_eigenvalues(const LaGenMatComplex& initialMatrix, const int size){
-    LaVectorComplex eigenvalueVec = LaVectorComplex(size);             //initialise eigenstuff
-    LaGenMatComplex eigenvalues = LaGenMatComplex::zeros(size, size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(size, size);
-    matrix_eigenvstuff(initialMatrix, eigenvalueVec, eigenvectors); //calculate eigenstuff
-    print_matrix(eigenvalueVec, "eigenvalue vector");               //print eigenstuff
+void test_eigenvalues(const int matrix_size, const int max_rand){
+    /* initialise everything */
+    LaGenMatComplex matrix;
+    LaVectorComplex eigenvalueVector;
+    LaGenMatComplex eigenvalues;
+    LaGenMatComplex eigenvectors;
+    LaGenMatComplex transposeEigenvectors;
+    /* generate matrix */
+    generate_matrix(matrix_size, max_rand, matrix);
+    /* calculate eigenstuff */
+    matrix_eigenvstuff(matrix, eigenvalueVec, eigenvectors);
     vec_to_diag(eigenvalueVec, size, eigenvalues);
-    print_matrix(eigenvalues, "eigenvalue matrix");
+    matrix_transpose(eigenvectors, matrix_size, transposeEigenvectors);
+    /* print everything */
+    print_matrix(eigenvalueVec, "eigenvalue vector");
+    print_matrix(eigenvalues, "diagonal eigenvalue matrix");
     print_matrix(eigenvectors, "eigenvector matrix");
+    print_matrix(transposeEigenvectors, "transpose eigenvector matrix");
 }//working
 void test_inverse(const LaGenMatComplex& initialMatrix, const int size){
     LaGenMatComplex inverseMatrix;
@@ -465,17 +474,17 @@ void test_idenpotent_exponential(const int iterations){//in progress
 
 /* Main Program */
 int main(){
-	int matrix_size = 3, max_rand = 9;
-    int matrix_volume = matrix_size * matrix_size;
+//	int matrix_size = 3, max_rand = 9;
+//    int matrix_volume = matrix_size * matrix_size;
 
 	/* generate the matrix */
-    COMPLEX elements[matrix_volume];
-    generate_array(elements, matrix_volume, max_rand);
-	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
-    print_matrix(initialMatrix, "initial matrix");
+//    COMPLEX elements[matrix_volume];
+//    generate_array(elements, matrix_volume, max_rand);
+//	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+//    print_matrix(initialMatrix, "initial matrix");
 
     /* test eigenvalues */
-    test_eigenvalues(initialMatrix, matrix_size);
+    test_eigenvalues(2, 9);
 
     /* test scalar manipulation */
 //    test_scalar_manipulation(4);
