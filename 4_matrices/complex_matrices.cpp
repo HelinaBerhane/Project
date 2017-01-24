@@ -326,9 +326,9 @@ void test_scalar_manipulation(const int max_rand){
 void test_eigenvalues(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrix;
-    LaVectorComplex eigenvalueVector = LaVectorComplex(size);
-    LaGenMatComplex eigenvalues = LaGenMatComplex::zeros(size, size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(size, size);
+    LaVectorComplex eigenvalueVector = LaVectorComplex(matrix_size);
+    LaGenMatComplex eigenvalues = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaGenMatComplex transposeEigenvectors;
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
