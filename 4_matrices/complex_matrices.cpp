@@ -193,7 +193,7 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
     }
     */
 //}                       //empty
-void vector_exponential(const LaVectorComplex& vector, const int matrix_size, LaVectorComplex& result){
+void vector_exponential(const LaVectorComplex& vector, const int matrix_size, const int iterations, LaVectorComplex& result){
     for(int i = 0; i < matrix_size; i++){
         scalar_exponential_main(vector(i), iterations, result(i));
     }
@@ -236,13 +236,13 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
     /* initialise everything */
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex diagonaleigenexp = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex diagonalEigenExp = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaVectorComplex eigenExponential = LaVectorComplex(matrix_size);
     /* calculate eigenstuff */
     matrix_eigenvstuff(matrix, eigenvalues, eigenvectors);
     print_matrix(eigenvectors, "eigenvectors");
     /* calculate exponentials */
-    vector_exponential(eigenvalues, matrix_size, eigenExponential)
+    vector_exponential(eigenvalues, matrix_size, eigenExponential);
     print_array(eigenExponential, matrix_size, "exponential eigenvalues");
     /* process matrices */
     array_to_diag(eigenExponential, matrix_size, diagonalEigenExp);

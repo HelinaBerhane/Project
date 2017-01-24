@@ -29,7 +29,7 @@ void scalar_division(const COMPLEX& A, const COMPLEX& B, COMPLEX& result);
 void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result);
 void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLEX& result);
 void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result);
-void vector_exponential(const LaVectorComplex& vector, const int matrix_size, LaVectorComplex& result);
+void vector_exponential(const LaVectorComplex& vector, const int matrix_size, const int iterations, LaVectorComplex& result);
 void recursive_scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result);
 void array_powers(COMPLEX array[], const int len, const int power);
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors);
