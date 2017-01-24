@@ -237,7 +237,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
     for(int i = 0; i < matrix_size; i++){
         scalar_exponential_main(eigenvalues(i), iterations, eigenExponential[i]);
     }
-    print_array(eigenExponential, "exponential eigenvalues");
+    print_array(eigenExponential, matrix_size, "exponential eigenvalues");
 
     /* multiply them back together to get the matrix */
 //    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenvalues, result);
