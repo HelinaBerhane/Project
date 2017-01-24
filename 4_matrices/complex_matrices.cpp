@@ -202,7 +202,7 @@ void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenval
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
 }//working
-void recombine_diagonalised_matrices(const int matrix_size, const LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){//not working
+void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){//not working
     /* initialise  everything */
     LaGenMatComplex eigenvalueMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaGenMatComplex transposeEigenvectors;
