@@ -200,7 +200,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
     for(int i = 0; i < matrix_size; i++){
         scalar_exponential_main(vector(i), iterations, result(i));
     }
-    print_vector(result, "vector exponential");
+    //print_vector(result, "vector exponential");
 }
 
 /* Matrix manipulation [6/6] */
@@ -220,14 +220,14 @@ void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eig
     vec_to_diag(eigenvalues, matrix_size, eigenvalueMatrix);
     matrix_inverse(eigenvectors, matrix_size);
     /* print matrices */
-    print_matrix(result, "U - eigenvectors (check if column based?)");
-    print_matrix(eigenvalueMatrix, "D - eigenvalues (vector)");
-    print_matrix(eigenvectors, "U^-1 - inverse eigenvectors");
+    //print_matrix(result, "U - eigenvectors (check if column based?)");
+    //print_matrix(eigenvalueMatrix, "D - eigenvalues (vector)");
+    //print_matrix(eigenvectors, "U^-1 - inverse eigenvectors");
     /* multiply results */
     matrix_product(result, eigenvalueMatrix);
     matrix_product(result, eigenvectors);
     /* print results */
-    print_matrix(result, "U D U^-1");
+    //print_matrix(result, "U D U^-1");
 }//working
 void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
     // LaLUInverseIP: http://lapackpp.sourceforge.net/html/laslv_8h.html#a042c82c5b818f54e7f000d068f14189
@@ -243,11 +243,11 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
     LaVectorComplex eigenExponential = LaVectorComplex(matrix_size);
     /* calculate eigenstuff */
     matrix_eigenvstuff(matrix, eigenvalues, eigenvectors);
-    print_matrix(eigenvectors, "eigenvectors");
-    print_vector(eigenvalues, "eigenvalues");
+    //print_matrix(eigenvectors, "eigenvectors");
+    //print_vector(eigenvalues, "eigenvalues");
     /* calculate exponentials */
     vector_exponential(eigenvalues, matrix_size, iterations, eigenExponential);
-    print_vector(eigenExponential, "exponential eigenvalues");
+    //print_vector(eigenExponential, "exponential eigenvalues");
     /* multiply them back together to get the matrix */
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 }//should be working
