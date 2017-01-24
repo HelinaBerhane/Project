@@ -337,6 +337,7 @@ void test_eigenvalues(const int matrix_size, const int max_rand){
     vec_to_diag(eigenvalueVector,matrix_size, eigenvalues);
     matrix_transpose(eigenvectors, matrix_size, transposeEigenvectors);
     /* print everything */
+    print_matrix(matrix, "initial matrix");
     print_matrix(eigenvalueVector, "eigenvalue vector");
     print_matrix(eigenvalues, "diagonal eigenvalue matrix");
     print_matrix(eigenvectors, "eigenvector matrix");
