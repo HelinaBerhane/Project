@@ -246,10 +246,10 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
     print_matrix(eigenvectors, "eigenvectors");
     print_vector(eigenvalues, "eigenvalues");
     /* calculate exponentials */
-    vector_exponential(eigenvalues, matrix_size, eigenExponential);
+    vector_exponential(eigenvalues, matrix_size, iterations, eigenExponential);
     print_vector(eigenExponential, "exponential eigenvalues");
     /* multiply them back together to get the matrix */
-    recombine_diagonalised_matrices(eigenvectors, matrix_size, iterations, eigenExponential, result);
+    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 
     //
     //LaGenMatComplex eigenvectortrans = LaGenMatComplex::zeros(matrix_size, matrix_size);
