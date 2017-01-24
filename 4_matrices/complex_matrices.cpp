@@ -466,8 +466,8 @@ void test_idenpotent_exponential(const int iterations){//in progress
     int numbers [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
     COMPLEX elements[9];
     for(int i = 0; i < 9; i++){
-        comp[i].r = numbers[i];
-        comp[i].i = 0;
+        elements[i].r = numbers[i];
+        elements[i].i = 0;
     }
     LaGenMatComplex matrix = LaGenMatComplex(elements, 3, 3, false );
     LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
