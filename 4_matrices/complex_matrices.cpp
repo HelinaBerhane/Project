@@ -251,7 +251,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
 
     /* print matrices */
     print_matrix(eigenvectors, "U - eigenvectors");
-    print_matrix(diagonalEigenExp, "D - eigenvalues")
+    print_matrix(diagonalEigenExp, "D - eigenvalues");
 
 
     /* multiply them back together to get the matrix */
