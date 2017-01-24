@@ -200,7 +200,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
     for(int i = 0; i < matrix_size; i++){
         scalar_exponential_main(vector(i), iterations, result(i));
     }
-    print_vector(result, "vector exponential")
+    print_vector(result, "vector exponential");
 }
 
 /* Matrix manipulation [6/6] */
@@ -249,7 +249,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
     vector_exponential(eigenvalues, matrix_size, eigenExponential);
     print_vector(eigenExponential, "exponential eigenvalues");
     /* multiply them back together to get the matrix */
-    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
+    recombine_diagonalised_matrices(eigenvectors, matrix_size, iterations, eigenExponential, result);
 
     //
     //LaGenMatComplex eigenvectortrans = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -472,7 +472,7 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
 }//working
 void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){//not working
     /* initialise everything */
-    int matrix_volume = matrix_size * matrix_size;
+//    int matrix_volume = matrix_size * matrix_size;
     LaGenMatComplex matrix;
     LaGenMatComplex result;
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
