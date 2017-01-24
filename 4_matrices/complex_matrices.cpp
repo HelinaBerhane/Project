@@ -200,7 +200,7 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
 //}
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){//unknown result
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
-    LaEigSolve(matrix, eigenvalues, eigenvectorVec);
+    LaEigSolve(matrix, eigenvalues, eigenvectors);
 }//working
 void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){
     /* initialise  everything */
