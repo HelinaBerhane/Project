@@ -202,6 +202,19 @@ void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenval
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
 }//working
+void recombine_diagonalised_matrices(const LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, const LaGenMatComplex& result){
+    /* initialise  everything */
+    LaGenMatComplex eigenvalueMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex transposeEigenvectors;
+    /* process matrices */
+    vec_to_diag(eigenvalues, matrix_size, eigenvalueMatrix);
+    matrix_transpose(eigenvectors, matrix_size, transposeEigenvectors);
+    result = transposeEigenvectors.copy();
+    /* multiply results */
+    matrix_product(result, eigenvalueMatrix);
+    matrix_product(result, eigenvectors);
+    print_matrix(result, "U^T D U");
+}
 void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
     // LaLUInverseIP: http://lapackpp.sourceforge.net/html/laslv_8h.html#a042c82c5b818f54e7f000d068f14189
     LaVectorLongInt PIV = LaVectorLongInt(matrix_size);
@@ -247,7 +260,7 @@ void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGe
         }
     }
 }//working
-void matrix_product(const LaGenMatComplex& matrix, LaGenMatComplex& product){
+void matrix_product(LaGenMatComplex& product, const LaGenMatComplex& matrix){
     LaGenMatComplex result = matrix.copy();
     Blas_Mat_Mat_Mult(product, matrix, result);
     product = result.copy();
@@ -326,22 +339,24 @@ void test_scalar_manipulation(const int max_rand){
 void test_eigenvalues(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrix;
-    LaVectorComplex eigenvalueVector = LaVectorComplex(matrix_size);
-    LaGenMatComplex eigenvalues = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex transposeEigenvectors;
+    LaGenMatComplex result;
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
-    /* calculate eigenstuff */
-    matrix_eigenvstuff(matrix, eigenvalueVector, eigenvectors);
-    vec_to_diag(eigenvalueVector,matrix_size, eigenvalues);
-    matrix_transpose(eigenvectors, matrix_size, transposeEigenvectors);
-    /* print everything */
     print_matrix(matrix, "initial matrix");
-    print_matrix(eigenvalueVector, "eigenvalue vector");
-    print_matrix(eigenvalues, "diagonal eigenvalue matrix");
-    print_matrix(eigenvectors, "eigenvector matrix");
-    print_matrix(transposeEigenvectors, "transpose eigenvector matrix");
+    /* calculate eigenstuff */
+    matrix_eigenvstuff(matrix, eigenvalues, eigenvectors);
+    /* print everything */
+    print_matrix(eigenvalues, "eigenvalues (vector)");
+    print_matrix(eigenvectors, "eigenvectors (row based?)");
+    print_matrix(transposeEigenvectors, "eigenvector (column based?)");
+    /* multiply them back together to get the matris */
+    recombine_diagonalised_matrices(eigenvectors, eigenvalues, result);
+
+    /* wolfram test */
+    // 2x2 real:
+    // 3x3 complex: {{1+7i, 1+3i, 5+7i},{7i, 6+i, 5+4i},{5+7i, 5+4i, 6}}
 }//working
 void test_inverse(const LaGenMatComplex& initialMatrix, const int matrix_size){
     LaGenMatComplex inverseMatrix;
