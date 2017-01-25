@@ -88,7 +88,7 @@ void vec_to_diag(const LaVectorComplex& vector, const int len, LaGenMatComplex& 
     array_to_diag(array, len, diag);
 }//working
 
-/* Scalar manipulation [8/8] */
+/* Scalar manipulation [9/9] */
 int factorial(int x){
 	if(x <= 1){
         return 1;
@@ -203,7 +203,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
     //print_vector(result, "vector exponential");
 }
 
-/* Matrix manipulation [6/6] */
+/* Matrix manipulation [7/7] */
 //void diagonal_matrix_powers(){      //empty
   //...
 //}
@@ -285,7 +285,7 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     //print_matrix(result, "ABCDE");
 }//working
 
-/* Testing [10/11] */
+/* Testing [11/11] */
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
