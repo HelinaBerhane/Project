@@ -543,7 +543,6 @@ int main(){
 //    generate_array(elements, matrix_volume, max_rand);
 //	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
 //    print_matrix(initialMatrix, "initial matrix");
-    test_lattice_generation(5);
 
     /* test eigenvalues */
 //    test_eigenvalues(2, 9);
@@ -565,4 +564,8 @@ int main(){
 
     /* test inversion */
 //    test_inverse(initialMatrix, matrix_size);
+
+    /* test QMC stuff */
+//    test_lattice_generation(5);
+    test_hamiltonian(5);
 }
