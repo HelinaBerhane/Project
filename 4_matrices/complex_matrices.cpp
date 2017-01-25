@@ -76,11 +76,11 @@ int generate_spins(){
     return (dist(gen) % 2)*2 - 1;
 }
 void generate_lattice(int matrix_size, LaGenMatComplex& lattice){ /* Do this today! */
-    matrix_volume = matrix_size * matrix_size;
-    COMPLEX[] elements[matrix_volume];
+    int matrix_volume = matrix_size * matrix_size;
+    COMPLEX elements[matrix_volume];
     for(int i = 0; i < matrix_volume; i++){
-        array[i].r = generate_spins();
-        array[i].i = 0;
+        elements[i].r = generate_spins();
+        elements[i].i = 0;
     }
     lattice = LaGenMatComplex(elements, matrix_size, matrix_size, false);
     print_matrix(lattice, "lattice");
