@@ -5,7 +5,7 @@
 #include <gmc.h> 	//LaGenMatComplex
 #include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
 #include <blas3pp.h>
-//#include <random>   //random_device, mt19937
+#include <random>   //random_device, mt19937
 
 using namespace std;
 
