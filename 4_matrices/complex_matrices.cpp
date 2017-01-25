@@ -9,8 +9,8 @@
 
 using namespace std;
 
-/* Total [13/20] */
-/* randomisation */
+/* Total [13/20] - QMC [3/3] */
+/* Randomisation */
 int ran(int a, int b){//WIP
     //random_device rd;
     //mt19937 gen(rd());
@@ -49,7 +49,7 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }//working
 
-/* Number generation [4/4] */
+/* Number generation [4/4] - QMC [2/2]*/
 void generate_scalar(COMPLEX& A, const int x){
     A.r = ran(1, x);	//1 to x
     A.i = ran(1, x);
@@ -68,14 +68,15 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     COMPLEX elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-}//workinh
-int generate_spins(){
+}//working
+// QMC -
+int generate_spins(){// QMC - working
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<> dist(0, 1);
     return (dist(gen) % 2)*2 - 1;
 }
-void generate_lattice(int matrix_size, LaGenMatComplex& lattice){ /* Do this today! */
+void generate_lattice(const int matrix_size, LaGenMatComplex& lattice){// QMC - working
     int matrix_volume = matrix_size * matrix_size;
     COMPLEX elements[matrix_volume];
     for(int i = 0; i < matrix_volume; i++){
@@ -83,7 +84,28 @@ void generate_lattice(int matrix_size, LaGenMatComplex& lattice){ /* Do this tod
         elements[i].i = 0;
     }
     lattice = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-    print_matrix(lattice, "lattice");
+}
+void generate_H(const int matrix_size){
+    COMPLEX elements[matrix_volume];
+    int n;
+    /* generate the matrix */
+    for(int i = 0; i < matrix_size; i++){
+        for (int j = 0; j < matrix_size; j++) {
+            n = (matrix_size * i) + j;
+            cout.width(3);
+            cout << abs(i-j);
+            if(abs(i-j) = 1 || abs(i-j) = matrix_size - 1){
+                elements[n].r = -1;
+            }else{
+                comp[n].r = 0;
+            }
+            comp[i+j].i = 0;
+        }
+        cout << endl;
+    }
+    cout << endl;
+    LaGenMatComplex matrix = LaGenMatComplex(elements, 3, 3, false );
+    /* print result */
 }
 
 /* Matrix conversion [3/3] */
@@ -301,7 +323,7 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     //print_matrix(result, "ABCDE");
 }//working
 
-/* Testing [11/11] */
+/* Testing [11/11] - QMC [1/1]*/
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
@@ -462,7 +484,7 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     print_matrix(result, "ABCDE");
     //{{1+7i, 5+7i},{7i, 1+3i}}*{{6+i, 5+7i},{5+4i, 5+4i}}*{{6, 8+8i},{7+i, 6+6i}}*{{8+8i, 1+i},{8+4i, 5}}*{{3, 1+7i},{5+3i, 4+7i}}
 }//working
-void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){//not working
+void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
     /* initialise everything */
     LaGenMatComplex matrix;
     LaGenMatComplex result;
@@ -473,7 +495,7 @@ void test_matrix_exponential(const int matrix_size, const int max_rand, const in
     /* calculate exponential */
     matrix_exponential(matrix, matrix_size, iterations, result);
     print_matrix(result, "e^(matrix)");
-}//should be working
+}//working
 void test_idenpotent_exponential(const int iterations){
     /* generate the matrix */
     int numbers [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
@@ -492,9 +514,14 @@ void test_idenpotent_exponential(const int iterations){
         print_matrix(result);
     }
 }//working
-void test_lattice_generation(const int matrix_size){
-    LaGenMatComplex lattice;
-    generate_lattice(matrix_size, lattice);
+// QMC -
+void test_lattice_generation(const int matrix_size){// QMC - working
+    //LaGenMatComplex lattice;
+    LaGenMatComplex hamiltonian;
+    //generate_lattice(matrix_size, lattice);
+    //print_matrix(lattice);
+    generate_H(matrix_size, hamiltonian);
+    print_matrix(hamiltonian);
 }
 
 /* Main Program */
