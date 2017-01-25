@@ -43,11 +43,9 @@ void print_vector(const LaVectorComplex& vector, const string name){
     cout << name << ":" << endl << vector << endl;
 }
 void print_matrix(const LaGenMatComplex& matrix){
-    cout.width(7);
 	cout << matrix << endl;
 }//working
 void print_matrix(const LaGenMatComplex& matrix, const string name){
-    cout.width(7);
 	cout << name << ":" << endl << matrix << endl;
 }//working
 
@@ -95,8 +93,8 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){//working
     for(int i = 0; i < matrix_size; i++){
         for (int j = 0; j < matrix_size; j++) {
             n = (matrix_size * i) + j;
-            cout.width(3);
-            cout << abs(i-j);
+            //cout.width(3);
+            //cout << abs(i-j);
             if(abs(i-j) == 1 || abs(i-j) == matrix_size - 1){
                 elements[n].r = 1;
             }else{
@@ -104,9 +102,9 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){//working
             }
             elements[n].i = 0;
         }
-        cout << endl;
+        //cout << endl;
     }
-    cout << endl;
+    //cout << endl;
     hamiltonian = LaGenMatComplex(elements, matrix_size, matrix_size, false );
     /* print result */
 }
@@ -534,8 +532,7 @@ void test_hamiltonian(const int matrix_size){
     /* calculate eigenstuff */
     matrix_eigenvstuff(hamiltonian, eigenvalues, eigenvectors);
     print_vector(eigenvalues, "eigenvalues");
-    // eigenvalues are 2 cos(n pi / 5), not /3
-
+    // eigenvalues are 2 cos(n pi / q), where q = the matrix size
 }
 /* Main Program */
 int main(){
