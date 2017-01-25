@@ -69,6 +69,12 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//workinh
+int generate_spins(){
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dist(0, 1);
+    return (dist(gen) % 2)*2 - 1;
+}
 
 /* Matrix conversion [3/3] */
 void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[ ]){
@@ -458,7 +464,7 @@ void test_matrix_exponential(const int matrix_size, const int max_rand, const in
     matrix_exponential(matrix, matrix_size, iterations, result);
     print_matrix(result, "e^(matrix)");
 }//should be working
-void test_idenpotent_exponential(const int iterations){//in progress
+void test_idenpotent_exponential(const int iterations){
     /* generate the matrix */
     int numbers [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
     COMPLEX elements[9];
@@ -475,6 +481,12 @@ void test_idenpotent_exponential(const int iterations){//in progress
         cout << j << " iterations:" << endl;
         print_matrix(result);
     }
+}//working
+void test_lattice_generation(const int iterations){
+    for(int i = 0; i < iterations, i++){
+        cout.width(3);
+        cout << generate_spins();
+    }
 }
 
 /* Main Program */
@@ -487,6 +499,7 @@ int main(){
 //    generate_array(elements, matrix_volume, max_rand);
 //	LaGenMatComplex initialMatrix = LaGenMatComplex(elements, matrix_size, matrix_size, false );
 //    print_matrix(initialMatrix, "initial matrix");
+    test_lattice_generation(10);
 
     /* test eigenvalues */
 //    test_eigenvalues(2, 9);
