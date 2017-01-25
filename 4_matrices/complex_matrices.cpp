@@ -86,6 +86,7 @@ void generate_lattice(const int matrix_size, LaGenMatComplex& lattice){// QMC - 
     lattice = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }
 void generate_H(const int matrix_size){
+    int matrix_volume = matrix_size * matrix_size;
     COMPLEX elements[matrix_volume];
     int n;
     /* generate the matrix */
