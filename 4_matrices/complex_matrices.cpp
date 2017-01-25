@@ -100,7 +100,7 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
             }else{
                 elements[n].r = 0;
             }
-            elements[i+j].i = 0;
+            elements[n].i = 0;
         }
         cout << endl;
     }
@@ -518,7 +518,7 @@ void test_idenpotent_exponential(const int iterations){
 // QMC -
 void test_lattice_generation(const int matrix_size){// QMC - working
     //LaGenMatComplex lattice;
-    LaGenMatComplex hamiltonian = LaGenMatComplex::zeros(matrix_size, matrix_size);;
+    LaGenMatComplex hamiltonian;
     //generate_lattice(matrix_size, lattice);
     //print_matrix(lattice);
     generate_H(matrix_size, hamiltonian);
