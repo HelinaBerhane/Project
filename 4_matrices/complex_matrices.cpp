@@ -518,7 +518,7 @@ void test_idenpotent_exponential(const int iterations){
 // QMC -
 void test_lattice_generation(const int matrix_size){// QMC - working
     //LaGenMatComplex lattice;
-    LaGenMatComplex hamiltonian;
+    LaGenMatComplex hamiltonian = LaGenMatComplex::zeros(matrix_size, matrix_size);;
     //generate_lattice(matrix_size, lattice);
     //print_matrix(lattice);
     generate_H(matrix_size, hamiltonian);
