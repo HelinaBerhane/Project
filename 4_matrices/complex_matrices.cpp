@@ -95,7 +95,7 @@ void generate_H(const int matrix_size){
             n = (matrix_size * i) + j;
             cout.width(3);
             cout << abs(i-j);
-            if( (abs(i-j) = 1) || (abs(i-j) = matrix_size - 1) ){
+            if( (abs(i-j) == 1) || (abs(i-j) == matrix_size - 1) ){
                 elements[n].r = -1;
             }else{
                 comp[n].r = 0;
