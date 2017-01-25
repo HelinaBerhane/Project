@@ -106,10 +106,10 @@ void scalar_addition(const COMPLEX& A, const COMPLEX& B , COMPLEX& result){
     result.r = A.r + B.r;
     result.i = A.i + B.i;
 }//working
-//void scalar_addition(COMPLEX& result, const COMPLEX addition){//probably working
-//    result.r += addition.r;
-//    result.i += addition.i;
-//}
+void scalar_addition(COMPLEX& result, const COMPLEX addition){//probably working
+    result.r += addition.r;
+    result.i += addition.i;
+}
 void scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result){//to test
     result.r = A.r * B;
     result.i = A.i * B;
