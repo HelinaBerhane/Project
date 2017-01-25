@@ -85,7 +85,7 @@ void generate_lattice(const int matrix_size, LaGenMatComplex& lattice){// QMC - 
     }
     lattice = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }
-void generate_H(const int matrix_size){
+void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
     int matrix_volume = matrix_size * matrix_size;
     COMPLEX elements[matrix_volume];
     int n;
@@ -95,17 +95,17 @@ void generate_H(const int matrix_size){
             n = (matrix_size * i) + j;
             cout.width(3);
             cout << abs(i-j);
-            if( (abs(i-j) == 1) || (abs(i-j) == matrix_size - 1) ){
+            if(abs(i-j) == 1 || abs(i-j) == matrix_size - 1){
                 elements[n].r = -1;
             }else{
-                comp[n].r = 0;
+                elements[n].r = 0;
             }
-            comp[i+j].i = 0;
+            elements[i+j].i = 0;
         }
         cout << endl;
     }
     cout << endl;
-    LaGenMatComplex matrix = LaGenMatComplex(elements, 3, 3, false );
+    hamiltonian = LaGenMatComplex(elements, 3, 3, false );
     /* print result */
 }
 
