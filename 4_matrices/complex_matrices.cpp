@@ -483,7 +483,7 @@ void test_idenpotent_exponential(const int iterations){
     }
 }//working
 void test_lattice_generation(const int iterations){
-    for(int i = 0; i < iterations, i++){
+    for(int i = 0; i < iterations; i++){
         cout.width(3);
         cout << generate_spins();
     }
