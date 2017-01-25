@@ -96,7 +96,7 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
             cout.width(3);
             cout << abs(i-j);
             if(abs(i-j) == 1 || abs(i-j) == matrix_size - 1){
-                elements[n].r = -1;
+                elements[n].r = 1;
             }else{
                 elements[n].r = 0;
             }
@@ -105,7 +105,7 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
         cout << endl;
     }
     cout << endl;
-    hamiltonian = LaGenMatComplex(elements, 3, 3, false );
+    hamiltonian = LaGenMatComplex(elements, matrix_size, matrix_size, false );
     /* print result */
 }
 
