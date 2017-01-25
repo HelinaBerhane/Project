@@ -43,9 +43,11 @@ void print_vector(const LaVectorComplex& vector, const string name){
     cout << name << ":" << endl << vector << endl;
 }
 void print_matrix(const LaGenMatComplex& matrix){
+    cout.width(7);
 	cout << matrix << endl;
 }//working
 void print_matrix(const LaGenMatComplex& matrix, const string name){
+    cout.width(7);
 	cout << name << ":" << endl << matrix << endl;
 }//working
 
@@ -96,7 +98,7 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){//working
             cout.width(3);
             cout << abs(i-j);
             if(abs(i-j) == 1 || abs(i-j) == matrix_size - 1){
-                elements[n].r = -1;
+                elements[n].r = 1;
             }else{
                 elements[n].r = 0;
             }
@@ -532,6 +534,8 @@ void test_hamiltonian(const int matrix_size){
     /* calculate eigenstuff */
     matrix_eigenvstuff(hamiltonian, eigenvalues, eigenvectors);
     print_vector(eigenvalues, "eigenvalues");
+    // eigenvalues are 2 cos(n pi / 5), not /3
+
 }
 /* Main Program */
 int main(){
@@ -567,5 +571,5 @@ int main(){
 
     /* test QMC stuff */
 //    test_lattice_generation(5);
-    test_hamiltonian(5);
+    test_hamiltonian(7);
 }
