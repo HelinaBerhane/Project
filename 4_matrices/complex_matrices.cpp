@@ -49,7 +49,7 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }//working
 
-/* Number generation [4/4] - QMC [2/2]*/
+/* Number generation [4/4] - QMC [3/3]*/
 void generate_scalar(COMPLEX& A, const int x){
     A.r = ran(1, x);	//1 to x
     A.i = ran(1, x);
@@ -85,7 +85,7 @@ void generate_lattice(const int matrix_size, LaGenMatComplex& lattice){// QMC - 
     }
     lattice = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }
-void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
+void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){//working
     int matrix_volume = matrix_size * matrix_size;
     COMPLEX elements[matrix_volume];
     int n;
@@ -516,15 +516,23 @@ void test_idenpotent_exponential(const int iterations){
     }
 }//working
 // QMC -
-void test_lattice_generation(const int matrix_size){// QMC - working
-    //LaGenMatComplex lattice;
+void test_lattice_generation(const int matrix_size){//working
+    LaGenMatComplex lattice;
+    generate_lattice(matrix_size, lattice);
+    print_matrix(lattice);
+}
+void test_hamiltonian(const int matrix_size){
+    /* initialise everything */
     LaGenMatComplex hamiltonian;
-    //generate_lattice(matrix_size, lattice);
-    //print_matrix(lattice);
+    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    /* generate matrix */
     generate_H(matrix_size, hamiltonian);
     print_matrix(hamiltonian);
+    /* calculate eigenstuff */
+    matrix_eigenvstuff(hamiltonian, eigenvalues, eigenvectors);
+    print_vector(eigenvalues, "eigenvalues");
 }
-
 /* Main Program */
 int main(){
 //	int matrix_size = 3, max_rand = 9;
