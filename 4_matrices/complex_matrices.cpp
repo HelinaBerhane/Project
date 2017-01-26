@@ -106,7 +106,6 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
     /* print result */
 }//working
 void generate_lattice_array(const int time_slices, COMPLEX elements[]){
-    COMPLEX elements[time_slices];
     for(int i = 0; i < time_slices; i++){
         elements[i].r = generate_spins();
         elements[i].i = 0;
@@ -114,7 +113,7 @@ void generate_lattice_array(const int time_slices, COMPLEX elements[]){
 }
 
 /* Matrix conversion [3/3] */
-void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[ ]){
+void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[]){
     for(int i = 0; i < len; i++){
         array[i] = vector(i);
     }
