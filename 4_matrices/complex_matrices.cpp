@@ -634,6 +634,7 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
     /* generate matrices */
     generate_H(time_slices, H);
     for(int i = 0; i < time_slices; i++){
+        cout << i << endl;
         /* generate matrices */
         generate_lattice_array(time_slices, elements);
         V_matrix_calculation(elements, time_slices, V);
