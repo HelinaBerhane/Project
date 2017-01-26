@@ -352,7 +352,7 @@ void B_matrix_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComple
     matrix_exponential(V, matrix_size, iterations, expV);
     /* print exponential matrices */
     //print_matrix(expH, "e^H");
-    //print_matrix(expV, "e^V");
+    print_matrix(expV, "e^V");
     /* multiply exponentials */
     B = expH.copy();
     matrix_product(B, expV);
@@ -565,10 +565,11 @@ void test_idenpotent_exponential(const int iterations){
     }
 }//working
 void test_diagonal_exponential(const int iterations){
-    LaGenMatComplex matrix = LaGenMatComplex::eye(3, 3);
+    LaGenMatComplex I = LaGenMatComplex::eye(3, 3);
     LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
     diagonal_matrix_exponential(matrix, 3, iterations, result);
-    print_matrix(result, "diagonal exponential");
+    print_matrix(I, "I");
+    print_matrix(result);
 }
 
 // QMC
