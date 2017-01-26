@@ -562,8 +562,10 @@ void test_idenpotent_exponential(const int iterations){
     /* calculate the exponential */
     for(int j = 1; j <= iterations; j++){
         matrix_exponential(matrix, 3, j, result);
-        cout << j << " iterations:" << endl;
-        print_matrix(result);
+        if(j < 5){
+            cout << j << " iterations:" << endl;
+            print_matrix(result);
+        }
     }
 }//working
 void test_diagonal_exponential(const int iterations){
