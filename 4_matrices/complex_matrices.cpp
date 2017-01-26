@@ -629,6 +629,7 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
     LaGenMatComplex BC = LaGenMatComplex::zeros(time_slices, time_slices);
     LaGenMatComplex BD = LaGenMatComplex::zeros(time_slices, time_slices);
     LaGenMatComplex BE = LaGenMatComplex::zeros(time_slices, time_slices);
+    LaGenMatComplex O = LaGenMatComplex::zeros(time_slices, time_slices);
     /* generate matrices */
     generate_H(time_slices, H);
     for(int i = 0; i < time_slices; i++){
