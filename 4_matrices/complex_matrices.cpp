@@ -570,6 +570,7 @@ void test_diagonal_exponential(const int iterations){
     LaGenMatComplex matrix = LaGenMatComplex::eye(3, 3);
     LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
     diagonal_matrix_exponential(matrix, 3, iterations, result);
+    print_matrix(result, "diagonal exponential");
 }
 
 // QMC
@@ -641,6 +642,18 @@ int main(){
 
     cout << "lattice generation test:" << endl;
     test_lattice_generation(matrix_size, time_slices);
+    cout << endl;
+
+    cout << "hamiltonian generation test:" << endl;
+    test_hamiltonian(time_slices);
+    cout << endl;
+
+    cout << "V generation test:" << endl;
+    test_V_generation(time_slices);
+    cout << endl;
+
+    cout << "B generation test:" << endl;
+    test_B_generation(time_slices, iterations);
     cout << endl;
     //test_QMC(matrix_size, time_slices);
 }
