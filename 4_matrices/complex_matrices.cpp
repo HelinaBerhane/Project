@@ -301,7 +301,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
 void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
-        scalar_exponential_main(result(i,i), iterations, result(i,i));
+        scalar_exponential_main(matrix(i,i), iterations, result(i,i));
     }
 }
 void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
@@ -572,7 +572,7 @@ void test_diagonal_exponential(const int iterations){
     print_matrix(result);
 }
 
-// QMC
+// QMC [4/5]
 void test_lattice_generation(const int matrix_size, const int time_slices){
     LaGenMatComplex lattice;
     generate_lattice(matrix_size, lattice);
@@ -670,6 +670,10 @@ int main(){
     int matrix_size = 5, time_slices = 5;//tau
     int iterations = 500;
     /* tests */
+    cout << "idenpotent exponential test:" << endl;
+    test_idenpotent_exponential(iterations);
+    cout << endl;
+
     cout << "diagonal exponential test:" << endl;
     test_diagonal_exponential(iterations);
     cout << endl;
