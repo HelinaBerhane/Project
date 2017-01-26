@@ -119,7 +119,7 @@ void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[ ]
         array[i] = vector(i);
     }
 }//working
-void array_to_diag(COMPLEX array[], const int len, LaGenMatComplex& diag){
+void array_to_diag(const COMPLEX array[], const int len, LaGenMatComplex& diag){
     diag = 0;
     for(int i = 0; i < len; i++){
         diag(i, i) = array[i];
