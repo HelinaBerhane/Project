@@ -649,7 +649,7 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
             B_matrix_calculation(H, V, BE, time_slices, iterations);
         }
     }
-    O_matrix_calculation(BA, BB, BC, BD, BE, O, matrix_size)
+    O_matrix_calculation(BA, BB, BC, BD, BE, O, time_slices);
     /* print result */
     print_matrix(O);
 }
