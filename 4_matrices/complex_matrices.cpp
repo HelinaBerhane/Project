@@ -247,7 +247,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
 }
 
 /* Matrix manipulation [7/7] - [0/3]*/
-void matrix_sum(const int matrix_size, const LaVectorComplex& sum, const LaVectorComplex& matrix){//to test
+void matrix_sum(const int matrix_size, LaVectorComplex& sum, const LaVectorComplex& matrix){//to test
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
             scalar_addition(sum, matrix);
@@ -298,6 +298,12 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
     /* multiply them back together to get the matrix */
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 }//should be working
+void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){
+    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    for(int i = 0; i < matrix_size; i++){
+        scalar_exponential_main(result(i,i), iterations, result(i,i));
+    }
+}
 void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -332,9 +338,11 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     //print_matrix(result, "ABCDE");
 }//working
 // QMC
-void V_matrix_calculation(const int matrix_size, LaGenMatComplex& V){//in progress
+void V_matrix_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//in progress
     //V = ??
-    V = LaGenMatComplex::eye(matrix_size, matrix_size);
+    vec_to_diag(slices, time_slices, V);
+    /* print result */
+    print_matrix(V, "V");
 }
 void B_matrix_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//in progress
     //B = exp(-H)exp(-V)
@@ -348,7 +356,7 @@ void B_matrix_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComple
     print_matrix(expH, "e^H");
     print_matrix(expV, "e^V");
     /* multiply exponentials */
-    B = expH.copy;
+    B = expH.copy();
     matrix_product(B, expV);
     /* print result */
     print_matrix(B, "B");
@@ -361,7 +369,7 @@ void O_matrix_calculation(const LaGenMatComplex& BA, const LaGenMatComplex& BB, 
     /* multiply exponentials */
     five_matrix_multiplication(BA, BB, BC, BD, BE, O);
     /* add I */
-    matrix_sum(O, I);
+    matrix_sum(matrix_size, O, I);
 }
 void partition_function(){//in progress
     //
@@ -558,6 +566,12 @@ void test_idenpotent_exponential(const int iterations){
         print_matrix(result);
     }
 }//working
+void test_diagonal_exponential(const int iterations){
+    LaGenMatComplex matrix = LaGenMatComplex::eye(3, 3);
+    LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
+    diagonal_matrix_exponential(matrix, 3, iterations, result);
+}
+
 // QMC
 void test_lattice_generation(const int matrix_size, const int time_slices){
     LaGenMatComplex lattice;
@@ -565,7 +579,7 @@ void test_lattice_generation(const int matrix_size, const int time_slices){
     print_matrix(lattice);
     COMPLEX lattice_points[time_slices];
     generate_lattice_array(time_slices, lattice_points);
-    print_array(lattice_points, "string");
+    print_array(lattice_points, time_slices, "string");
 }//working
 void test_hamiltonian(const int matrix_size){
     /* initialise everything */
@@ -580,21 +594,36 @@ void test_hamiltonian(const int matrix_size){
     print_vector(eigenvalues, "eigenvalues");
     // eigenvalues are 2 cos(n pi / q), where q = the matrix size
 }//working
-void test_V_generation(const int time_slices){//in progress
+void test_V_generation(const int time_slices){//should work
     //delta test_scalar_sum
-    //lamba
-    //sigma
-    //s_i(l)
-    //mu
-}
-void test_B_generation(const int matrix_size, const int time_slices){//in progress
+    //lamba = 1
+    //sigma = 1
+    //s_i(l) = \pm 1
+    //mu = 0?
     /* initialise everything */
-    int delta_tau = 1;
-    LaGenMatComplex hamiltonian;
-    /* generate matrices */
-    generate_H(matrix_size, hamiltonian);
+    LaGenMatComplex V = LaGenMatComplex::zeros(time_slices, time_slices);
+    COMPLEX elements[time_slices];
+    /* generate the lattice */
+    generate_lattice_array(time_slices, elements);
+    V_matrix_calculation(elements, time_slices, V);
+    /* print result */
+    print_matrix(V, "V");
 }
-void test_QMC(const int matrix_size, const int time_slices){
+void test_B_generation(const int time_slices){//should work
+    /* initialise everything */
+    LaGenMatComplex H;
+    LaGenMatComplex V = LaGenMatComplex::zeros(time_slices, time_slices);
+    LaGenMatComplex B = LaGenMatComplex::zeros(time_slices, time_slices);
+    /* generate matrices */
+    generate_H(time_slices, H);
+    generate_lattice_array(time_slices, elements);
+    V_matrix_calculation(elements, time_slices, V);
+    /* calculate B */
+    B_matrix_calculation(H, V, B, const int time_slices, const int iterations);
+    /* print result */
+    print_matrix(B, "B");
+}
+void test_QMC(const int matrix_size, const int time_slices){//in progress
     test_lattice_generation(matrix_size, time_slices);
     test_hamiltonian(time_slices);
 }
@@ -603,7 +632,14 @@ void test_QMC(const int matrix_size, const int time_slices){
 int main(){
     /* initialise everything */
     int matrix_size = 5, time_slices = 5;//tau
-    /* generate matrices */
+    int iterations = 5000;
+    /* tests */
+    cout << "diagonal exponential test:" << endl;
+    test_diagonal_exponential(iterations);
+    cout << endl;
+
+    cout << "lattice generation test:" << endl;
     test_lattice_generation(matrix_size, time_slices);
+    cout << endl;
     //test_QMC(matrix_size, time_slices);
 }
