@@ -567,7 +567,7 @@ void test_idenpotent_exponential(const int iterations){
 void test_diagonal_exponential(const int iterations){
     LaGenMatComplex I = LaGenMatComplex::eye(3, 3);
     LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
-    diagonal_matrix_exponential(matrix, 3, iterations, result);
+    diagonal_matrix_exponential(I, 3, iterations, result);
     print_matrix(I, "I");
     print_matrix(result);
 }
