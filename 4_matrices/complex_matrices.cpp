@@ -634,20 +634,19 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
     /* generate matrices */
     generate_H(time_slices, H);
     for(int i = 0; i < time_slices; i++){
-        cout << i << endl;
         /* generate matrices */
         generate_lattice_array(time_slices, elements);
         V_matrix_calculation(elements, time_slices, V);
         /* calculate B */
-        if(i = 0){
+        if(i == 0){
             B_matrix_calculation(H, V, BA, time_slices, iterations);
-        }else if(i = 1){
+        }else if(i == 1){
             B_matrix_calculation(H, V, BB, time_slices, iterations);
-        }else if(i = 2){
+        }else if(i == 2){
             B_matrix_calculation(H, V, BC, time_slices, iterations);
-        }else if(i = 3){
+        }else if(i == 3){
             B_matrix_calculation(H, V, BD, time_slices, iterations);
-        }else if(i = 4){
+        }else if(i == 4){
             B_matrix_calculation(H, V, BE, time_slices, iterations);
         }
     }
