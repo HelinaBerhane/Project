@@ -560,13 +560,13 @@ void test_idenpotent_exponential(const int iterations){
     LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
     //print_matrix(matrix, "initial matrix");
     /* calculate the exponential */
-    for(int j = 1; j <= iterations; j++){
+    for(int j = 1; j <= 5; j++){
         matrix_exponential(matrix, 3, j, result);
-        if(j < 5){
-            cout << j << " iterations:" << endl;
-            print_matrix(result);
-        }
+        cout << j << " iterations:" << endl;
+        print_matrix(result);
     }
+    matrix_exponential(matrix, 3, iterations, result);
+    print_matrix(result, "idenpotent exponential");
 }//working
 void test_diagonal_exponential(const int iterations){
     LaGenMatComplex I = LaGenMatComplex::eye(3, 3);
