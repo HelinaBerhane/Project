@@ -624,7 +624,11 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
     COMPLEX elements[time_slices];
     LaGenMatComplex H;
     LaGenMatComplex V = LaGenMatComplex::zeros(time_slices, time_slices);
-    LaGenMatComplex B = LaGenMatComplex::zeros(time_slices, time_slices);
+    LaGenMatComplex BA = LaGenMatComplex::zeros(time_slices, time_slices);
+    LaGenMatComplex BB = LaGenMatComplex::zeros(time_slices, time_slices);
+    LaGenMatComplex BC = LaGenMatComplex::zeros(time_slices, time_slices);
+    LaGenMatComplex BD = LaGenMatComplex::zeros(time_slices, time_slices);
+    LaGenMatComplex BE = LaGenMatComplex::zeros(time_slices, time_slices);
     /* generate matrices */
     generate_H(time_slices, H);
     for(int i = 0; i < time_slices; i++){
