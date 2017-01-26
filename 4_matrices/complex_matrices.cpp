@@ -47,17 +47,17 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 }//working
 
 /* Number generation [4/4] - QMC [3/3]*/
-void generate_scalar(COMPLEX& A, const int x){
-    A.r = ran(1, x);	//1 to x
-    A.i = ran(1, x);
+void generate_scalar(COMPLEX& scalar, const int max_rand){
+    scalar.r = ran(max_rand);	//1 to x
+    scalar.i = ran(max_rand);
 }//working
-void generate_scalar(int number, const int x){
-    number = ran(1, x);	//1 to x
+void generate_scalar(int scalar, const int max_rand){
+    scalar = ran(max_rand);	//1 to x
 }//working
-void generate_array(COMPLEX array[], const int len, const int x){
-    for(int i = 0; i < len; i++){
-        array[i].r = ran(1, x);	//1 to x
-        array[i].i = ran(1, x);
+void generate_array(COMPLEX array[], const int array_length, const int max_rand){
+    for(int i = 0; i < array_length; i++){
+        array[i].r = ran(max_rand);	//1 to x
+        array[i].i = ran(max_rand);
 	}
 }//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
@@ -105,7 +105,7 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
     hamiltonian = LaGenMatComplex(elements, matrix_size, matrix_size, false );
     /* print result */
 }//working
-void generate_lattice_array(const int time_slices, COMPLEX& elements[]){
+void generate_lattice_array(const int time_slices, COMPLEX elements[]){
     COMPLEX elements[time_slices];
     for(int i = 0; i < time_slices; i++){
         elements[i].r = generate_spins();
