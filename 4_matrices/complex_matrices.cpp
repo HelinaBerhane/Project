@@ -652,7 +652,12 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
     }
     O_matrix_calculation(BA, BB, BC, BD, BE, O, time_slices);
     /* print result */
-    print_matrix(O);
+    print_matrix(BA, "BA");
+    print_matrix(BB, "BB");
+    print_matrix(BC, "BC");
+    print_matrix(BD, "BD");
+    print_matrix(BE, "BE");
+    print_matrix(O, "O");
 }
 void test_QMC(const int matrix_size, const int time_slices){//in progress
     test_lattice_generation(matrix_size, time_slices);
