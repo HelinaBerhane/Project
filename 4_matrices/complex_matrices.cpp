@@ -351,8 +351,8 @@ void B_matrix_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComple
     matrix_exponential(H, matrix_size, iterations, expH);
     matrix_exponential(V, matrix_size, iterations, expV);
     /* print exponential matrices */
-    print_matrix(expH, "e^H");
-    print_matrix(expV, "e^V");
+    //print_matrix(expH, "e^H");
+    //print_matrix(expV, "e^V");
     /* multiply exponentials */
     B = expH.copy();
     matrix_product(B, expV);
@@ -662,7 +662,7 @@ void test_QMC(const int matrix_size, const int time_slices){//in progress
 int main(){
     /* initialise everything */
     int matrix_size = 5, time_slices = 5;//tau
-    int iterations = 5000;
+    int iterations = 500;
     /* tests */
     cout << "diagonal exponential test:" << endl;
     test_diagonal_exponential(iterations);
