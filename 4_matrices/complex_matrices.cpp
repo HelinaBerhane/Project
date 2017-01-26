@@ -301,7 +301,9 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, co
 void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
+        cout << "matrix_ii "<< matrix(i,i) << endl;
         scalar_exponential_main(matrix(i,i), iterations, result(i,i));
+        cout << "e^matrix_ii "<< result(i,i) << endl;
     }
 }
 void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
