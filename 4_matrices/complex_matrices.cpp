@@ -247,10 +247,11 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
 }
 
 /* Matrix manipulation [7/7] - [0/3]*/
-void matrix_sum(const int matrix_size, LaVectorComplex& sum, const LaVectorComplex& matrix){//to test
+void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatComplex& matrix){//to test
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
-            scalar_addition(sum, matrix);
+            sum(i, j).r += matrix(i, j).r;
+            sum(i, j).i += matrix(i, j).i;
         }
     }
 }
@@ -340,7 +341,7 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
 // QMC
 void V_matrix_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//in progress
     //V = ??
-    vec_to_diag(slices, time_slices, V);
+    array_to_diag(slices, time_slices, V);
     /* print result */
     print_matrix(V, "V");
 }
@@ -609,8 +610,9 @@ void test_V_generation(const int time_slices){//should work
     /* print result */
     print_matrix(V, "V");
 }
-void test_B_generation(const int time_slices){//should work
+void test_B_generation(const int time_slices, const int iterations){//should work
     /* initialise everything */
+    COMPLEX elements[time_slices];
     LaGenMatComplex H;
     LaGenMatComplex V = LaGenMatComplex::zeros(time_slices, time_slices);
     LaGenMatComplex B = LaGenMatComplex::zeros(time_slices, time_slices);
@@ -619,7 +621,7 @@ void test_B_generation(const int time_slices){//should work
     generate_lattice_array(time_slices, elements);
     V_matrix_calculation(elements, time_slices, V);
     /* calculate B */
-    B_matrix_calculation(H, V, B, const int time_slices, const int iterations);
+    B_matrix_calculation(H, V, B, time_slices, iterations);
     /* print result */
     print_matrix(B, "B");
 }
