@@ -352,7 +352,7 @@ void B_matrix_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComple
     matrix_exponential(V, matrix_size, iterations, expV);
     /* print exponential matrices */
     //print_matrix(expH, "e^H");
-    print_matrix(expV, "e^V");
+    //print_matrix(expV, "e^V");
     /* multiply exponentials */
     B = expH.copy();
     matrix_product(B, expV);
