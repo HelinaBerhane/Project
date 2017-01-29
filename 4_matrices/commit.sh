@@ -1,5 +1,9 @@
 #!/bin/bash
-# push to git
+message=$1
 git add *
-git commit -m "testing"
+if [[ -n "$message" ]]; then
+    git commit -m "$message"
+else
+    git commit -m "testing"
+fi
 git push origin master
