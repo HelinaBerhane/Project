@@ -396,7 +396,7 @@ void partition_function(){//in progress
 
 //46 - 7/9
 
-/* Testing [11/11] - QMC [2/5]*/
+/* Testing [12/12] - QMC [2/5]*/
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
@@ -490,6 +490,16 @@ void test_scalar_exponential(COMPLEX& number, const int iterations, COMPLEX& res
     scalar_exponential_main(number, iterations, result);
     cout << "e^" << number << " = " << result << endl;
 }//working
+void test_matrix_subtraction(const int matrix_size, const int max_rand){
+    LaGenMatComplex matrix;
+    LaGenMatComplex result;
+    generate_matrix(matrix_size, max_rand, matrix);
+    print_matrix(matrix, "Matrix");
+    matrix_negative(matrix_size, matrix, result);
+    print_matrix(result, "- Matrix");
+    matrix_negative(matrix_size,  matrix);
+    print_matrix(matrix, "- Matrix (in place)");
+}
 void test_matrix_multiplication(const int matrix_size, const int max_rand){
     int matrix_volume = matrix_size * matrix_size;
     /* generate matrix A */
@@ -690,10 +700,14 @@ void test_QMC(const int matrix_size, const int time_slices){//in progress
 
 /* --- Main QMC Program --- */
 int main(){
+    test_matrix_subtraction(4, 5);
     /* initialise everything */
+/*
     int matrix_size = 5, time_slices = 5;//tau
     int iterations = 500;
+*/
     /* tests */
+/*
     cout << "idenpotent exponential test:" << endl;
     test_idenpotent_exponential(iterations);
     cout << endl;
@@ -722,4 +736,5 @@ int main(){
     test_O_generation(time_slices, iterations);
     cout << endl;
     //test_QMC(matrix_size, time_slices);
+*/
 }
