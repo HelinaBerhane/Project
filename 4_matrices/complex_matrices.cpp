@@ -492,7 +492,7 @@ void test_scalar_exponential(COMPLEX& number, const int iterations, COMPLEX& res
 }//working
 void test_matrix_subtraction(const int matrix_size, const int max_rand){
     LaGenMatComplex matrix;
-    LaGenMatComplex result;
+    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     generate_matrix(matrix_size, max_rand, matrix);
     print_matrix(matrix, "Matrix");
     matrix_negative(matrix_size, matrix, result);
