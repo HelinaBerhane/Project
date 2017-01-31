@@ -93,7 +93,7 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
             //cout.width(3);
             //cout << abs(i-j);
             if(abs(i-j) == 1 || abs(i-j) == matrix_size - 1){
-                elements[n].r = 1;
+                elements[n].r = -1;
             }else{
                 elements[n].r = 0;
             }
@@ -366,19 +366,24 @@ void V_matrix_calculation(const COMPLEX slices[], const int time_slices, LaGenMa
 void B_matrix_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
     //B = exp(-H)exp(-V)
     /* initialise everything */
+    LaGenMatComplex negH;
+    LaGenMatComplex negV;
     LaGenMatComplex expH;
     LaGenMatComplex expV;
+    /* negate matrices (not in place) */
+    matrix_negative(matrix_size, H, negH);
+    matrix_negative(matrix_size, V, negV);
     /* calculate exponentials */
-    matrix_exponential(H, matrix_size, iterations, expH);
-    matrix_exponential(V, matrix_size, iterations, expV);
+    matrix_exponential(negH, matrix_size, iterations, expH);
+    matrix_exponential(negV, matrix_size, iterations, expV);
     /* print exponential matrices */
-    //print_matrix(expH, "e^H");
-    //print_matrix(expV, "e^V");
+    print_matrix(expH, "e^-H");
+    print_matrix(expV, "e^-V");
     /* multiply exponentials */
     B = expH.copy();
     matrix_product(B, expV);
     /* print result */
-    //print_matrix(B, "B");
+    print_matrix(B, "B");
 }
 void O_matrix_calculation(const LaGenMatComplex& BA, const LaGenMatComplex& BB, const LaGenMatComplex& BC, const LaGenMatComplex& BD, const LaGenMatComplex&BE, LaGenMatComplex& O, const int matrix_size){//should be working
     //O = 1 + B(m) B(m-1) B(...) B(1)
@@ -396,7 +401,7 @@ void partition_function(){//in progress
 
 //46 - 7/9
 
-/* Testing [12/12] - QMC [2/5]*/
+/* Testing [13/13] - QMC [2/5]*/
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
@@ -652,7 +657,7 @@ void test_B_generation(const int time_slices, const int iterations){//should wor
     /* calculate B */
     B_matrix_calculation(H, V, B, time_slices, iterations);
     /* print result */
-    print_matrix(B);
+    //print_matrix(B);
 }
 void test_O_generation(const int time_slices, const int iterations){//should work
     /* initialise everything */
@@ -700,7 +705,6 @@ void test_QMC(const int matrix_size, const int time_slices){//in progress
 
 /* --- Main QMC Program --- */
 int main(){
-    test_matrix_subtraction(4, 5);
     /* initialise everything */
 /*
     int matrix_size = 5, time_slices = 5;//tau
@@ -727,11 +731,11 @@ int main(){
     cout << "V generation test:" << endl;
     test_V_generation(time_slices);
     cout << endl;
-
+*/
     cout << "B generation test:" << endl;
     test_B_generation(time_slices, iterations);
     cout << endl;
-
+/*
     cout << "O generation test:" << endl;
     test_O_generation(time_slices, iterations);
     cout << endl;
