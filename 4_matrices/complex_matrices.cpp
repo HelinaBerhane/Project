@@ -364,7 +364,7 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
         if(i % 2 == 1){// if odd
             //along the first row
             coefficient.r = matrix(1, i).r;
-            coefficient.i = matrix(1, i).r;
+            coefficient.i = matrix(1, i).i;
         }else{// if even
             coefficient.r = - matrix(1, i).r;
             coefficient.i = - matrix(1, i).i;
