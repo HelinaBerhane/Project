@@ -380,11 +380,13 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
         for(int row = 1; row < matrix_size; row ++){
             for(int column = 0; column < matrix_size; column++){
                 if(column != element){
-                    newMatrix(row, newColumn).r = matrix(row, column).r;
-                    newMatrix(row, newColumn).i = matrix(row, column).i;
+                    newMatrix(row - 1, newColumn).r = matrix(row, column).r;
+                    newMatrix(row - 1, newColumn).i = matrix(row, column).i;
                     newColumn++;
+                    cout << newMatrix(row - 1, newColumn) << " ";
                 }
             }
+            cout << "new row";
         }
         print_matrix(newMatrix, "New matrix");
         /* calculate the determinant of the new matrix */
