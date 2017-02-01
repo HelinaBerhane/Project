@@ -469,7 +469,7 @@ void flip_lattice_points(const int matrix_size, const int time_slices, LaGenMatC
 
 //46 - 7/9
 
-/* Testing [13/13] - QMC [2/5]*/
+/* Testing [14/14] - QMC [2/5]*/
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
@@ -688,6 +688,17 @@ void test_simple_matrix_determinant(const int max_rand){
     /* calculate determinant */
     simple_matrix_determinant(matrix);
     print_scalar(simple_matrix_determinant(matrix), "det(M)");
+}//working
+void test_determinant_coefficient(){//in progress
+    /* initialise everything */
+    LaGenMatComplex matrix;
+    /* generate matrix */
+    generate_matrix(4, 9, matrix);
+    /* calculate coefficients */
+    for(int element = 0; element < 4; i++){
+        cout << determinant_coefficient(matrix, element) << " ";
+    }
+    cout << endl;
 }
 void test_matrix_determinant(const int matrix_size, const int max_rand){//in progress
     /* initialise everything */
@@ -798,10 +809,11 @@ void test_QMC(const int matrix_size, const int time_slices){//in progress
 int main(){
     /* initialise everything */
 
-    int matrix_size = 5, time_slices = 5, max_rand = 9;
+    int matrix_size = 3, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
-    test_matrix_determinant(matrix_size, max_rand);
+    test_determinant_coefficient()
+//    test_matrix_determinant(matrix_size, max_rand);
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
