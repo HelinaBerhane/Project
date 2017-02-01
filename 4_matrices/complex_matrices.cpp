@@ -66,8 +66,17 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//working
-void generate_reduced_matrix(const int matrix_size, LaGenMatComplex& matrix){//in progress
-    //...
+void generate_reduced_matrix(const int matrix_size, LaGenMatComplex& matrix, const int row, const int column, LaGenMatComplex& newMatrix){//in progress
+    for(int r = 1; r < matrix_size; r++){ // skip first row
+        int newC = 0;
+        for(int c = 0; c < matrix_size; c++){
+            if(c != element){ // slip column
+                newMatrix(r - 1, newC).r = matrix(r, c).r;
+                newMatrix(r - 1, newC).i = matrix(r, c).i;
+                newC++;
+            }
+        }
+    }
 }
 // QMC - [4/4]
 int generate_spins(){
@@ -248,7 +257,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
     //print_vector(result, "vector exponential");
 }//working
 
-/* Matrix manipulation [12/12]*/
+/* Matrix manipulation [13/13]*/
 void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -387,7 +396,7 @@ COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int element
         coefficient.i = matrix(0, element).i;
     }
     return coefficient;
-}
+}//working
 void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient, COMPLEX& determinant){
     /* initialise everything */
     determinant.r = 0;
@@ -398,18 +407,7 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
         determinant_coefficient(matrix, element);
         /* make a new matrix without the relavant row and column */
         LaGenMatComplex newMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
-        for(int row = 1; row < matrix_size; row++){
-            int newColumn = 0;
-            for(int column = 0; column < matrix_size; column++){
-                if(column != element){
-                    newMatrix(row - 1, newColumn).r = matrix(row, column).r;
-                    newMatrix(row - 1, newColumn).i = matrix(row, column).i;
-                    newColumn++;
-                    //cout << newMatrix(row - 1, newColumn) << " ";
-                }
-            }
-            //cout << "new row" << endl;
-        }
+
         print_matrix(newMatrix, "newMatrix");
         /* calculate the determinant of the new matrix */
         matrix_determinant(matrix_size - 1, newMatrix, coefficient, determinant);
@@ -692,14 +690,27 @@ void test_simple_matrix_determinant(const int max_rand){
 void test_determinant_coefficient(){//in progress
     /* initialise everything */
     LaGenMatComplex matrix;
+    int matrix_size = 4, max_rand = 9;
     /* generate matrix */
-    generate_matrix(4, 9, matrix);
+    generate_matrix(matrix_size, max_rand, matrix);
     print_matrix(matrix, "matrix");
     /* calculate coefficients */
-    for(int element = 0; element < 4; element++){
+    for(int element = 0; element < matrix_size; element++){
         cout << determinant_coefficient(matrix, element) << " ";
     }
     cout << endl;
+}
+void test_reduced_matrix(){
+    /* initialise everything */
+    LaGenMatComplex matrix;
+    LaGenMatComplex newMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
+    int matrix_size = 4, max_rand = 9, row = 1, column = 3;
+    /* generate matrix */
+    generate_matrix(matrix_size, max_rand, matrix);
+    print_matrix(matrix, "matrix");
+    /* calculate reduced matrix */
+    generate_reduced_matrix(matrix_size, matrix, row, column, newMatrix);
+    print_matrix(newMatrix, "newMatrix");
 }
 void test_matrix_determinant(const int matrix_size, const int max_rand){//in progress
     /* initialise everything */
@@ -813,7 +824,7 @@ int main(){
     int matrix_size = 3, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
-    test_determinant_coefficient();
+    test_reduced_matrix();
 //    test_matrix_determinant(matrix_size, max_rand);
     /* tests */
 /*
