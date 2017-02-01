@@ -105,8 +105,8 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
     hamiltonian = LaGenMatComplex(elements, matrix_size, matrix_size, false );
     /* print result */
 }//working
-void generate_lattice_array(const int time_slices, COMPLEX elements[]){
-    for(int i = 0; i < time_slices; i++){
+void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
+    for(int i = 0; i < matrix_size; i++){
         elements[i].r = generate_spins();
         elements[i].i = 0;
     }
@@ -358,6 +358,19 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     matrix_product(result, matrixE);
     //print_matrix(result, "ABCDE");
 }//working
+void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& determinant){
+    COMPLEX coefficient
+    for(int i = 0; i < matrix_size; i++){
+        if(i % 2 = 1){// if odd
+            //along the first row
+            coefficient = matrix(1, i);
+        }else{// if even
+            coefficient = - matrix(1, i);
+        }
+        cout.width(7);
+        cout << coefficient;
+    }
+}
 // QMC - [3/4]
 void V_matrix_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//should be working
     //V = ??
@@ -397,6 +410,14 @@ void O_matrix_calculation(const LaGenMatComplex& BA, const LaGenMatComplex& BB, 
 }
 void partition_function(){//in progress
     //
+}
+void flip_lattice_points(const int matrix_size, const int time_slices, LaGenMatComplex& lattice){
+    generate_lattice_array(const int matrix_size, COMPLEX elements[]);
+    for(int i = 0; i < time_slices; i ++){
+        for(int j = 0; j < matrix_size; j++){
+
+        }
+    }
 }
 
 //46 - 7/9
@@ -611,6 +632,18 @@ void test_diagonal_exponential(const int iterations){
     print_matrix(I, "I");
     print_matrix(result);
 }
+void test_matrix_determinant(const int matrix_size, const int max_rand){
+    /* initialise everything */
+    LaGenMatComplex matrix;
+    COMPLEX determinant;
+    /* generate matrix */
+    generate_matrix(matrix_size, max_rand, matrix);
+    determinant.r = 0;
+    determinant.i = 0
+    print_matrix(matrix, "initial matrix");
+    /* calculate determinant */
+    matrix_determinant(matrix_size, matrix, determinant);
+}
 // QMC [4/5]
 void test_lattice_generation(const int matrix_size, const int time_slices){
     LaGenMatComplex lattice;
@@ -710,6 +743,7 @@ int main(){
     int matrix_size = 5, time_slices = 5;//tau
     int iterations = 500;
 
+    test_matrix_determinant( matrix_size, max_rand);
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
@@ -731,11 +765,11 @@ int main(){
     cout << "V generation test:" << endl;
     test_V_generation(time_slices);
     cout << endl;
-*/
+
     cout << "B generation test:" << endl;
     test_B_generation(time_slices, iterations);
     cout << endl;
-/*
+
     cout << "O generation test:" << endl;
     test_O_generation(time_slices, iterations);
     cout << endl;
