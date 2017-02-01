@@ -56,7 +56,7 @@ void generate_scalar(int scalar, const int max_rand){
 }//working
 void generate_array(COMPLEX array[], const int array_length, const int max_rand){
     for(int i = 0; i < array_length; i++){
-        array[i].r = ran(max_rand);	//1 to x
+        array[i].r = ran(max_rand)+1;	//1 to x
         array[i].i = 0;//ran(max_rand);
 	}
 }//working
