@@ -812,7 +812,7 @@ int main(){
     int matrix_size = 3, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
-    test_determinant_coefficient()
+    test_determinant_coefficient();
 //    test_matrix_determinant(matrix_size, max_rand);
     /* tests */
 /*
