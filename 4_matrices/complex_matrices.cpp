@@ -66,6 +66,7 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//working
+void generate_reduced_matrix(const int matrix_size, LaGenMatComplex& matrix, )
 // QMC - [4/4]
 int generate_spins(){
     random_device rd;
@@ -157,11 +158,11 @@ void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     laResult = laA * laB;
     result = laResult.toCOMPLEX();
 }//working
-void scalar_product(COMPLEX& total, const COMPLEX& number){
+void scalar_product(COMPLEX& product, const COMPLEX& number){
     COMPLEX part;
-    part.r = (total.r * number.r) - (total.i * number.i);
-    part.i = (total.r * number.i) + (total.i * number.r);
-    total = part;
+    part.r = (product.r * number.r) - (product.i * number.i);
+    part.i = (product.r * number.i) + (product.i * number.r);
+    product = part;
 }//working
 void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
     result.r = A.r / B;
@@ -358,6 +359,21 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     matrix_product(result, matrixE);
     //print_matrix(result, "ABCDE");
 }//working
+COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
+    /* initialise everything */
+    COMPLEX A;
+    COMPLEX B;
+    /* multiply opposite corners */
+    scalar_multiplication(matrix(0,0), matrix(1,1), A);
+    scalar_multiplication(matrix(0,1), matrix(1,0), B);
+    /* - B */
+    B.r = -B.r;
+    B.i = -B.i;
+    /* calculate determinant */
+    scalar_sum(A, B)
+    return A;
+}
+
 void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient, COMPLEX& determinant){
     /* initialise everything */
     determinant.r = 0;
@@ -388,7 +404,7 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
             }
             //cout << "new row" << endl;
         }
-        print_matrix(newMatrix);
+        print_matrix(newMatrix, "newMatrix");
         /* calculate the determinant of the new matrix */
         matrix_determinant(matrix_size - 1, newMatrix, coefficient, determinant);
         /* sum the determinants */
@@ -657,6 +673,15 @@ void test_diagonal_exponential(const int iterations){
     print_matrix(I, "I");
     print_matrix(result);
 }
+void test_simple_matrix_determinant(const int max_rand){
+    /* initialise everything */
+    LaGenMatComplex matrix;
+    /* generate matrix */
+    generate_matrix(2, max_rand, matrix);
+    /* calculate determinant */
+    matrix_determinant(matrix_size, matrix, coefficient, determinant);
+    print_scalar(simple_matrix_determinant(matrix), "det(M)");
+}
 void test_matrix_determinant(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrix;
@@ -769,7 +794,8 @@ int main(){
     int matrix_size = 5, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
-    test_matrix_determinant(matrix_size, max_rand);
+    test_simple_matrix_determinant(max_rand);
+//    test_matrix_determinant(matrix_size, max_rand);
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
