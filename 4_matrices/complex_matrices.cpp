@@ -388,7 +388,7 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
             }
             //cout << "new row" << endl;
         }
-        print_matrix(newMatrix, "New matrix");
+        print_matrix(newMatrix);
         /* calculate the determinant of the new matrix */
         matrix_determinant(matrix_size - 1, newMatrix, coefficient, determinant);
         /* sum the determinants */
