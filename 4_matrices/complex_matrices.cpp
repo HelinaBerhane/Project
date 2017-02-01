@@ -359,7 +359,7 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     //print_matrix(result, "ABCDE");
 }//working
 void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& determinant){
-    COMPLEX coefficient
+    COMPLEX coefficient;
     for(int i = 0; i < matrix_size; i++){
         if(i % 2 = 1){// if odd
             //along the first row
@@ -412,10 +412,10 @@ void partition_function(){//in progress
     //
 }
 void flip_lattice_points(const int matrix_size, const int time_slices, LaGenMatComplex& lattice){
-    generate_lattice_array(const int matrix_size, COMPLEX elements[]);
+    //generate_lattice_array(matrix_size, elements[]);
     for(int i = 0; i < time_slices; i ++){
         for(int j = 0; j < matrix_size; j++){
-
+            //
         }
     }
 }
