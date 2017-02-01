@@ -361,11 +361,13 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
 void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& determinant){
     COMPLEX coefficient;
     for(int i = 0; i < matrix_size; i++){
-        if(i % 2 = 1){// if odd
+        if(i % 2 == 1){// if odd
             //along the first row
-            coefficient = matrix(1, i);
+            coefficient.r = matrix(1, i).r;
+            coefficient.i = matrix(1, i).r;
         }else{// if even
-            coefficient = - matrix(1, i);
+            coefficient.r = - matrix(1, i).r;
+            coefficient.i = - matrix(1, i).i;
         }
         cout.width(7);
         cout << coefficient;
