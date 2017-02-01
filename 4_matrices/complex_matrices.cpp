@@ -694,6 +694,7 @@ void test_determinant_coefficient(){//in progress
     LaGenMatComplex matrix;
     /* generate matrix */
     generate_matrix(4, 9, matrix);
+    print_matrix(matrix, "matrix");
     /* calculate coefficients */
     for(int element = 0; element < 4; element++){
         cout << determinant_coefficient(matrix, element) << " ";
