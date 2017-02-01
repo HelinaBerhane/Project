@@ -695,7 +695,7 @@ void test_determinant_coefficient(){//in progress
     /* generate matrix */
     generate_matrix(4, 9, matrix);
     /* calculate coefficients */
-    for(int element = 0; element < 4; i++){
+    for(int element = 0; element < 4; element++){
         cout << determinant_coefficient(matrix, element) << " ";
     }
     cout << endl;
