@@ -360,6 +360,7 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
 }//working
 void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient, COMPLEX& determinant){
     /* initialise everything */
+    cout << matrix << endl;
     determinant.r = 0;
     determinant.i = 0;
     /* do stuff */
@@ -377,7 +378,7 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
         /* make a new matrix without the relavant row and column */
         int newColumn = 0;
         LaGenMatComplex newMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
-        for(int row = 1; row < matrix_size; row ++){
+        for(int row = 1; row < matrix_size; row++){
             for(int column = 0; column < matrix_size; column++){
                 if(column != element){
                     newMatrix(row - 1, newColumn).r = matrix(row, column).r;
@@ -386,7 +387,7 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
                     cout << newMatrix(row - 1, newColumn) << " ";
                 }
             }
-            cout << "new row";
+            cout << "new row" << endl;
         }
         print_matrix(newMatrix, "New matrix");
         /* calculate the determinant of the new matrix */
