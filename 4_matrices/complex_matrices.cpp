@@ -711,8 +711,8 @@ void test_reduced_matrix(){
     /* calculate reduced matrix */
     for(int element = 0; element < matrix_size; element++){
         generate_reduced_matrix(matrix_size, matrix, element, newMatrix);
+        print_matrix(newMatrix, "newMatrix");
     }
-    print_matrix(newMatrix, "newMatrix");
 }
 void test_matrix_determinant(const int matrix_size, const int max_rand){//in progress
     /* initialise everything */
