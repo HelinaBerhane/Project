@@ -66,7 +66,9 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//working
-void generate_reduced_matrix(const int matrix_size, LaGenMatComplex& matrix, )
+void generate_reduced_matrix(const int matrix_size, LaGenMatComplex& matrix){//in progress
+    //...
+}
 // QMC - [4/4]
 int generate_spins(){
     random_device rd;
@@ -370,7 +372,7 @@ COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
     B.r = -B.r;
     B.i = -B.i;
     /* calculate determinant */
-    scalar_sum(A, B)
+    scalar_sum(A, B);
     return A;
 }
 
@@ -679,10 +681,10 @@ void test_simple_matrix_determinant(const int max_rand){
     /* generate matrix */
     generate_matrix(2, max_rand, matrix);
     /* calculate determinant */
-    matrix_determinant(matrix_size, matrix, coefficient, determinant);
+    simple_matrix_determinant(matrix);
     print_scalar(simple_matrix_determinant(matrix), "det(M)");
 }
-void test_matrix_determinant(const int matrix_size, const int max_rand){
+void test_matrix_determinant(const int matrix_size, const int max_rand){//in progress
     /* initialise everything */
     LaGenMatComplex matrix;
     COMPLEX coefficient;
