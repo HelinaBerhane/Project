@@ -142,7 +142,7 @@ void scalar_addition(const COMPLEX& A, const COMPLEX& B , COMPLEX& result){
     result.r = A.r + B.r;
     result.i = A.i + B.i;
 }//working
-void scalar_addition(COMPLEX& result, const COMPLEX addition){//probably working
+void scalar_sum(COMPLEX& result, const COMPLEX addition){//probably working
     result.r += addition.r;
     result.i += addition.i;
 }
@@ -193,7 +193,7 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
             scalar_division(number, i, division);
             scalar_product(total_division, division);
         }
-        scalar_addition(result, total_division);
+        scalar_sum(result, total_division);
     }
 }//probably working
 //void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
@@ -359,15 +359,37 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     //print_matrix(result, "ABCDE");
 }//working
 void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient, COMPLEX& determinant){
-    for(int i = 0; i < matrix_size; i++){
-        if(i % 2 == 1){// if odd
-            //along the first row
-            coefficient.r = matrix(0, i).r;
-            coefficient.i = matrix(0, i).i;
-        }else{// if even
-            coefficient.r = - matrix(0, i).r;
-            coefficient.i = - matrix(0, i).i;
+    /* initialise everything */
+    determinant.r = 0;
+    determinant.i = 0;
+    /* do stuff */
+    for(int element = 0; element < matrix_size; element++){
+        /* determine the coefficients */
+        if(element % 2 == 1){
+            // if odd
+            coefficient.r = matrix(0, element).r;
+            coefficient.i = matrix(0, element).i;
+        }else{
+            // if even
+            coefficient.r = - matrix(0, element).r;
+            coefficient.i = - matrix(0, element).i;
         }
+        /* make a new matrix without the relavant row and column */
+        int newColumn = 0;
+        LaGenMatComplex newMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
+        for(int row = 1; row < matrix_size; row ++){
+            for(int column = 0; column < matrix_size; column++){
+                if(column != element){
+                    newMatrix(row, newColumn).r = matrix(row, column).r;
+                    newMatrix(row, newColumn).i = matrix(row, column).i;
+                    newColumn++;
+                }
+            }
+        }
+        print_matrix(newMatrix, "New matrix");
+        /* calculate the determinant of the new matrix */
+        matrix_determinant(matrix_size - 1, newMatrix, coefficient, determinant);
+        /* sum the determinants */
         cout << coefficient << " ";
     }
     cout << endl;
@@ -468,7 +490,7 @@ void test_scalar_manipulation(const int max_rand){
     sum.i = 0;
     for(int i = 0; i < 5; i++){
         cout << "sum(" << i << ") = " << sum << endl;
-        scalar_addition(sum, compA);
+        scalar_sum(sum, compA);
     }
     cout << "sum = " << sum << endl;
 
@@ -502,7 +524,7 @@ void test_scalar_sum(const int max_rand, const int iterations){
     step = number;
     for(int i = 0; i < iterations; i++){
         cout << step << endl;
-        scalar_addition(number, step);
+        scalar_sum(number, step);
     }
     cout << number << endl;
 }//working
