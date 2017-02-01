@@ -706,10 +706,10 @@ void test_QMC(const int matrix_size, const int time_slices){//in progress
 /* --- Main QMC Program --- */
 int main(){
     /* initialise everything */
-/*
+
     int matrix_size = 5, time_slices = 5;//tau
     int iterations = 500;
-*/
+
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
