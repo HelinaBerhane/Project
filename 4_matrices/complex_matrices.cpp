@@ -66,7 +66,7 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//working
-void generate_reduced_matrix(const int matrix_size, LaGenMatComplex& matrix, const int element, LaGenMatComplex& newMatrix){
+void generate_reduced_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int element, LaGenMatComplex& newMatrix){
     for(int r = 1; r < matrix_size; r++){ // skip first row
         int newC = 0;
         for(int c = 0; c < matrix_size; c++){
