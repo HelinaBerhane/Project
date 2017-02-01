@@ -56,8 +56,8 @@ void generate_scalar(int scalar, const int max_rand){
 }//working
 void generate_array(COMPLEX array[], const int array_length, const int max_rand){
     for(int i = 0; i < array_length; i++){
-        array[i].r = ran(max_rand)+1;	//1 to x
-        array[i].i = 0;//ran(max_rand);
+        array[i].r = ran(max_rand);	//1 to x
+        array[i].i = ran(max_rand);
 	}
 }//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
@@ -248,7 +248,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
     //print_vector(result, "vector exponential");
 }//working
 
-/* Matrix manipulation [11/11]*/
+/* Matrix manipulation [12/12]*/
 void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -374,8 +374,20 @@ COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
     /* calculate determinant */
     scalar_sum(A, B);
     return A;
+}//working
+COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int element){
+    COMPLEX coefficient;
+    if(element % 2 == 1){
+        // if odd
+        coefficient.r = matrix(0, element).r;
+        coefficient.i = matrix(0, element).i;
+    }else{
+        // if even
+        coefficient.r = - matrix(0, element).r;
+        coefficient.i = - matrix(0, element).i;
+    }
+    return coefficient;
 }
-
 void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient, COMPLEX& determinant){
     /* initialise everything */
     determinant.r = 0;
@@ -383,15 +395,7 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
     /* do stuff */
     for(int element = 0; element < matrix_size; element++){
         /* determine the coefficients */
-        if(element % 2 == 1){
-            // if odd
-            coefficient.r = matrix(0, element).r;
-            coefficient.i = matrix(0, element).i;
-        }else{
-            // if even
-            coefficient.r = - matrix(0, element).r;
-            coefficient.i = - matrix(0, element).i;
-        }
+        determinant_coefficient(matrix, element);
         /* make a new matrix without the relavant row and column */
         LaGenMatComplex newMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
         for(int row = 1; row < matrix_size; row++){
@@ -797,8 +801,7 @@ int main(){
     int matrix_size = 5, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
-    test_simple_matrix_determinant(max_rand);
-//    test_matrix_determinant(matrix_size, max_rand);
+    test_matrix_determinant(matrix_size, max_rand);
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
