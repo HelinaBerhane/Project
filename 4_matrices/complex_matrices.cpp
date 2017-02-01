@@ -46,7 +46,7 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }//working
 
-/* Number generation [4/4]*/
+/* Generation [5/5]*/
 void generate_scalar(COMPLEX& scalar, const int max_rand){
     scalar.r = ran(max_rand);	//1 to x
     scalar.i = ran(max_rand);
@@ -66,7 +66,7 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//working
-void generate_reduced_matrix(const int matrix_size, LaGenMatComplex& matrix, const int element, LaGenMatComplex& newMatrix){//in progress
+void generate_reduced_matrix(const int matrix_size, LaGenMatComplex& matrix, const int element, LaGenMatComplex& newMatrix){
     for(int r = 1; r < matrix_size; r++){ // skip first row
         int newC = 0;
         for(int c = 0; c < matrix_size; c++){
@@ -77,7 +77,7 @@ void generate_reduced_matrix(const int matrix_size, LaGenMatComplex& matrix, con
             }
         }
     }
-}
+}//working
 // QMC - [4/4]
 int generate_spins(){
     random_device rd;
@@ -407,10 +407,10 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
         determinant_coefficient(matrix, element);
         /* make a new matrix without the relavant row and column */
         LaGenMatComplex newMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
-
+        generate_reduced_matrix(matrix_size, matrix, element, newMatrix);
         print_matrix(newMatrix, "newMatrix");
         /* calculate the determinant of the new matrix */
-        matrix_determinant(matrix_size - 1, newMatrix, coefficient, determinant);
+        //matrix_determinant(matrix_size - 1, newMatrix, coefficient, determinant);
         /* sum the determinants */
         //cout << coefficient << " ";
     }
@@ -467,7 +467,7 @@ void flip_lattice_points(const int matrix_size, const int time_slices, LaGenMatC
 
 //46 - 7/9
 
-/* Testing [14/14] - QMC [2/5]*/
+/* Testing [15/15] - QMC [2/5]*/
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
@@ -687,7 +687,7 @@ void test_simple_matrix_determinant(const int max_rand){
     simple_matrix_determinant(matrix);
     print_scalar(simple_matrix_determinant(matrix), "det(M)");
 }//working
-void test_determinant_coefficient(){//in progress
+void test_determinant_coefficient(){
     /* initialise everything */
     LaGenMatComplex matrix;
     int matrix_size = 4, max_rand = 9;
@@ -699,7 +699,7 @@ void test_determinant_coefficient(){//in progress
         cout << determinant_coefficient(matrix, element) << " ";
     }
     cout << endl;
-}
+}//working
 void test_reduced_matrix(){
     /* initialise everything */
     int matrix_size = 4, max_rand = 9, row = 1, column = 3;
@@ -713,9 +713,10 @@ void test_reduced_matrix(){
         generate_reduced_matrix(matrix_size, matrix, element, newMatrix);
         print_matrix(newMatrix, "newMatrix");
     }
-}
-void test_matrix_determinant(const int matrix_size, const int max_rand){//in progress
+}//working
+void test_matrix_determinant(){//in progress
     /* initialise everything */
+    int matrix_size = 4, max_rand = 9;
     LaGenMatComplex matrix;
     COMPLEX coefficient;
     COMPLEX determinant;
@@ -826,8 +827,7 @@ int main(){
     int matrix_size = 3, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
-    test_reduced_matrix();
-//    test_matrix_determinant(matrix_size, max_rand);
+    test_matrix_determinant();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
