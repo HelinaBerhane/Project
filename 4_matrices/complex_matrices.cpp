@@ -680,6 +680,7 @@ void test_simple_matrix_determinant(const int max_rand){
     LaGenMatComplex matrix;
     /* generate matrix */
     generate_matrix(2, max_rand, matrix);
+    print_matrix(matrix, "matrix");
     /* calculate determinant */
     simple_matrix_determinant(matrix);
     print_scalar(simple_matrix_determinant(matrix), "det(M)");
