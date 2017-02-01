@@ -379,12 +379,12 @@ COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int element
     COMPLEX coefficient;
     if(element % 2 == 1){
         // if odd
-        coefficient.r = matrix(0, element).r;
-        coefficient.i = matrix(0, element).i;
-    }else{
-        // if even
         coefficient.r = - matrix(0, element).r;
         coefficient.i = - matrix(0, element).i;
+    }else{
+        // if even
+        coefficient.r = matrix(0, element).r;
+        coefficient.i = matrix(0, element).i;
     }
     return coefficient;
 }
