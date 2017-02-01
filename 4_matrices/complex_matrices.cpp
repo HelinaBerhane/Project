@@ -363,11 +363,11 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
     for(int i = 0; i < matrix_size; i++){
         if(i % 2 == 1){// if odd
             //along the first row
-            coefficient.r = matrix(1, i).r;
-            coefficient.i = matrix(1, i).i;
+            coefficient.r = matrix(0, i).r;
+            coefficient.i = matrix(0, i).i;
         }else{// if even
-            coefficient.r = - matrix(1, i).r;
-            coefficient.i = - matrix(1, i).i;
+            coefficient.r = - matrix(0, i).r;
+            coefficient.i = - matrix(0, i).i;
         }
         cout.width(7);
         cout << coefficient;
