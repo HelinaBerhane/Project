@@ -702,9 +702,9 @@ void test_determinant_coefficient(){//in progress
 }
 void test_reduced_matrix(){
     /* initialise everything */
+    int matrix_size = 4, max_rand = 9, row = 1, column = 3;
     LaGenMatComplex matrix;
     LaGenMatComplex newMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
-    int matrix_size = 4, max_rand = 9, row = 1, column = 3;
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
     print_matrix(matrix, "matrix");
