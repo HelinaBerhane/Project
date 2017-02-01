@@ -358,8 +358,7 @@ void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatCo
     matrix_product(result, matrixE);
     //print_matrix(result, "ABCDE");
 }//working
-void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& determinant){
-    COMPLEX coefficient;
+void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient, COMPLEX& determinant){
     for(int i = 0; i < matrix_size; i++){
         if(i % 2 == 1){// if odd
             //along the first row
@@ -637,6 +636,7 @@ void test_diagonal_exponential(const int iterations){
 void test_matrix_determinant(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrix;
+    COMPLEX coefficient;
     COMPLEX determinant;
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
@@ -644,7 +644,7 @@ void test_matrix_determinant(const int matrix_size, const int max_rand){
     determinant.i = 0;
     print_matrix(matrix, "initial matrix");
     /* calculate determinant */
-    matrix_determinant(matrix_size, matrix, determinant);
+    matrix_determinant(matrix_size, matrix, coefficient, determinant);
 }
 // QMC [4/5]
 void test_lattice_generation(const int matrix_size, const int time_slices){
