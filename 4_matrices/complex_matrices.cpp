@@ -383,18 +383,18 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
                     newMatrix(row - 1, newColumn).r = matrix(row, column).r;
                     newMatrix(row - 1, newColumn).i = matrix(row, column).i;
                     newColumn++;
-                    cout << newMatrix(row - 1, newColumn) << " ";
+                    //cout << newMatrix(row - 1, newColumn) << " ";
                 }
             }
-            cout << "new row" << endl;
+            //cout << "new row" << endl;
         }
         print_matrix(newMatrix, "New matrix");
         /* calculate the determinant of the new matrix */
         matrix_determinant(matrix_size - 1, newMatrix, coefficient, determinant);
         /* sum the determinants */
-        cout << coefficient << " ";
+        //cout << coefficient << " ";
     }
-    cout << endl;
+    //cout << endl;
 }
 // QMC - [3/4]
 void V_matrix_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//should be working
