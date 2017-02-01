@@ -368,9 +368,9 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
             coefficient.r = - matrix(0, i).r;
             coefficient.i = - matrix(0, i).i;
         }
-        cout.width(7);
-        cout << coefficient;
+        cout << coefficient << " ";
     }
+    cout << endl;
 }
 // QMC - [3/4]
 void V_matrix_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//should be working
