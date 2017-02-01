@@ -57,7 +57,7 @@ void generate_scalar(int scalar, const int max_rand){
 void generate_array(COMPLEX array[], const int array_length, const int max_rand){
     for(int i = 0; i < array_length; i++){
         array[i].r = ran(max_rand);	//1 to x
-        array[i].i = ran(max_rand);
+        array[i].i = 0;//ran(max_rand);
 	}
 }//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
