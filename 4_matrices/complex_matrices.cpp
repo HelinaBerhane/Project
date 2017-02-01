@@ -639,7 +639,7 @@ void test_matrix_determinant(const int matrix_size, const int max_rand){
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
     determinant.r = 0;
-    determinant.i = 0
+    determinant.i = 0;
     print_matrix(matrix, "initial matrix");
     /* calculate determinant */
     matrix_determinant(matrix_size, matrix, determinant);
@@ -740,10 +740,10 @@ void test_QMC(const int matrix_size, const int time_slices){//in progress
 int main(){
     /* initialise everything */
 
-    int matrix_size = 5, time_slices = 5;//tau
+    int matrix_size = 5, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
-    test_matrix_determinant( matrix_size, max_rand);
+    test_matrix_determinant(matrix_size, max_rand);
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
