@@ -403,7 +403,7 @@ COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int element
     }
     return coefficient;
 }//working
-COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient){
+COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
     /* initialise everything */
     COMPLEX determinant;
     determinant.r = 0;
@@ -417,15 +417,16 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix,
             /* initialise everything */
             LaGenMatComplex cofactorMatrix;
             COMPLEX cofactor;
+            COMPLEX coefficient;
             int cofactor_size = matrix_size - 1;
             /* determine the coefficient */
-            determinant_coefficient(matrix, element); // = +- the element
+            coefficient = determinant_coefficient(matrix, element); // = +- the element
             /* calculate the cofactor */
             cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
             generate_cofactor_matrix(matrix_size, matrix, element, cofactorMatrix);
             print_matrix(cofactorMatrix, "cofactorMatrix");
             /* finish calculation */
-            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix, coefficient)));
+            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
             //cout << coefficient << " ";
         }
     }
@@ -743,14 +744,13 @@ void test_matrix_determinant(){//in progress
     int matrix_size = 4, max_rand = 9;
     LaGenMatComplex matrix;
     COMPLEX coefficient;
-    COMPLEX determinant;
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
     determinant.r = 0;
     determinant.i = 0;
     print_matrix(matrix, "initial matrix");
     /* calculate determinant */
-    print_scalar(matrix_determinant(matrix_size, matrix, coefficient), "determinant");
+    print_scalar(matrix_determinant(matrix_size, matrix), "determinant");
 }
 // QMC [4/5]
 void test_lattice_generation(const int matrix_size, const int time_slices){
