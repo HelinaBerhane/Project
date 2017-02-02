@@ -177,9 +177,9 @@ void scalar_product(COMPLEX& product, const COMPLEX& number){
 }//working
 COMPLEX scalar_multiple(COMPLEX& A, const COMPLEX& B){
     COMPLEX part;
-    part.r = (product.r * number.r) - (product.i * number.i);
-    part.i = (product.r * number.i) + (product.i * number.r);
-    return part
+    part.r = (A.r * B.r) - (A.i * B.i);
+    part.i = (A.r * B.i) + (A.i * B.r);
+    return part;
 }
 void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
     result.r = A.r / B;
@@ -405,6 +405,7 @@ COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int element
 }//working
 COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient){
     /* initialise everything */
+    COMPLEX determinant;
     determinant.r = 0;
     determinant.i = 0;
     /* do stuff */
@@ -423,11 +424,8 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix,
             cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
             generate_cofactor_matrix(matrix_size, matrix, element, cofactorMatrix);
             print_matrix(cofactorMatrix, "cofactorMatrix");
-            /* calculate the determinant * the cofactor */
-            scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result)
-            matrix_determinant(cofactor_size, cofactorMatrix, coefficient, determinant);
             /* finish calculation */
-            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(matrix_size - 1, cofactorMatrix, coefficient)));
+            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix, coefficient)));
             //cout << coefficient << " ";
         }
     }
