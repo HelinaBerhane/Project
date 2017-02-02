@@ -746,8 +746,6 @@ void test_matrix_determinant(){//in progress
     COMPLEX coefficient;
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
-    determinant.r = 0;
-    determinant.i = 0;
     print_matrix(matrix, "initial matrix");
     /* calculate determinant */
     print_scalar(matrix_determinant(matrix_size, matrix), "determinant");
