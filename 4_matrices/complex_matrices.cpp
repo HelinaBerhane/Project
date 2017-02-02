@@ -38,7 +38,7 @@ void print_array(const COMPLEX array[], int len, const string name){
 }//working
 void print_vector(const LaVectorComplex& vector, const string name){
     cout << name << ":" << endl << vector << endl;
-}
+}//working
 void print_matrix(const LaGenMatComplex& matrix){
 	cout << matrix << endl;
 }//working
@@ -57,7 +57,7 @@ void generate_scalar(int scalar, const int max_rand){
 void generate_array(COMPLEX array[], const int array_length, const int max_rand){
     for(int i = 0; i < array_length; i++){
         array[i].r = ran(max_rand);	//1 to x
-        array[i].i = ran(max_rand);
+        array[i].i = 0;//ran(max_rand);
 	}
 }//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
@@ -66,13 +66,13 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//working
-void generate_reduced_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int element, LaGenMatComplex& newMatrix){
+void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int element, LaGenMatComplex& cofactorMatrix){
     for(int r = 1; r < matrix_size; r++){ // skip first row
         int newC = 0;
         for(int c = 0; c < matrix_size; c++){
             if(c != element){ // slip column
-                newMatrix(r - 1, newC).r = matrix(r, c).r;
-                newMatrix(r - 1, newC).i = matrix(r, c).i;
+                cofactorMatrix(r - 1, newC).r = matrix(r, c).r;
+                cofactorMatrix(r - 1, newC).i = matrix(r, c).i;
                 newC++;
             }
         }
@@ -157,7 +157,7 @@ void scalar_addition(const COMPLEX& A, const COMPLEX& B , COMPLEX& result){
 void scalar_sum(COMPLEX& result, const COMPLEX addition){//probably working
     result.r += addition.r;
     result.i += addition.i;
-}
+}//working
 void scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result){//to test
     result.r = A.r * B;
     result.i = A.i * B;
@@ -175,6 +175,12 @@ void scalar_product(COMPLEX& product, const COMPLEX& number){
     part.i = (product.r * number.i) + (product.i * number.r);
     product = part;
 }//working
+COMPLEX scalar_multiple(COMPLEX& A, const COMPLEX& B){
+    COMPLEX part;
+    part.r = (product.r * number.r) - (product.i * number.i);
+    part.i = (product.r * number.i) + (product.i * number.r);
+    return part
+}
 void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
     result.r = A.r / B;
     result.i = A.i / B;
@@ -267,7 +273,7 @@ void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
         }
     }
     matrix = result.copy();
-}
+}//working
 void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -276,7 +282,7 @@ void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGen
             result(i, j).i -= matrix(i, j).i;
         }
     }
-}
+}//working
 void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatComplex& matrix){//to test
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
@@ -397,24 +403,44 @@ COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int element
     }
     return coefficient;
 }//working
-void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient, COMPLEX& determinant){
+COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& coefficient){
     /* initialise everything */
     determinant.r = 0;
     determinant.i = 0;
     /* do stuff */
-    for(int element = 0; element < matrix_size; element++){
-        /* determine the coefficients */
-        determinant_coefficient(matrix, element);
-        /* make a new matrix without the relavant row and column */
-        LaGenMatComplex newMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
-        generate_reduced_matrix(matrix_size, matrix, element, newMatrix);
-        print_matrix(newMatrix, "newMatrix");
-        /* calculate the determinant of the new matrix */
-        //matrix_determinant(matrix_size - 1, newMatrix, coefficient, determinant);
-        /* sum the determinants */
-        //cout << coefficient << " ";
+    if(matrix_size == 2){
+        /* calculate the determinant */
+        return simple_matrix_determinant(matrix);
+    }else{
+        for(int element = 0; element < matrix_size; element++){//for each element in the first row
+            /* initialise everything */
+            LaGenMatComplex cofactorMatrix;
+            COMPLEX cofactor;
+            int cofactor_size = matrix_size - 1;
+            /* determine the coefficient */
+            determinant_coefficient(matrix, element); // = +- the element
+            /* calculate the cofactor */
+            cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
+            generate_cofactor_matrix(matrix_size, matrix, element, cofactorMatrix);
+            print_matrix(cofactorMatrix, "cofactorMatrix");
+            /* calculate the determinant * the cofactor */
+            scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result)
+            matrix_determinant(cofactor_size, cofactorMatrix, coefficient, determinant);
+            /* finish calculation */
+            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(matrix_size - 1, cofactorMatrix, coefficient)));
+            //cout << coefficient << " ";
+        }
     }
-    //cout << endl;
+    return determinant;
+    /*
+    int row = 0, det = 0;
+    for( int column = 0; column < size; column++ ) {
+        Matrix cofactorMatrix;
+        submatrix( matrix, cofactorMatrix, row + 1, column + 1, size );
+        det += matrix( row, column ) * determinant( cofactorMatrix, size - 1 ) * perm( row, column );
+    }
+    return det;
+    */
 }
 // QMC - [3/4]
 void V_matrix_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//should be working
@@ -704,14 +730,14 @@ void test_reduced_matrix(){
     /* initialise everything */
     int matrix_size = 4, max_rand = 9, row = 1, column = 3;
     LaGenMatComplex matrix;
-    LaGenMatComplex newMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
+    LaGenMatComplex cofactorMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
     print_matrix(matrix, "matrix");
     /* calculate reduced matrix */
     for(int element = 0; element < matrix_size; element++){
-        generate_reduced_matrix(matrix_size, matrix, element, newMatrix);
-        print_matrix(newMatrix, "newMatrix");
+        generate_cofactor_matrix(matrix_size, matrix, element, cofactorMatrix);
+        print_matrix(cofactorMatrix, "cofactorMatrix");
     }
 }//working
 void test_matrix_determinant(){//in progress
