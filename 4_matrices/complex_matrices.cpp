@@ -750,7 +750,7 @@ void test_matrix_determinant(){//in progress
     determinant.i = 0;
     print_matrix(matrix, "initial matrix");
     /* calculate determinant */
-    matrix_determinant(matrix_size, matrix, coefficient, determinant);
+    print_scalar(matrix_determinant(matrix_size, matrix, coefficient), "determinant");
 }
 // QMC [4/5]
 void test_lattice_generation(const int matrix_size, const int time_slices){
