@@ -424,23 +424,13 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             /* calculate the cofactor */
             cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
             generate_cofactor_matrix(matrix_size, matrix, element, cofactorMatrix);
-            print_matrix(cofactorMatrix, "cofactorMatrix");
+            //print_matrix(cofactorMatrix, "cofactorMatrix");
             /* finish calculation */
             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
-            //cout << coefficient << " ";
         }
     }
     return determinant;
-    /*
-    int row = 0, det = 0;
-    for( int column = 0; column < size; column++ ) {
-        Matrix cofactorMatrix;
-        submatrix( matrix, cofactorMatrix, row + 1, column + 1, size );
-        det += matrix( row, column ) * determinant( cofactorMatrix, size - 1 ) * perm( row, column );
-    }
-    return det;
-    */
-}
+}//working
 // QMC - [3/4]
 void V_matrix_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//should be working
     //V = ??
@@ -749,7 +739,7 @@ void test_matrix_determinant(){//in progress
     print_matrix(matrix, "initial matrix");
     /* calculate determinant */
     print_scalar(matrix_determinant(matrix_size, matrix), "determinant");
-}
+}//working
 // QMC [4/5]
 void test_lattice_generation(const int matrix_size, const int time_slices){
     LaGenMatComplex lattice;
