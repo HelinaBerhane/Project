@@ -431,16 +431,16 @@ COMPLEX my_matrix_determinant(const int matrix_size, const LaGenMatComplex& matr
     }
     return determinant;
 }//working
-void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, const LaGenMatComplex& result){
+void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, const COMPLEX& result){
     /* initialise everything */
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
     result.r = 1;
     result.i = 0;
     /* calculate eigenvectors */
-    matrix_eigenvstuff(matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors);
+    matrix_eigenvstuff(matrix, eigenvalues, eigenvectors);
     /* calculate determinant */
-    for(int i = -; i < matrix_size; i++){
+    for(int i = 0; i < matrix_size; i++){
         scalar_product(result, eigenvalues(i));
     }
 }
