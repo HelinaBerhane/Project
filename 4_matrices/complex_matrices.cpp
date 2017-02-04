@@ -57,7 +57,7 @@ void generate_scalar(int scalar, const int max_rand){
 void generate_array(COMPLEX array[], const int array_length, const int max_rand){
     for(int i = 0; i < array_length; i++){
         array[i].r = ran(max_rand);	//1 to x
-        array[i].i = 0;//ran(max_rand);
+        array[i].i = ran(max_rand);
 	}
 }//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
@@ -263,7 +263,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
     //print_vector(result, "vector exponential");
 }//working
 
-/* Matrix manipulation [13/13]*/
+/* Matrix manipulation [14/14]*/
 void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -403,7 +403,7 @@ COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int element
     }
     return coefficient;
 }//working
-COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
+COMPLEX my_matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
     /* initialise everything */
     COMPLEX determinant;
     determinant.r = 0;
@@ -426,17 +426,30 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             generate_cofactor_matrix(matrix_size, matrix, element, cofactorMatrix);
             //print_matrix(cofactorMatrix, "cofactorMatrix");
             /* finish calculation */
-            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
+            scalar_sum(determinant, scalar_multiple(coefficient, my_matrix_determinant(cofactor_size, cofactorMatrix)));
         }
     }
     return determinant;
 }//working
+void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, const LaGenMatComplex& result){
+    /* initialise everything */
+    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    result.r = 1;
+    result.i = 0;
+    /* calculate eigenvectors */
+    matrix_eigenvstuff(matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors);
+    /* calculate determinant */
+    for(int i = -; i < matrix_size; i++){
+        scalar_product(result, eigenvalues(i));
+    }
+}
 // QMC - [3/4]
-void V_matrix_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//should be working
+void V_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//should be working
     //V = ??
     array_to_diag(slices, time_slices, V);
 }
-void B_matrix_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
+void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
     //B = exp(-H)exp(-V)
     /* initialise everything */
     LaGenMatComplex negH;
@@ -458,7 +471,7 @@ void B_matrix_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComple
     /* print result */
     print_matrix(B, "B");
 }
-void O_matrix_calculation(const LaGenMatComplex& BA, const LaGenMatComplex& BB, const LaGenMatComplex& BC, const LaGenMatComplex& BD, const LaGenMatComplex&BE, LaGenMatComplex& O, const int matrix_size){//should be working
+void O_calculation(const LaGenMatComplex& BA, const LaGenMatComplex& BB, const LaGenMatComplex& BC, const LaGenMatComplex& BD, const LaGenMatComplex&BE, LaGenMatComplex& O, const int matrix_size){//should be working
     //O = 1 + B(m) B(m-1) B(...) B(1)
     /* initialise everything */
     LaGenMatComplex I = LaGenMatComplex::eye(matrix_size, matrix_size);
@@ -467,6 +480,9 @@ void O_matrix_calculation(const LaGenMatComplex& BA, const LaGenMatComplex& BB, 
     five_matrix_multiplication(BA, BB, BC, BD, BE, O);
     /* add I */
     matrix_sum(matrix_size, O, I);
+}
+void detO_calculation(const LaGenMatComplex& O, const int matrix_size){
+    //
 }
 void partition_function(){//in progress
     //
@@ -733,12 +749,14 @@ void test_matrix_determinant(){//in progress
     /* initialise everything */
     int matrix_size = 4, max_rand = 9;
     LaGenMatComplex matrix;
-    COMPLEX coefficient;
+    COMPLEX result;
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
     print_matrix(matrix, "initial matrix");
     /* calculate determinant */
-    print_scalar(matrix_determinant(matrix_size, matrix), "determinant");
+    print_scalar(my_matrix_determinant(matrix_size, matrix), "my determinant");
+    matrix_determinant(matrix_size, matrix, result);
+    print_scalar(result, "eigenvalue determinant");
 }//working
 // QMC [4/5]
 void test_lattice_generation(const int matrix_size, const int time_slices){
@@ -769,7 +787,7 @@ void test_V_generation(const int time_slices){//should work
     COMPLEX elements[time_slices];
     /* generate the lattice */
     generate_lattice_array(time_slices, elements);
-    V_matrix_calculation(elements, time_slices, V);
+    V_calculation(elements, time_slices, V);
     /* print result */
     print_matrix(V);
 }
@@ -782,9 +800,9 @@ void test_B_generation(const int time_slices, const int iterations){//should wor
     /* generate matrices */
     generate_H(time_slices, H);
     generate_lattice_array(time_slices, elements);
-    V_matrix_calculation(elements, time_slices, V);
+    V_calculation(elements, time_slices, V);
     /* calculate B */
-    B_matrix_calculation(H, V, B, time_slices, iterations);
+    B_calculation(H, V, B, time_slices, iterations);
     /* print result */
     //print_matrix(B);
 }
@@ -804,21 +822,21 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
     for(int i = 0; i < time_slices; i++){
         /* generate matrices */
         generate_lattice_array(time_slices, elements);
-        V_matrix_calculation(elements, time_slices, V);
+        V_calculation(elements, time_slices, V);
         /* calculate B */
         if(i == 0){
-            B_matrix_calculation(H, V, BA, time_slices, iterations);
+            B_calculation(H, V, BA, time_slices, iterations);
         }else if(i == 1){
-            B_matrix_calculation(H, V, BB, time_slices, iterations);
+            B_calculation(H, V, BB, time_slices, iterations);
         }else if(i == 2){
-            B_matrix_calculation(H, V, BC, time_slices, iterations);
+            B_calculation(H, V, BC, time_slices, iterations);
         }else if(i == 3){
-            B_matrix_calculation(H, V, BD, time_slices, iterations);
+            B_calculation(H, V, BD, time_slices, iterations);
         }else if(i == 4){
-            B_matrix_calculation(H, V, BE, time_slices, iterations);
+            B_calculation(H, V, BE, time_slices, iterations);
         }
     }
-    O_matrix_calculation(BA, BB, BC, BD, BE, O, time_slices);
+    O_calculation(BA, BB, BC, BD, BE, O, time_slices);
     /* print result */
     print_matrix(BA, "BA");
     print_matrix(BB, "BB");
@@ -827,7 +845,11 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
     print_matrix(BE, "BE");
     print_matrix(O, "O");
 }
+void test_detO(){
+
+}
 void test_QMC(const int matrix_size, const int time_slices){//in progress
+    /* generate a 1D lattice of spins */
     test_lattice_generation(matrix_size, time_slices);
     test_hamiltonian(time_slices);
 }
@@ -839,7 +861,6 @@ int main(){
     int matrix_size = 3, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
-    test_matrix_determinant();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
