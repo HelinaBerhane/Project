@@ -431,7 +431,7 @@ COMPLEX my_matrix_determinant(const int matrix_size, const LaGenMatComplex& matr
     }
     return determinant;
 }//working
-void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, const COMPLEX& result){
+void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& result){
     /* initialise everything */
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -861,6 +861,7 @@ int main(){
     int matrix_size = 3, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
+    test_matrix_determinant();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
