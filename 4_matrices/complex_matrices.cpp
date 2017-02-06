@@ -15,6 +15,9 @@ using namespace std;
 int ran(int max_rand){
     return rand() % max_rand;
 }//working
+float random_float(){//fix later
+    return (rand() % 1000)/1000;
+}
 
 /* Printing [7/7] */
 void print_scalar(const COMPLEX scalar){
@@ -531,12 +534,12 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     }
     /* generate H */
     generate_H(matrix_size, H);
-    print_matrix(H, "H");
+    //print_matrix(H, "H");
     /* generate V matrices */
     V_calculation(latticeUP, time_size, VUP);
     V_calculation(latticeDOWN, time_size, VDOWN);
-    print_matrix(VUP, "V up");
-    print_matrix(VDOWN, "V down");
+    //print_matrix(VUP, "V up");
+    //print_matrix(VDOWN, "V down");
     /* multiply B matrices */
     for(int t = time_size - 1; t >= 0 ; t--){
         //for each time slice
@@ -550,25 +553,22 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     /* calculate O matrices */
     matrix_sum(matrix_size, OUP, proBUP);
     matrix_sum(matrix_size, ODOWN, proBDOWN);
-    print_matrix(OUP, "O up");
-    print_matrix(ODOWN, "O down");
+    //print_matrix(OUP, "O up");
+    //print_matrix(ODOWN, "O down");
     /* calculate det(O)s */
     matrix_determinant(matrix_size, OUP, detOUP);
     matrix_determinant(matrix_size, ODOWN, detODOWN);
     /* calculate the weight */
     scalar_multiplication(detOUP, detODOWN, weight);
-    print_scalar(weight, "weight");
+    //print_scalar(weight, "weight");
 }
-void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progress
+void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
     /* initialise everything */
     int lattice_size = matrix_size, time_size = matrix_size;
-    COMPLEX elements[lattice_size];
     COMPLEX weightBefore;
     COMPLEX weightAfter;
-    COMPLEX probability;
+    float probability;
     float ran;
-    /* generate the lattice */
-    generate_lattice_array(lattice_size, elements);
     /* generate time slices */                          // I'm not sure whether the imaginary time
     for(int t = 0; t < time_size; t++){                 // components should be the same as the initial
         for(int l = 0; l < lattice_size; l++){          // ones or not? so I made them the same and will
@@ -579,23 +579,25 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progres
     for(int t = 0; t < time_size; t++){
         for(int l = 0; l < lattice_size; l++){
             /* calculate the weight before the flip */
-            //calculate_weight(matrix_size, const LaGenMatComplex& detOup, const LaGenMatComplex& detOdown, LaGenMatComplex& weight)
+            calculate_weight(matrix_size, lattice[], weightBefore);
             /* propose the flip */
-            flip_scalar(lattice(l, t));
+            flip_scalar(lattice[l]);
             /* calculate the weight after the flip */
+            calculate_weight(matrix_size, lattice[], weightAfter);
             /* calculate the ratio of weights */
-            scalar_division(weightBefore, weightAfter, probability);    //check order
+            probability = weightBefore.r / weightAfter.r;
+            //scalar_division(weightBefore, weightAfter, probability);    //check order
             /* accept or reject the flip */
-            if(probability.r > 1){
-                //accept
-            }else{
+            cout << "prob: " << probability << endl;
+            if(probability.r < 1){
                 /* generate random float */
-                //generate_float();
+                ran = random_float();
                 /* check */
                 if(probability.r > ran){
                     //accept
                 }else{
                     flip_scalar(lattice(l, t));
+                    cout << rejected << endl;
                 }
             }
         }
@@ -963,7 +965,7 @@ void test_O_generation(const int time_size, const int iterations){//should work
 void test_detO(){//in progress
     //
 }
-void test_weight(){
+void test_weight(){//working
     /* initialise everything */
     int matrix_size = 5;
     COMPLEX lattice[matrix_size];
@@ -978,8 +980,8 @@ void test_QMC(){//in progress
     int matrix_size = 3;
     int time_size = matrix_size;
     /* generate a 1D lattice of spins */
-    test_lattice_generation(matrix_size, time_size);
-    test_H(time_size);
+    /* generate the lattice */
+
 }
 
 /* --- Main QMC Program --- */
