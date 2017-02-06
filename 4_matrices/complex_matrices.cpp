@@ -468,9 +468,10 @@ void V_calculation(const COMPLEX lattice[], const int time_size, LaGenMatComplex
     /* given a lattice */
     array_to_diag(lattice, time_size, V);
 }
-void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
+void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size){//should be working
     //B = exp(-H)exp(-V)
     /* initialise everything */
+    int iterations = 500;
     LaGenMatComplex negH;
     LaGenMatComplex negV;
     LaGenMatComplex expH;
@@ -507,27 +508,21 @@ void detO_calculation(const int matrix_size, const LaGenMatComplex& O, COMPLEX& 
 void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX& weight){//to test
     /* initialise everything */
     int lattice_size = matrix_size, time_size = matrix_size;
-    COMPLEX latticeDOWN[lattice_size];
+    COMPLEX latticeDOWN[matrix_size];
     LaGenMatComplex H;
-    LaGenMatComplex VUP = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex VDOWN = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex proBUP = LaGenMatComplex::eye(time_size, time_size);
-    LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
-
-
-    LaGenMatComplex BUPA = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex BUPB = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex BUPC = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex BUPD = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex BUPE = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex BDOWNA = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex BDOWNB = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex BDOWNC = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex BDOWND = LaGenMatComplex::zeros(time_size, time_size);
-    LaGenMatComplex BDOWNE = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex VUP = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex VDOWN = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex proBUP = LaGenMatComplex::eye(matrix_size, matrix_size);
+    LaGenMatComplex proBDOWN = LaGenMatComplex::eye(matrix_size, matrix_size);
+    LaGenMatComplex BUP = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex BDOWN = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex OUP = LaGenMatComplex::eye(matrix_size, matrix_size);
+    LaGenMatComplex ODOWN = LaGenMatComplex::eye(matrix_size, matrix_size);
+    COMPLEX detOUP;
+    COMPLEX detODOWN;
     /* generate lattices */
     //cout << "    up | down" << endl;
-    for(int l = 0; l < lattice_size; l++){
+    for(int l = 0; l < matrix_size; l++){
         //cout.width(6);
         //cout << latticeUP[i] << " | ";
         copy_negative_scalar(latticeUP[l], latticeDOWN[l]);
@@ -535,19 +530,28 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
         //cout << latticeDown[i] << endl;
     }
     /* generate H */
-    generate_H(time_size, H);
+    generate_H(matrix_size, H);
     /* generate V matrices */
     V_calculation(latticeUP, time_size, VUP);
     V_calculation(latticeDOWN, time_size, VDOWN);
     /* multiply B matrices */
     for(int t = time_size - 1; t >= 0 ; t--){
         //for each time slice
-        cout.width();
-        cout << t;
-        //matrix_product(proBUP, BL);
+        /* calculate B(t) matrices */
+        B_calculation(H, VUP, BUP, lattice_size);
+        B_calculation(H, VDOWN, BDOWN, lattice_size);
+        /* multiply the matrices */
+        matrix_product(proBUP, BUP);
+        matrix_product(proBDOWN, BUP);
     }
-    cout << endl;
-    //scalar_multiplication(detOup, detOdown, weight);
+    /* calculate O matrices */
+    matrix_sum(matrix_size, OUP, proBUP);
+    matrix_sum(matrix_size, ODOWN, proBDOWN);
+    /* calculate det(O)s */
+    matrix_determinant(matrix_size, OUP, detOUP);
+    matrix_determinant(matrix_size, ODOWN, detODOWN);
+    /* calculate the weight */
+    scalar_multiplication(detOUP, detODOWN, weight);
 }
 void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progress
     /* initialise everything */
@@ -907,7 +911,7 @@ void test_B_generation(const int time_size, const int iterations){//should work
     generate_lattice_array(time_size, elements);
     V_calculation(elements, time_size, V);
     /* calculate B */
-    B_calculation(H, V, B, time_size, iterations);
+    B_calculation(H, V, B, time_size);
     /* print result */
     //print_matrix(B);
 }
@@ -930,15 +934,15 @@ void test_O_generation(const int time_size, const int iterations){//should work
         V_calculation(elements, time_size, V);
         /* calculate B */
         if(i == 0){
-            B_calculation(H, V, BA, time_size, iterations);
+            B_calculation(H, V, BA, time_size);
         }else if(i == 1){
-            B_calculation(H, V, BB, time_size, iterations);
+            B_calculation(H, V, BB, time_size);
         }else if(i == 2){
-            B_calculation(H, V, BC, time_size, iterations);
+            B_calculation(H, V, BC, time_size);
         }else if(i == 3){
-            B_calculation(H, V, BD, time_size, iterations);
+            B_calculation(H, V, BD, time_size);
         }else if(i == 4){
-            B_calculation(H, V, BE, time_size, iterations);
+            B_calculation(H, V, BE, time_size);
         }
     }
     O_calculation(time_size, BA, BB, BC, BD, BE, O);
