@@ -450,10 +450,9 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
     }
 }//working
 // QMC - [3/4]
-void V_calculation(const COMPLEX lattice[], const int time_slices, LaGenMatComplex& V){//should be working
+void V_calculation(const COMPLEX lattice[], const int tau, LaGenMatComplex& V){//should be working
     /* given a lattice */
-    COMPLEX slices[];
-    array_to_diag(slices, time_slices, V);
+    array_to_diag(lattice, tau, V);
 }
 void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
     //B = exp(-H)exp(-V)
@@ -493,38 +492,37 @@ void detO_calculation(const int matrix_size, const LaGenMatComplex& O, COMPLEX& 
 }
 void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& weight){//to test
     /* initialise everything */
-    int lattice_size = matrix_size, time_slices = matrix_size;
-    COMPLEX latticeUP[lattice_size] = lattice;
-    COMPLEX latticeDown[lattice_size] = -lattice;
+    int lattice_size = matrix_size, time_size = matrix_size;
+    COMPLEX latticeUP[lattice_size] = lattice[];
+    COMPLEX latticeDown[lattice_size] = -lattice[];
 
     /* V up */
 
     /* V down */
 
-
     //scalar_multiplication(detOup, detOdown, weight);
 }
-void sweep_lattice(const int lattice_size, const int time_slices, LaGenMatComplex& lattice){
+void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){
     /* initialise everything */
+    int lattice_size = matrix_size, time_size = matrix_size;
     COMPLEX elements[lattice_size];
     COMPLEX weightBefore;
     COMPLEX weightAfter;
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_slices);
     /* generate the lattice */
     generate_lattice_array(lattice_size, elements);
     /* generate time slices */                          // I'm not sure whether the imaginary time
-    for(int t = 0; t < time_slices; t++){               // components should be the same as the initial
+    for(int t = 0; t < time_size; t++){               // components should be the same as the initial
         for(int l = 0; l < lattice_size; l++){          // ones or not? so I made them the same and will
-            lattice(l, t) = elements[j];                // change this later
+            lattice(l, t) = elements[l];                // change this later
         }
     }
     /* sweep through the lattice */
-    for(int t = 0; t < time_slices; t++){
+    for(int t = 0; t < time_size; t++){
         for(int l = 0; l < lattice_size; l++){
             /* calculate the weight before the flip */
-            calculate_weight(matrix_size, const LaGenMatComplex& detOup, const LaGenMatComplex& detOdown, LaGenMatComplex& weight)
+//            calculate_weight(matrix_size, const LaGenMatComplex& detOup, const LaGenMatComplex& detOdown, LaGenMatComplex& weight)
             /* propose the flip */
-            flip_spin(lattice(l, t));
+//            flip_spin(lattice(l, t));
             /* calculate the weight after the flip */
         }
     }
@@ -793,13 +791,13 @@ void test_matrix_determinant(){//in progress
     print_scalar(result, "eigenvalue determinant");
 }//working
 // QMC [4/5]
-void test_lattice_generation(const int matrix_size, const int time_slices){
+void test_lattice_generation(const int matrix_size, const int time_size){
     LaGenMatComplex lattice;
     generate_lattice(matrix_size, lattice);
     print_matrix(lattice);
-    COMPLEX lattice_points[time_slices];
-    generate_lattice_array(time_slices, lattice_points);
-    print_array(lattice_points, time_slices, "string");
+    COMPLEX lattice_points[time_size];
+    generate_lattice_array(time_size, lattice_points);
+    print_array(lattice_points, time_size, "string");
 }//working
 void test_hamiltonian(const int matrix_size){
     /* initialise everything */
@@ -814,63 +812,63 @@ void test_hamiltonian(const int matrix_size){
     print_vector(eigenvalues, "eigenvalues");
     // eigenvalues are 2 cos(n pi / q), where q = the matrix size
 }//working
-void test_V_generation(const int time_slices){//should work
+void test_V_generation(const int time_size){//should work
     //delta tau = ?, lamba = 1, sigma = 1, s_i(l) = \pm 1, mu = 0?
     /* initialise everything */
-    LaGenMatComplex V = LaGenMatComplex::zeros(time_slices, time_slices);
-    COMPLEX elements[time_slices];
+    LaGenMatComplex V = LaGenMatComplex::zeros(time_size, time_size);
+    COMPLEX elements[time_size];
     /* generate the lattice */
-    generate_lattice_array(time_slices, elements);
-    V_calculation(elements, time_slices, V);
+    generate_lattice_array(time_size, elements);
+    V_calculation(elements, time_size, V);
     /* print result */
     print_matrix(V);
 }
-void test_B_generation(const int time_slices, const int iterations){//should work
+void test_B_generation(const int time_size, const int iterations){//should work
     /* initialise everything */
-    COMPLEX elements[time_slices];
+    COMPLEX elements[time_size];
     LaGenMatComplex H;
-    LaGenMatComplex V = LaGenMatComplex::zeros(time_slices, time_slices);
-    LaGenMatComplex B = LaGenMatComplex::zeros(time_slices, time_slices);
+    LaGenMatComplex V = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
     /* generate matrices */
-    generate_H(time_slices, H);
-    generate_lattice_array(time_slices, elements);
-    V_calculation(elements, time_slices, V);
+    generate_H(time_size, H);
+    generate_lattice_array(time_size, elements);
+    V_calculation(elements, time_size, V);
     /* calculate B */
-    B_calculation(H, V, B, time_slices, iterations);
+    B_calculation(H, V, B, time_size, iterations);
     /* print result */
     //print_matrix(B);
 }
-void test_O_generation(const int time_slices, const int iterations){//should work
+void test_O_generation(const int time_size, const int iterations){//should work
     /* initialise everything */
-    COMPLEX elements[time_slices];
+    COMPLEX elements[time_size];
     LaGenMatComplex H;
-    LaGenMatComplex V = LaGenMatComplex::zeros(time_slices, time_slices);
-    LaGenMatComplex BA = LaGenMatComplex::zeros(time_slices, time_slices);
-    LaGenMatComplex BB = LaGenMatComplex::zeros(time_slices, time_slices);
-    LaGenMatComplex BC = LaGenMatComplex::zeros(time_slices, time_slices);
-    LaGenMatComplex BD = LaGenMatComplex::zeros(time_slices, time_slices);
-    LaGenMatComplex BE = LaGenMatComplex::zeros(time_slices, time_slices);
-    LaGenMatComplex O = LaGenMatComplex::zeros(time_slices, time_slices);
+    LaGenMatComplex V = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BA = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BB = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BC = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BD = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BE = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex O = LaGenMatComplex::zeros(time_size, time_size);
     /* generate matrices */
-    generate_H(time_slices, H);
-    for(int i = 0; i < time_slices; i++){
+    generate_H(time_size, H);
+    for(int i = 0; i < time_size; i++){
         /* generate matrices */
-        generate_lattice_array(time_slices, elements);
-        V_calculation(elements, time_slices, V);
+        generate_lattice_array(time_size, elements);
+        V_calculation(elements, time_size, V);
         /* calculate B */
         if(i == 0){
-            B_calculation(H, V, BA, time_slices, iterations);
+            B_calculation(H, V, BA, time_size, iterations);
         }else if(i == 1){
-            B_calculation(H, V, BB, time_slices, iterations);
+            B_calculation(H, V, BB, time_size, iterations);
         }else if(i == 2){
-            B_calculation(H, V, BC, time_slices, iterations);
+            B_calculation(H, V, BC, time_size, iterations);
         }else if(i == 3){
-            B_calculation(H, V, BD, time_slices, iterations);
+            B_calculation(H, V, BD, time_size, iterations);
         }else if(i == 4){
-            B_calculation(H, V, BE, time_slices, iterations);
+            B_calculation(H, V, BE, time_size, iterations);
         }
     }
-    O_calculation(time_slices, BA, BB, BC, BD, BE, O);
+    O_calculation(time_size, BA, BB, BC, BD, BE, O);
     /* print result */
     print_matrix(BA, "BA");
     print_matrix(BB, "BB");
@@ -884,7 +882,7 @@ void test_detO(){//in progress
 }
 void test_weight(){
     /* initialise everything */
-    int lattice_size = 3;
+    int matrix_size = 3;
     COMPLEX lattice[matrix_size];
     COMPLEX weight;
     /* generate the lattice */
@@ -892,17 +890,19 @@ void test_weight(){
     /* calculate the weight */
     calculate_weight(matrix_size, lattice, weight);
 }
-void test_QMC(const int matrix_size, const int time_slices){//in progress
+void test_QMC(){//in progress
+    /* initialise everything */
+    int matrix_size = 3;
+    int time_size = matrix_size;
     /* generate a 1D lattice of spins */
-    test_lattice_generation(matrix_size, time_slices);
-    test_hamiltonian(time_slices);
+    test_lattice_generation(matrix_size, time_size);
+    test_hamiltonian(time_size);
 }
 
 /* --- Main QMC Program --- */
 int main(){
     /* initialise everything */
-
-    int matrix_size = 3, time_slices = 5, max_rand = 9;
+    int matrix_size = 3, time_size = 5, max_rand = 9;
     int iterations = 500;
 
     test_weight();
@@ -917,24 +917,24 @@ int main(){
     cout << endl;
 
     cout << "lattice generation test:" << endl;
-    test_lattice_generation(matrix_size, time_slices);
+    test_lattice_generation(matrix_size, time_size);
     cout << endl;
 
     cout << "hamiltonian generation test:" << endl;
-    test_hamiltonian(time_slices);
+    test_hamiltonian(time_size);
     cout << endl;
 
     cout << "V generation test:" << endl;
-    test_V_generation(time_slices);
+    test_V_generation(time_size);
     cout << endl;
 
     cout << "B generation test:" << endl;
-    test_B_generation(time_slices, iterations);
+    test_B_generation(time_size, iterations);
     cout << endl;
 
     cout << "O generation test:" << endl;
-    test_O_generation(time_slices, iterations);
+    test_O_generation(time_size, iterations);
     cout << endl;
-    //test_QMC(matrix_size, time_slices);
+    //test_QMC(matrix_size, time_size);
 */
 }
