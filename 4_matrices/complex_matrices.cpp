@@ -141,6 +141,11 @@ void vec_to_diag(const LaVectorComplex& vector, const int len, LaGenMatComplex& 
     vec_to_array(vector, len, array);
     array_to_diag(array, len, diag);
 }//working
+void copy_array(const int len, const COMPLEX array[], COMPLEX copy[]){//in progress
+    for(int i = 0; i < len; i++){
+        //
+    }
+}
 
 /* Scalar manipulation [10/10] */
 int factorial(int x){
@@ -150,6 +155,18 @@ int factorial(int x){
         return x * factorial(x - 1);
 	}
 }//working
+void copy_scalar(const COMPLEX& scalar, COMPLEX& copy){//should work
+    scalar.r = copy.r;
+    scalar.i = copy.i;
+}
+void copy_negative_scalar(const COMPLEX& scalar, COMPLEX& copy){//should work
+    scalar.r = -copy.r;
+    scalar.i = -copy.i;
+}
+void flip_scalar(COMPLEX& spin){//should work
+    spin.r = -spin.r;
+    spin.i = -spin.i;
+}
 void scalar_addition(const COMPLEX& A, const COMPLEX& B , COMPLEX& result){
     result.r = A.r + B.r;
     result.i = A.i + B.i;
@@ -248,10 +265,7 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
     //}
 //}
 // QMC - [/1]
-void flip_spin(COMPLEX& spin){//to test
-    spin.r = -spin.r;
-    spin.i = -spin.i;
-}
+
 
 /* array manipulation [1/1] */
 //void array_powers(COMPLEX array[], const int len, const int power){/**/
@@ -496,11 +510,13 @@ void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& w
     COMPLEX latticeUP[lattice_size];
     COMPLEX latticeDown[lattice_size];
     /* generate lattices */
+    cout.length(5);
+    cout << "up | down" << endl
     for(int i = 0; i < lattice_size; i++){
-        latticeUP[i].r = lattice[i].r;
-        latticeUP[i].i = lattice[i].i;
-        latticeDown[i].r = lattice[i].r;
-        latticeDown[i].r = lattice[i].r;
+        copy_scalar(lattice[i], latticeUP[i]);
+        cout << lattice[i] << " | ";
+        copy_negative_scalar(lattice[i], latticeDown[i]);
+        cout << lattice[i] << endl;
     }
     /* V up */
 
@@ -508,7 +524,7 @@ void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& w
 
     //scalar_multiplication(detOup, detOdown, weight);
 }
-void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){
+void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progress
     /* initialise everything */
     int lattice_size = matrix_size, time_size = matrix_size;
     COMPLEX elements[lattice_size];
@@ -526,9 +542,9 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){
     for(int t = 0; t < time_size; t++){
         for(int l = 0; l < lattice_size; l++){
             /* calculate the weight before the flip */
-//            calculate_weight(matrix_size, const LaGenMatComplex& detOup, const LaGenMatComplex& detOdown, LaGenMatComplex& weight)
+            //calculate_weight(matrix_size, const LaGenMatComplex& detOup, const LaGenMatComplex& detOdown, LaGenMatComplex& weight)
             /* propose the flip */
-//            flip_spin(lattice(l, t));
+            //flip_scalar(lattice(l, t));
             /* calculate the weight after the flip */
         }
     }
@@ -884,7 +900,7 @@ void test_O_generation(const int time_size, const int iterations){//should work
     print_matrix(O, "O");
 }
 void test_detO(){//in progress
-
+    //
 }
 void test_weight(){
     /* initialise everything */
