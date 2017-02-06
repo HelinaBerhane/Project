@@ -593,11 +593,11 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
                 /* generate random float */
                 ran = random_float();
                 /* check */
-                if(probability.r > ran){
+                if(probability > ran){
                     //accept
                 }else{
                     flip_scalar(lattice[l]);
-                    cout << rejected << endl;
+                    cout << "rejected" << endl;
                 }
             }
         }
