@@ -247,6 +247,11 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
     //    scalar_addition(result, division, result);
     //}
 //}
+// QMC - [/1]
+void flip_spin(COMPLEX& spin){//to test
+    spin.r = -spin.r;
+    spin.i = -spin.i;
+}
 
 /* array manipulation [1/1] */
 //void array_powers(COMPLEX array[], const int len, const int power){/**/
@@ -443,10 +448,11 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
     for(int i = 0; i < matrix_size; i++){
         scalar_product(result, eigenvalues(i));
     }
-}
+}//working
 // QMC - [3/4]
-void V_calculation(const COMPLEX slices[], const int time_slices, LaGenMatComplex& V){//should be working
-    //V = ??
+void V_calculation(const COMPLEX lattice[], const int time_slices, LaGenMatComplex& V){//should be working
+    /* given a lattice */
+    COMPLEX slices[];
     array_to_diag(slices, time_slices, V);
 }
 void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
@@ -471,7 +477,7 @@ void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, c
     /* print result */
     print_matrix(B, "B");
 }
-void O_calculation(const LaGenMatComplex& BA, const LaGenMatComplex& BB, const LaGenMatComplex& BC, const LaGenMatComplex& BD, const LaGenMatComplex&BE, LaGenMatComplex& O, const int matrix_size){//should be working
+void O_calculation(const int matrix_size, const LaGenMatComplex& BA, const LaGenMatComplex& BB, const LaGenMatComplex& BC, const LaGenMatComplex& BD, const LaGenMatComplex&BE, LaGenMatComplex& O){//should be working
     //O = 1 + B(m) B(m-1) B(...) B(1)
     /* initialise everything */
     LaGenMatComplex I = LaGenMatComplex::eye(matrix_size, matrix_size);
@@ -481,17 +487,45 @@ void O_calculation(const LaGenMatComplex& BA, const LaGenMatComplex& BB, const L
     /* add I */
     matrix_sum(matrix_size, O, I);
 }
-void detO_calculation(const LaGenMatComplex& O, const int matrix_size){
-    //
+void detO_calculation(const int matrix_size, const LaGenMatComplex& O, COMPLEX& detO){//to test
+    /* calculate det O */
+    detO = my_matrix_determinant(matrix_size, O);
 }
-void partition_function(){//in progress
-    //
+void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& weight){//to test
+    /* initialise everything */
+    int lattice_size = matrix_size, time_slices = matrix_size;
+    COMPLEX latticeUP[lattice_size] = lattice;
+    COMPLEX latticeDown[lattice_size] = -lattice;
+
+    /* V up */
+
+    /* V down */
+
+
+    //scalar_multiplication(detOup, detOdown, weight);
 }
-void flip_lattice_points(const int matrix_size, const int time_slices, LaGenMatComplex& lattice){
-    //generate_lattice_array(matrix_size, elements[]);
-    for(int i = 0; i < time_slices; i ++){
-        for(int j = 0; j < matrix_size; j++){
-            //
+void sweep_lattice(const int lattice_size, const int time_slices, LaGenMatComplex& lattice){
+    /* initialise everything */
+    COMPLEX elements[lattice_size];
+    COMPLEX weightBefore;
+    COMPLEX weightAfter;
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_slices);
+    /* generate the lattice */
+    generate_lattice_array(lattice_size, elements);
+    /* generate time slices */                          // I'm not sure whether the imaginary time
+    for(int t = 0; t < time_slices; t++){               // components should be the same as the initial
+        for(int l = 0; l < lattice_size; l++){          // ones or not? so I made them the same and will
+            lattice(l, t) = elements[j];                // change this later
+        }
+    }
+    /* sweep through the lattice */
+    for(int t = 0; t < time_slices; t++){
+        for(int l = 0; l < lattice_size; l++){
+            /* calculate the weight before the flip */
+            calculate_weight(matrix_size, const LaGenMatComplex& detOup, const LaGenMatComplex& detOdown, LaGenMatComplex& weight)
+            /* propose the flip */
+            flip_spin(lattice(l, t));
+            /* calculate the weight after the flip */
         }
     }
 }
@@ -836,7 +870,7 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
             B_calculation(H, V, BE, time_slices, iterations);
         }
     }
-    O_calculation(BA, BB, BC, BD, BE, O, time_slices);
+    O_calculation(time_slices, BA, BB, BC, BD, BE, O);
     /* print result */
     print_matrix(BA, "BA");
     print_matrix(BB, "BB");
@@ -845,8 +879,18 @@ void test_O_generation(const int time_slices, const int iterations){//should wor
     print_matrix(BE, "BE");
     print_matrix(O, "O");
 }
-void test_detO(){
+void test_detO(){//in progress
 
+}
+void test_weight(){
+    /* initialise everything */
+    int lattice_size = 3;
+    COMPLEX lattice[matrix_size];
+    COMPLEX weight;
+    /* generate the lattice */
+    generate_lattice_array(matrix_size, lattice);
+    /* calculate the weight */
+    calculate_weight(matrix_size, lattice, weight);
 }
 void test_QMC(const int matrix_size, const int time_slices){//in progress
     /* generate a 1D lattice of spins */
@@ -861,7 +905,7 @@ int main(){
     int matrix_size = 3, time_slices = 5, max_rand = 9;
     int iterations = 500;
 
-    test_matrix_determinant();
+    test_weight();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
