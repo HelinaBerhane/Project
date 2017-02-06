@@ -94,7 +94,7 @@ void generate_lattice(const int matrix_size, LaGenMatComplex& lattice){
     }
     lattice = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//working
-void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
+void generate_H(const int matrix_size, LaGenMatComplex& H){
     int matrix_volume = matrix_size * matrix_size;
     COMPLEX elements[matrix_volume];
     int n;
@@ -114,7 +114,7 @@ void generate_H(const int matrix_size, LaGenMatComplex& hamiltonian){
         //cout << endl;
     }
     //cout << endl;
-    hamiltonian = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+    H = LaGenMatComplex(elements, matrix_size, matrix_size, false );
     /* print result */
 }//working
 void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
@@ -464,9 +464,9 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
     }
 }//working
 // QMC - [3/4]
-void V_calculation(const COMPLEX lattice[], const int tau, LaGenMatComplex& V){//should be working
+void V_calculation(const COMPLEX lattice[], const int time_size, LaGenMatComplex& V){//should be working
     /* given a lattice */
-    array_to_diag(lattice, tau, V);
+    array_to_diag(lattice, time_size, V);
 }
 void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
     //B = exp(-H)exp(-V)
@@ -482,13 +482,13 @@ void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, c
     matrix_exponential(negH, matrix_size, iterations, expH);
     matrix_exponential(negV, matrix_size, iterations, expV);
     /* print exponential matrices */
-    print_matrix(expH, "e^-H");
-    print_matrix(expV, "e^-V");
+    //print_matrix(expH, "e^-H");
+    //print_matrix(expV, "e^-V");
     /* multiply exponentials */
     B = expH.copy();
     matrix_product(B, expV);
     /* print result */
-    print_matrix(B, "B");
+    //print_matrix(B, "B");
 }
 void O_calculation(const int matrix_size, const LaGenMatComplex& BA, const LaGenMatComplex& BB, const LaGenMatComplex& BC, const LaGenMatComplex& BD, const LaGenMatComplex&BE, LaGenMatComplex& O){//should be working
     //O = 1 + B(m) B(m-1) B(...) B(1)
@@ -507,19 +507,45 @@ void detO_calculation(const int matrix_size, const LaGenMatComplex& O, COMPLEX& 
 void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX& weight){//to test
     /* initialise everything */
     int lattice_size = matrix_size, time_size = matrix_size;
-    COMPLEX latticeDown[lattice_size];
+    COMPLEX latticeDOWN[lattice_size];
+    LaGenMatComplex H;
+    LaGenMatComplex VUP = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex VDOWN = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex proBUP = LaGenMatComplex::eye(time_size, time_size);
+    LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
+
+
+    LaGenMatComplex BUPA = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BUPB = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BUPC = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BUPD = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BUPE = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BDOWNA = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BDOWNB = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BDOWNC = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BDOWND = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex BDOWNE = LaGenMatComplex::zeros(time_size, time_size);
     /* generate lattices */
-    cout << "    up | down" << endl;
-    for(int i = 0; i < lattice_size; i++){
-        cout.width(6);
-        cout << latticeUP[i] << " | ";
-        copy_negative_scalar(latticeUP[i], latticeDown[i]);
-        cout << latticeDown[i] << endl;
+    //cout << "    up | down" << endl;
+    for(int l = 0; l < lattice_size; l++){
+        //cout.width(6);
+        //cout << latticeUP[i] << " | ";
+        copy_negative_scalar(latticeUP[l], latticeDOWN[l]);
+        //cout.width(6);
+        //cout << latticeDown[i] << endl;
     }
-    /* V up */
-
-    /* V down */
-
+    /* generate H */
+    generate_H(time_size, H);
+    /* generate V matrices */
+    V_calculation(latticeUP[], time_size, VUP);
+    V_calculation(latticeDOWN[], time_size, VDOWN);
+    /* multiply B matrices */
+    for(int t = time_size; t > 0 ; --t){
+        //for each time slice
+        cout << t;
+        //matrix_product(proBUP, BL);
+    }
+    cout << endl;
     //scalar_multiplication(detOup, detOdown, weight);
 }
 void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progress
@@ -533,7 +559,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progres
     /* generate the lattice */
     generate_lattice_array(lattice_size, elements);
     /* generate time slices */                          // I'm not sure whether the imaginary time
-    for(int t = 0; t < time_size; t++){               // components should be the same as the initial
+    for(int t = 0; t < time_size; t++){                 // components should be the same as the initial
         for(int l = 0; l < lattice_size; l++){          // ones or not? so I made them the same and will
             lattice(l, t) = elements[l];                // change this later
         }
@@ -845,16 +871,16 @@ void test_lattice_generation(const int matrix_size, const int time_size){
     generate_lattice_array(time_size, lattice_points);
     print_array(lattice_points, time_size, "string");
 }//working
-void test_hamiltonian(const int matrix_size){
+void test_H(const int matrix_size){
     /* initialise everything */
-    LaGenMatComplex hamiltonian;
+    LaGenMatComplex H;
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
     /* generate matrix */
-    generate_H(matrix_size, hamiltonian);
-    print_matrix(hamiltonian);
+    generate_H(matrix_size, H);
+    print_matrix(H);
     /* calculate eigenstuff */
-    matrix_eigenvstuff(hamiltonian, eigenvalues, eigenvectors);
+    matrix_eigenvstuff(H, eigenvalues, eigenvectors);
     print_vector(eigenvalues, "eigenvalues");
     // eigenvalues are 2 cos(n pi / q), where q = the matrix size
 }//working
@@ -942,7 +968,7 @@ void test_QMC(){//in progress
     int time_size = matrix_size;
     /* generate a 1D lattice of spins */
     test_lattice_generation(matrix_size, time_size);
-    test_hamiltonian(time_size);
+    test_H(time_size);
 }
 
 /* --- Main QMC Program --- */
@@ -967,7 +993,7 @@ int main(){
     cout << endl;
 
     cout << "hamiltonian generation test:" << endl;
-    test_hamiltonian(time_size);
+    test_H(time_size);
     cout << endl;
 
     cout << "V generation test:" << endl;
