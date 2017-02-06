@@ -540,7 +540,7 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     V_calculation(latticeUP, time_size, VUP);
     V_calculation(latticeDOWN, time_size, VDOWN);
     /* multiply B matrices */
-    for(int t = time_size; t > 0 ; t--){
+    for(int t = time_size - 1; t >= 0 ; t--){
         //for each time slice
         cout.width();
         cout << t;
