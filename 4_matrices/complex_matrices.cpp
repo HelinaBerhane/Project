@@ -513,9 +513,10 @@ void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& w
     cout << "   up | down" << endl;
     for(int i = 0; i < lattice_size; i++){
         copy_scalar(lattice[i], latticeUP[i]);
-        cout << lattice[i] << " | ";
+        cout.width(6);
+        cout << latticeUP[i] << " | ";
         copy_negative_scalar(lattice[i], latticeDown[i]);
-        cout << lattice[i] << endl;
+        cout << latticeDown[i] << endl;
     }
     /* V up */
 
