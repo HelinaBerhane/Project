@@ -579,11 +579,11 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
     for(int t = 0; t < time_size; t++){
         for(int l = 0; l < lattice_size; l++){
             /* calculate the weight before the flip */
-            calculate_weight(matrix_size, lattice[], weightBefore);
+            calculate_weight(matrix_size, lattice, weightBefore);
             /* propose the flip */
             flip_scalar(lattice[l]);
             /* calculate the weight after the flip */
-            calculate_weight(matrix_size, lattice[], weightAfter);
+            calculate_weight(matrix_size, lattice, weightAfter);
             /* calculate the ratio of weights */
             probability = weightBefore.r / weightAfter.r;
             //scalar_division(weightBefore, weightAfter, probability);    //check order
@@ -596,7 +596,7 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
                 if(probability.r > ran){
                     //accept
                 }else{
-                    flip_scalar(lattice(l, t));
+                    flip_scalar(lattice[l]);
                     cout << rejected << endl;
                 }
             }
