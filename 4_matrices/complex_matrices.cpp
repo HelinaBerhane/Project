@@ -496,7 +496,7 @@ void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& w
     COMPLEX latticeUP[lattice_size];
     COMPLEX latticeDown[lattice_size];
     /* generate lattices */
-    for(int i = 0; i < lattice_size){
+    for(int i = 0; i < lattice_size; i++){
         latticeUP[i].r = lattice[i].r;
         latticeUP[i].i = lattice[i].i;
         latticeDown[i].r = lattice[i].r;
