@@ -556,8 +556,8 @@ void test_negative_scalar(){
     COMPLEX negativeScalar;
     for(int i = 0; i < 10; i ++){
         generate_scalar(scalar, 9);
-        copy_negative_scalar(test, neg);
-        print_scalar(neg, "- test");
+        copy_negative_scalar(scalar, negativeScalar);
+        print_scalar(negativeScalar, "negative scalar");
     }
 }
 void test_scalar_manipulation(const int max_rand){
