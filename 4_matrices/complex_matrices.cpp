@@ -591,6 +591,9 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
             if(probability < 1){
                 /* generate random float */
                 ran = random_float();
+                cout << "ran = " << ran << endl;
+                float diff = ran - probability;
+                cout << "diff = " << diff << endl;
                 /* check */
                 if(probability > ran){
                     //accept
