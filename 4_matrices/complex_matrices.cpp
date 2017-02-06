@@ -559,7 +559,7 @@ void test_negative_scalar(){
         copy_negative_scalar(scalar, negativeScalar);
         print_scalar(negativeScalar, "negative scalar");
     }
-}
+}//working
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
@@ -934,9 +934,7 @@ int main(){
     int matrix_size = 3, time_size = 5, max_rand = 9;
     int iterations = 500;
 
-
-    test_negative_scalar();
-//    test_weight();
+    test_weight();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
