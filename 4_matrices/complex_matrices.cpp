@@ -504,18 +504,16 @@ void detO_calculation(const int matrix_size, const LaGenMatComplex& O, COMPLEX& 
     /* calculate det O */
     detO = my_matrix_determinant(matrix_size, O);
 }
-void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& weight){//to test
+void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX& weight){//to test
     /* initialise everything */
     int lattice_size = matrix_size, time_size = matrix_size;
-    COMPLEX latticeUP[lattice_size];
     COMPLEX latticeDown[lattice_size];
     /* generate lattices */
-    cout << "   up | down" << endl;
+    cout << "    up | down" << endl;
     for(int i = 0; i < lattice_size; i++){
-        copy_scalar(lattice[i], latticeUP[i]);
         cout.width(6);
         cout << latticeUP[i] << " | ";
-        copy_negative_scalar(lattice[i], latticeDown[i]);
+        copy_negative_scalar(latticeUP[i], latticeDown[i]);
         cout << latticeDown[i] << endl;
     }
     /* V up */
@@ -553,6 +551,14 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progres
 //46 - 7/9
 
 /* Testing [15/15] - QMC [2/5]*/
+void test_negative_scalar(){
+    COMPLEX test;
+    COMPLEX neg;
+    text.r = 4;
+    test.i = 3;
+    copy_negative_scalar(test, neg);
+    print_scalar(neg, "- test");
+}
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
     generate_scalar(compA, max_rand);
@@ -927,7 +933,9 @@ int main(){
     int matrix_size = 3, time_size = 5, max_rand = 9;
     int iterations = 500;
 
-    test_weight();
+
+    test_negative_scalar();
+//    test_weight();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
