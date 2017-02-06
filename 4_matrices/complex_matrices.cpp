@@ -540,8 +540,9 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     V_calculation(latticeUP, time_size, VUP);
     V_calculation(latticeDOWN, time_size, VDOWN);
     /* multiply B matrices */
-    for(int t = time_size; t > 0 ; --t){
+    for(int t = time_size; t > 0 ; t--){
         //for each time slice
+        cout.width();
         cout << t;
         //matrix_product(proBUP, BL);
     }
@@ -954,7 +955,7 @@ void test_detO(){//in progress
 }
 void test_weight(){
     /* initialise everything */
-    int matrix_size = 8;
+    int matrix_size = 5;
     COMPLEX lattice[matrix_size];
     COMPLEX weight;
     /* generate the lattice */
