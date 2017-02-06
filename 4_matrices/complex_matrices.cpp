@@ -556,7 +556,7 @@ void test_negative_scalar(){
     COMPLEX negativeScalar;
     for(int i = 0; i < 10; i ++){
         generate_scalar(scalar, 9);
-        copy_negative_scalar(scalar, negativeScalar);
+        copy_scalar(scalar, negativeScalar);
         print_scalar(negativeScalar, "negative scalar");
     }
 }
