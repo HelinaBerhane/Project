@@ -21,7 +21,7 @@ void print_scalar(const COMPLEX scalar){
     cout << scalar << endl;
 }//working
 void print_scalar(const COMPLEX scalar, const string name){
-    cout << name << ":" << scalar << endl;
+    cout << name << ": " << scalar << endl;
 }//working
 void print_array(const COMPLEX array[], int len){
     for(int i = 0; i < len; i++){
@@ -552,12 +552,13 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progres
 
 /* Testing [15/15] - QMC [2/5]*/
 void test_negative_scalar(){
-    COMPLEX test;
-    COMPLEX neg;
-    test.r = 4;
-    test.i = 3;
-    copy_negative_scalar(test, neg);
-    print_scalar(neg, "- test");
+    COMPLEX scalar;
+    COMPLEX negativeScalar;
+    for(int i = 0; i < 10; i ++){
+        generate_scalar(scalar, 9);
+        copy_negative_scalar(test, neg);
+        print_scalar(neg, "- test");
+    }
 }
 void test_scalar_manipulation(const int max_rand){
     COMPLEX compA;
