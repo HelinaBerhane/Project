@@ -531,9 +531,12 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     }
     /* generate H */
     generate_H(matrix_size, H);
+    print_matrix(H, "H");
     /* generate V matrices */
     V_calculation(latticeUP, time_size, VUP);
     V_calculation(latticeDOWN, time_size, VDOWN);
+    print_matrix(VUP, "V up");
+    print_matrix(VDOWN, "V down");
     /* multiply B matrices */
     for(int t = time_size - 1; t >= 0 ; t--){
         //for each time slice
@@ -547,11 +550,14 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     /* calculate O matrices */
     matrix_sum(matrix_size, OUP, proBUP);
     matrix_sum(matrix_size, ODOWN, proBDOWN);
+    print_matrix(OUP, "O up");
+    print_matrix(ODOWN, "O down");
     /* calculate det(O)s */
     matrix_determinant(matrix_size, OUP, detOUP);
     matrix_determinant(matrix_size, ODOWN, detODOWN);
     /* calculate the weight */
     scalar_multiplication(detOUP, detODOWN, weight);
+    print_scalar(weight, "weight");
 }
 void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progress
     /* initialise everything */
