@@ -589,7 +589,7 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
             //scalar_division(weightBefore, weightAfter, probability);    //check order
             /* accept or reject the flip */
             cout << "prob: " << probability << endl;
-            if(probability.r < 1){
+            if(probability < 1){
                 /* generate random float */
                 ran = random_float();
                 /* check */
