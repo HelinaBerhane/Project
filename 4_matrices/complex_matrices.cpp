@@ -160,7 +160,7 @@ void copy_scalar(const COMPLEX& scalar, COMPLEX& copy){//should work
     copy.i = scalar.i;
 }
 void copy_negative_scalar(const COMPLEX& scalar, COMPLEX& copy){//should work
-    copy.r - scalar.r;
+    copy.r = -scalar.r;
     copy.i = -scalar.i;
 }
 void flip_scalar(COMPLEX& spin){//should work
@@ -556,7 +556,7 @@ void test_negative_scalar(){
     COMPLEX negativeScalar;
     for(int i = 0; i < 10; i ++){
         generate_scalar(scalar, 9);
-        copy_scalar(scalar, negativeScalar);
+        copy_negative_scalar(scalar, negativeScalar);
         print_scalar(negativeScalar, "negative scalar");
     }
 }
