@@ -510,8 +510,7 @@ void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& w
     COMPLEX latticeUP[lattice_size];
     COMPLEX latticeDown[lattice_size];
     /* generate lattices */
-    cout.width(5);
-    cout << "up | down" << endl;
+    cout << "   up | down" << endl;
     for(int i = 0; i < lattice_size; i++){
         copy_scalar(lattice[i], latticeUP[i]);
         cout << lattice[i] << " | ";
@@ -904,7 +903,7 @@ void test_detO(){//in progress
 }
 void test_weight(){
     /* initialise everything */
-    int matrix_size = 3;
+    int matrix_size = 8;
     COMPLEX lattice[matrix_size];
     COMPLEX weight;
     /* generate the lattice */
