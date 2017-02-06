@@ -554,7 +554,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progres
 void test_negative_scalar(){
     COMPLEX test;
     COMPLEX neg;
-    text.r = 4;
+    test.r = 4;
     test.i = 3;
     copy_negative_scalar(test, neg);
     print_scalar(neg, "- test");
