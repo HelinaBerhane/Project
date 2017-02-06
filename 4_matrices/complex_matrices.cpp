@@ -156,12 +156,12 @@ int factorial(int x){
 	}
 }//working
 void copy_scalar(const COMPLEX& scalar, COMPLEX& copy){//should work
-    scalar.r = copy.r;
-    scalar.i = copy.i;
+    copy.r = scalar.r;
+    copy.i = scalar.i;
 }
 void copy_negative_scalar(const COMPLEX& scalar, COMPLEX& copy){//should work
-    scalar.r = -copy.r;
-    scalar.i = -copy.i;
+    copy.r - -scalar.r;
+    copy.i = -scalar.i;
 }
 void flip_scalar(COMPLEX& spin){//should work
     spin.r = -spin.r;
@@ -511,7 +511,7 @@ void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& w
     COMPLEX latticeDown[lattice_size];
     /* generate lattices */
     cout.width(5);
-    cout << "up | down" << endl
+    cout << "up | down" << endl;
     for(int i = 0; i < lattice_size; i++){
         copy_scalar(lattice[i], latticeUP[i]);
         cout << lattice[i] << " | ";
