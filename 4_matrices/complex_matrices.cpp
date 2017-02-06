@@ -493,12 +493,15 @@ void detO_calculation(const int matrix_size, const LaGenMatComplex& O, COMPLEX& 
 void calculate_weight(const int matrix_size, const COMPLEX lattice[], COMPLEX& weight){//to test
     /* initialise everything */
     int lattice_size = matrix_size, time_size = matrix_size;
-    for(int i = 0; i < lattice_size)
     COMPLEX latticeUP[lattice_size];
-    latticeUP = lattice;
     COMPLEX latticeDown[lattice_size];
-    latticeUP = -lattice;
-
+    /* generate lattices */
+    for(int i = 0; i < lattice_size){
+        latticeUP[i].r = lattice[i].r;
+        latticeUP[i].i = lattice[i].i;
+        latticeDown[i].r = lattice[i].r;
+        latticeDown[i].r = lattice[i].r;
+    }
     /* V up */
 
     /* V down */
