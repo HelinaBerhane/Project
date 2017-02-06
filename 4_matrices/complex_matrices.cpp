@@ -586,7 +586,6 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
             calculate_weight(matrix_size, lattice, weightAfter);
             /* calculate the ratio of weights */
             probability = weightBefore.r / weightAfter.r;
-            //scalar_division(weightBefore, weightAfter, probability);    //check order
             /* accept or reject the flip */
             cout << "prob: " << probability << endl;
             if(probability < 1){
@@ -990,7 +989,7 @@ int main(){
     int matrix_size = 3, time_size = 5, max_rand = 9;
     int iterations = 500;
 
-    test_weight();
+    test_QMC();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
