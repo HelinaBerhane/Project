@@ -528,6 +528,8 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progres
     COMPLEX elements[lattice_size];
     COMPLEX weightBefore;
     COMPLEX weightAfter;
+    COMPLEX probability;
+    float ran;
     /* generate the lattice */
     generate_lattice_array(lattice_size, elements);
     /* generate time slices */                          // I'm not sure whether the imaginary time
@@ -542,8 +544,23 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice){//in progres
             /* calculate the weight before the flip */
             //calculate_weight(matrix_size, const LaGenMatComplex& detOup, const LaGenMatComplex& detOdown, LaGenMatComplex& weight)
             /* propose the flip */
-            //flip_scalar(lattice(l, t));
+            flip_scalar(lattice(l, t));
             /* calculate the weight after the flip */
+            /* calculate the ratio of weights */
+            scalar_division(weightBefore, weightAfter, probability);    //check order
+            /* accept or reject the flip */
+            if(probability.r > 1){
+                //accept
+            }else{
+                /* generate random float */
+                //generate_float();
+                /* check */
+                if(probability.r > ran){
+                    //accept
+                }else{
+                    flip_scalar(lattice(l, t));
+                }
+            }
         }
     }
 }
