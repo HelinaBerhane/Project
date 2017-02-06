@@ -537,8 +537,8 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     /* generate H */
     generate_H(time_size, H);
     /* generate V matrices */
-    V_calculation(latticeUP[], time_size, VUP);
-    V_calculation(latticeDOWN[], time_size, VDOWN);
+    V_calculation(latticeUP, time_size, VUP);
+    V_calculation(latticeDOWN, time_size, VDOWN);
     /* multiply B matrices */
     for(int t = time_size; t > 0 ; --t){
         //for each time slice
