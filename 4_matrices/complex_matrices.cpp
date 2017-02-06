@@ -570,11 +570,11 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
     float probability;
     float ran;
     /* generate time slices */                          // I'm not sure whether the imaginary time
-    for(int t = 0; t < time_size; t++){                 // components should be the same as the initial
-        for(int l = 0; l < lattice_size; l++){          // ones or not? so I made them the same and will
-            lattice(l, t) = elements[l];                // change this later
-        }
-    }
+    //for(int t = 0; t < time_size; t++){                 // components should be the same as the initial
+    //    for(int l = 0; l < lattice_size; l++){          // ones or not? so I made them the same and will
+    //        lattice(l, t) = elements[l];                // change this later
+    //    }
+    //}
     /* sweep through the lattice */
     for(int t = 0; t < time_size; t++){
         for(int l = 0; l < lattice_size; l++){
@@ -977,11 +977,11 @@ void test_weight(){//working
 }
 void test_QMC(){//in progress
     /* initialise everything */
-    int matrix_size = 3;
-    int time_size = matrix_size;
-    /* generate a 1D lattice of spins */
+    int matrix_size = 5;
+    COMPLEX lattice[matrix_size];
     /* generate the lattice */
-
+    generate_lattice_array(matrix_size, lattice);
+    sweep_lattice(matrix_size, lattice);
 }
 
 /* --- Main QMC Program --- */
