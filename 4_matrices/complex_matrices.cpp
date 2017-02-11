@@ -470,10 +470,9 @@ void V_calculation(const COMPLEX lattice[], const int time_size, LaGenMatComplex
     /* given a lattice */
     array_to_diag(lattice, time_size, V);
 }
-void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size){//should be working
+void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
     //B = exp(-H)exp(-V)
     /* initialise everything */
-    int iterations = 500;
     LaGenMatComplex negH;
     LaGenMatComplex negV;
     LaGenMatComplex expH;
@@ -509,7 +508,7 @@ void detO_calculation(const int matrix_size, const LaGenMatComplex& O, COMPLEX& 
 }
 void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX& weight){//to test
     /* initialise everything */
-    int lattice_size = matrix_size, time_size = matrix_size;
+    int lattice_size = matrix_size, time_size = matrix_size, iterations = 1000;
     COMPLEX latticeDOWN[matrix_size];
     LaGenMatComplex H;
     LaGenMatComplex VUP = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -543,8 +542,8 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     for(int t = time_size - 1; t >= 0 ; t--){
         //for each time slice
         /* calculate B(t) matrices */
-        B_calculation(H, VUP, BUP, lattice_size);
-        B_calculation(H, VDOWN, BDOWN, lattice_size);
+        B_calculation(H, VUP, BUP, lattice_size, iterations);
+        B_calculation(H, VDOWN, BDOWN, lattice_size, iterations);
         /* multiply the matrices */
         matrix_product(proBUP, BUP);
         matrix_product(proBDOWN, BUP);
@@ -924,7 +923,7 @@ void test_B_generation(){//should work
     print_matrix(H, "H");
     print_matrix(V, "V");
     /* calculate B */
-    B_calculation(H, V, B, time_size);
+    B_calculation(H, V, B, time_size, iterations);
     /* print result */
     print_matrix(B,"B = e^-H e^-V");
 }
@@ -947,15 +946,15 @@ void test_O_generation(const int time_size, const int iterations){//should work
         V_calculation(elements, time_size, V);
         /* calculate B */
         if(i == 0){
-            B_calculation(H, V, BA, time_size);
+            B_calculation(H, V, BA, time_size, iterations);
         }else if(i == 1){
-            B_calculation(H, V, BB, time_size);
+            B_calculation(H, V, BB, time_size, iterations);
         }else if(i == 2){
-            B_calculation(H, V, BC, time_size);
+            B_calculation(H, V, BC, time_size, iterations);
         }else if(i == 3){
-            B_calculation(H, V, BD, time_size);
+            B_calculation(H, V, BD, time_size, iterations);
         }else if(i == 4){
-            B_calculation(H, V, BE, time_size);
+            B_calculation(H, V, BE, time_size, iterations);
         }
     }
     O_calculation(time_size, BA, BB, BC, BD, BE, O);
