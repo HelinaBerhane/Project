@@ -608,7 +608,7 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
 
 /* Testing [15/15] - QMC [2/5]*/
 void test_random_int(){
-    int max_rand = 9, iterations 100000, test;
+    int max_rand = 9, iterations = 100000, test;
     int zero = 0, one = 0, two = 0, three = 0, four = 0;
     int five = 0, six = 0, seven = 0, eight = 0, nine = 0;
     for(int i = 0; i < iterations; i++){
