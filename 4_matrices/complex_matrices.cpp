@@ -12,11 +12,11 @@ using namespace std;
 /* Total [35/35] - QMC [3/3] */
 
 /* Randomisation [1/1]*/
-int ran(int max_rand){
+int random_int(int max_rand){
     return rand() % max_rand;
 }//working
 float random_float(){//fix later
-    return (rand() % 1000)/1000;
+    return random_int(1000)/1000;
 }
 
 /* Printing [7/7] */
@@ -51,16 +51,16 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 
 /* Generation [5/5]*/
 void generate_scalar(COMPLEX& scalar, const int max_rand){
-    scalar.r = ran(max_rand);	//1 to x
-    scalar.i = ran(max_rand);
+    scalar.r = random_int(max_rand);	//1 to x
+    scalar.i = random_int(max_rand);
 }//working
 void generate_scalar(int scalar, const int max_rand){
-    scalar = ran(max_rand);	//1 to x
+    scalar = random_int(max_rand);	//1 to x
 }//working
 void generate_array(COMPLEX array[], const int array_length, const int max_rand){
     for(int i = 0; i < array_length; i++){
-        array[i].r = ran(max_rand);	//1 to x
-        array[i].i = ran(max_rand);
+        array[i].r = random_int(max_rand);	//1 to x
+        array[i].i = random_int(max_rand);
 	}
 }//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
@@ -607,6 +607,36 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
 //46 - 7/9
 
 /* Testing [15/15] - QMC [2/5]*/
+void test_random_int(){
+    int max_rand = 9, iterations 100000, test;
+    int zero = 0, one = 0, two = 0, three = 0, four = 0;
+    int five = 0, six = 0, seven = 0, eight = 0, nine = 0;
+    for(int i = 0; i < iterations; i++){
+        test = random_int(max_rand);
+        switch(test){
+            case 0: zero++;
+            case 1: one++;
+            case 2: two++;
+            case 3: three++;
+            case 4: four++;
+            case 5: five++;
+            case 6: six++;
+            case 7: seven++;
+            case 8: eight++;
+            case 9: nine++;
+        }
+    }
+    cout << "0: " << zero << endl;
+    cout << "1: " << one << endl;
+    cout << "2: " << two << endl;
+    cout << "3: " << three << endl;
+    cout << "4: " << four << endl;
+    cout << "5: " << five << endl;
+    cout << "6: " << six << endl;
+    cout << "7: " << seven << endl;
+    cout << "8: " << eight << endl;
+    cout << "9: " << nine << endl;
+}
 void test_negative_scalar(){
     COMPLEX scalar;
     COMPLEX negativeScalar;
@@ -916,8 +946,8 @@ void test_B_generation(){//should work
     LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
     /* generate matrices */
     for(int i = 0; i < time_size; i++){
-        H(i,i).r = ran(max_rand);
-        V(i,i).r = ran(max_rand);
+        H(i,i).r = random_int(max_rand);
+        V(i,i).r = random_int(max_rand);
     }
     /* print matrices */
     print_matrix(H, "H");
@@ -994,7 +1024,7 @@ int main(){
     //int matrix_size = 3, time_size = 5, max_rand = 9;
     //int iterations = 500;
 
-    test_B_generation();
+    test_random_int();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
