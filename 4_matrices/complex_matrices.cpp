@@ -438,7 +438,6 @@ COMPLEX my_matrix_determinant(const int matrix_size, const LaGenMatComplex& matr
         for(int element = 0; element < matrix_size; element++){//for each element in the first row
             /* initialise everything */
             LaGenMatComplex cofactorMatrix;
-            COMPLEX cofactor;
             COMPLEX coefficient;
             int cofactor_size = matrix_size - 1;
             /* determine the coefficient */
@@ -852,7 +851,7 @@ void test_determinant_coefficient(){
 }//working
 void test_reduced_matrix(){
     /* initialise everything */
-    int matrix_size = 4, max_rand = 9, row = 1, column = 3;
+    int matrix_size = 4, max_rand = 9;
     LaGenMatComplex matrix;
     LaGenMatComplex cofactorMatrix = LaGenMatComplex::zeros(matrix_size - 1, matrix_size - 1);
     /* generate matrix */
@@ -912,8 +911,7 @@ void test_V_generation(const int time_size){//should work
 }
 void test_B_generation(){//should work
     /* initialise everything */
-    int time_size = 5, max_rand = 9; iterations = 1000;
-    COMPLEX elements[time_size];
+    int time_size = 5, max_rand = 9, iterations = 1000;
     LaGenMatComplex H = LaGenMatComplex::eye(time_size, time_size);
     LaGenMatComplex V = LaGenMatComplex::eye(time_size, time_size);
     LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
@@ -994,8 +992,8 @@ void test_QMC(){//in progress
 /* --- Main QMC Program --- */
 int main(){
     /* initialise everything */
-    int matrix_size = 3, time_size = 5, max_rand = 9;
-    int iterations = 500;
+    //int matrix_size = 3, time_size = 5, max_rand = 9;
+    //int iterations = 500;
 
     test_B_generation();
     /* tests */
