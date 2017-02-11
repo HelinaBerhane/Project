@@ -910,20 +910,25 @@ void test_V_generation(const int time_size){//should work
     /* print result */
     print_matrix(V);
 }
-void test_B_generation(const int time_size, const int iterations){//should work
+void test_B_generation(){//should work
     /* initialise everything */
+    int time_size = 5, max_rand = 9; iterations = 1000;
     COMPLEX elements[time_size];
-    LaGenMatComplex H;
-    LaGenMatComplex V = LaGenMatComplex::zeros(time_size, time_size);
+    LaGenMatComplex H = LaGenMatComplex::eye(time_size, time_size);
+    LaGenMatComplex V = LaGenMatComplex::eye(time_size, time_size);
     LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
     /* generate matrices */
-    generate_H(time_size, H);
-    generate_lattice_array(time_size, elements);
-    V_calculation(elements, time_size, V);
+    for(int i = 0; i < time_size; i++){
+        H(i,i).r = ran(max_rand);
+        V(i,i).r = ran(max_rand);
+    }
+    /* print matrices */
+    print_matrix(H, "H");
+    print_matrix(V, "V");
     /* calculate B */
     B_calculation(H, V, B, time_size);
     /* print result */
-    //print_matrix(B);
+    print_matrix(B,"B = e^-H e^-V");
 }
 void test_O_generation(const int time_size, const int iterations){//should work
     /* initialise everything */
@@ -992,7 +997,7 @@ int main(){
     int matrix_size = 3, time_size = 5, max_rand = 9;
     int iterations = 500;
 
-    test_QMC();
+    test_B_generation();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
