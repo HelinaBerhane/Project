@@ -653,8 +653,11 @@ void test_random_int(){
     cout << "8: " << eight << endl;
     cout << "9: " << nine << endl;
 }
-test_random_float(){
-
+void test_random_float(){
+    int count = 100, min = 0, max = 10;
+    for (int i = 0; i < count; i++) {
+        cout << random_float(min, max) << endl;
+    }
 }
 void test_negative_scalar(){
     COMPLEX scalar;
