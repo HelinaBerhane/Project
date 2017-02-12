@@ -579,7 +579,7 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
     COMPLEX weightBefore;
     COMPLEX weightAfter;
     float probability;
-    float ran;
+    float prob;
     /* generate time slices */                          // I'm not sure whether the imaginary time
     //for(int t = 0; t < time_size; t++){                 // components should be the same as the initial
     //    for(int l = 0; l < lattice_size; l++){          // ones or not? so I made them the same and will
@@ -601,14 +601,12 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
             cout << "prob: " << probability << endl;
             if(probability < 1){
                 /* generate random float */
-                ran = .5;
-                cout << "ran = " << ran << endl;
-                float diff = ran - probability;
+                prob = random_probability();
+                cout << "ran = " << prob << endl;
+                float diff = prob - probability;
                 cout << "diff = " << diff << endl;
                 /* check */
-                if(probability > ran){
-                    //accept
-                }else{
+                if(probability < ran){
                     flip_scalar(lattice[l]);
                     cout << "rejected" << endl;
                 }
@@ -659,13 +657,13 @@ void test_random_int(){
     cout << "7: " << seven << endl;
     cout << "8: " << eight << endl;
     cout << "9: " << nine << endl;
-}
+}//working
 void test_random_float(){
     int count = 10, min = 0, max = 10;
     for (int i = 0; i < count; i++) {
         cout << random_float(min, max) << endl;
     }
-}
+}//working
 void test_negative_scalar(){
     COMPLEX scalar;
     COMPLEX negativeScalar;
@@ -940,7 +938,7 @@ void test_random_probability(){
     for (int i = 0; i < count; i++) {
         cout << random_probability() << endl;
     }
-}
+}//working
 void test_lattice_generation(const int matrix_size, const int time_size){
     LaGenMatComplex lattice;
     generate_lattice(matrix_size, lattice);
@@ -1059,7 +1057,7 @@ int main(){
     //int matrix_size = 3, time_size = 5, max_rand = 9;
     //int iterations = 500;
 
-    test_random_probability();
+    test_QMC();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
