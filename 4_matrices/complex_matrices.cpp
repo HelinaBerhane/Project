@@ -41,7 +41,7 @@ void print_scalar(const COMPLEX scalar, const string name){
 }//working
 void print_array(const COMPLEX array[], int len){
     for(int i = 0; i < len; i++){
-        cout.width(8);
+        cout.width(7);
         cout << array[i] << " ";
     }
     cout << endl;
@@ -588,6 +588,9 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
     //    }
     //}
     /* sweep through the lattice */
+    cout.width(11);
+    cout << "weight";
+    print_array(lattice, matrix_size);
     for(int t = 0; t < time_size; t++){
         for(int l = 0; l < lattice_size; l++){
             /* calculate the weight before the flip */
