@@ -591,7 +591,7 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
     cout.width(11);
     cout << "weight";
     cout << " lattice" << endl;
-    for(int t = 0; t < time_size; t++){
+    for(int t = 0; t < 2; t++){
         for(int l = 0; l < lattice_size; l++){
             /* calculate the weight before the flip */
             calculate_weight(matrix_size, lattice, weightBefore);
