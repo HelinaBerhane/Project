@@ -1,22 +1,28 @@
 #include <iostream> //cout
-#include <cstdlib>	//rand, sran
 #include <string>
 #include "complex_matrices.h"
 #include <gmc.h> 	//LaGenMatComplex
 #include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
 #include <blas3pp.h>
 #include <random>   //random_device, mt19937
+#include <cstdlib>	//rand, srand
 
 using namespace std;
 
 /* Total [35/35] - QMC [3/3] */
 
 /* Randomisation [1/1]*/
-int random_int(int max_rand){
+int basic_random_int(int max_rand){
     return rand() % (max_rand+1);
 }//working
-float random_float(){//fix later
-    return random_int(1000)/1000;
+float basic_random_float(){//fix later
+    return basic_random_int(1000)/1000;
+}
+float random_float(float min, float max){
+    random_device rd;
+    mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(min, max);
+    return dis(gen);
 }
 
 /* Printing [7/7] */
@@ -51,16 +57,16 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 
 /* Generation [5/5]*/
 void generate_scalar(COMPLEX& scalar, const int max_rand){
-    scalar.r = random_int(max_rand);	//1 to x
-    scalar.i = random_int(max_rand);
+    scalar.r = basic_random_int(max_rand);	//1 to x
+    scalar.i = basic_random_int(max_rand);
 }//working
 void generate_scalar(int scalar, const int max_rand){
-    scalar = random_int(max_rand);	//1 to x
+    scalar = basic_random_int(max_rand);	//1 to x
 }//working
 void generate_array(COMPLEX array[], const int array_length, const int max_rand){
     for(int i = 0; i < array_length; i++){
-        array[i].r = random_int(max_rand);	//1 to x
-        array[i].i = random_int(max_rand);
+        array[i].r = basic_random_int(max_rand);	//1 to x
+        array[i].i = basic_random_int(max_rand);
 	}
 }//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
@@ -612,7 +618,7 @@ void test_random_int(){
     int zero = 0, one = 0, two = 0, three = 0, four = 0;
     int five = 0, six = 0, seven = 0, eight = 0, nine = 0;
     for(int i = 0; i < iterations; i++){
-        test = random_int(max_rand);
+        test = basic_random_int(max_rand);
         switch(test){
             case 0: zero++;
                 break;
@@ -646,6 +652,9 @@ void test_random_int(){
     cout << "7: " << seven << endl;
     cout << "8: " << eight << endl;
     cout << "9: " << nine << endl;
+}
+test_random_float(){
+
 }
 void test_negative_scalar(){
     COMPLEX scalar;
@@ -956,8 +965,8 @@ void test_B_generation(){//should work
     LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
     /* generate matrices */
     for(int i = 0; i < time_size; i++){
-        H(i,i).r = random_int(max_rand);
-        V(i,i).r = random_int(max_rand);
+        H(i,i).r = basic_random_int(max_rand);
+        V(i,i).r = basic_random_int(max_rand);
     }
     /* print matrices */
     print_matrix(H, "H");
