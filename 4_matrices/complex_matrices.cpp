@@ -41,6 +41,7 @@ void print_scalar(const COMPLEX scalar, const string name){
 }//working
 void print_array(const COMPLEX array[], int len){
     for(int i = 0; i < len; i++){
+        cout.width(8);
         cout << array[i] << " ";
     }
     cout << endl;
@@ -600,7 +601,7 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
             probability = weightAfter.r / weightBefore.r;
             /* accept or reject the flip */
             // cout << "prob: " << probability << endl;
-            cout.width(10);
+            cout.width(11);
             cout << probability;
             if(abs(probability) < 1){
                 /* generate random float */
