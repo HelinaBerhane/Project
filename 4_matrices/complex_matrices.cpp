@@ -24,6 +24,13 @@ float random_float(float min, float max){
     std::uniform_real_distribution<> dis(min, max);
     return dis(gen);
 }
+/* QMC */
+float random_probability(){
+    random_device rd;
+    mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0, 1);
+    return dis(gen);
+}
 
 /* Printing [7/7] */
 void print_scalar(const COMPLEX scalar){
@@ -654,7 +661,7 @@ void test_random_int(){
     cout << "9: " << nine << endl;
 }
 void test_random_float(){
-    int count = 100, min = 0, max = 10;
+    int count = 10, min = 0, max = 10;
     for (int i = 0; i < count; i++) {
         cout << random_float(min, max) << endl;
     }
@@ -928,6 +935,12 @@ void test_matrix_determinant(){//in progress
     print_scalar(result, "eigenvalue determinant");
 }//working
 // QMC [4/5]
+void test_random_probability(){
+    int count = 10;
+    for (int i = 0; i < count; i++) {
+        cout << random_probability() << endl;
+    }
+}
 void test_lattice_generation(const int matrix_size, const int time_size){
     LaGenMatComplex lattice;
     generate_lattice(matrix_size, lattice);
@@ -1046,7 +1059,7 @@ int main(){
     //int matrix_size = 3, time_size = 5, max_rand = 9;
     //int iterations = 500;
 
-    test_random_float();
+    test_random_probability();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
