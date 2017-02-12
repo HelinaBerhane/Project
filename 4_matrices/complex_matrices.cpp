@@ -1046,7 +1046,7 @@ int main(){
     //int matrix_size = 3, time_size = 5, max_rand = 9;
     //int iterations = 500;
 
-    test_random_int();
+    test_random_float();
     /* tests */
 /*
     cout << "idenpotent exponential test:" << endl;
