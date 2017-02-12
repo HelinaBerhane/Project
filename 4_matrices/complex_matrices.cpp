@@ -594,7 +594,6 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
             calculate_weight(matrix_size, lattice, weightBefore);
             /* propose the flip */
             flip_scalar(lattice[l]);
-            print_array(lattice, matrix_size);
             /* calculate the weight after the flip */
             calculate_weight(matrix_size, lattice, weightAfter);
             /* calculate the ratio of weights */
@@ -616,6 +615,7 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
                     // cout << "rejected" << endl;
                 }
             }
+            print_array(lattice, matrix_size);
         }
     }
 }
