@@ -1,0 +1,8 @@
+|--- Time ---|
+ 17:39 - Plan
+ 17:43 - Read Papers
+
+|--- To Do ---|
+[ ] Figure out where U and Lambda are set
+[ ] Set U = 0 and lambda = 0
+[ ] Check if everything is always accepted

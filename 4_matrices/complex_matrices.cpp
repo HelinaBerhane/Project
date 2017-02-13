@@ -480,9 +480,15 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
     }
 }//working
 // QMC - [3/4]
-void V_calculation(const COMPLEX lattice[], const int time_size, LaGenMatComplex& V){//should be working
+void V_calculation(const COMPLEX lattice[], const int time_size, const int lambda, const int sigma, LaGenMatComplex& V){//should be working
+    /* initialise everything */
+    COMPLEX elements[time_size];
+    /* lambda sigma s_l */
+    for(int i = 0; i < time_size; i++){
+        elements[i] = lambda * sigma * lattice[i];
+    }
     /* given a lattice */
-    array_to_diag(lattice, time_size, V);
+    array_to_diag(elements, time_size, V);
 }
 void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
     //B = exp(-H)exp(-V)
@@ -520,7 +526,7 @@ void detO_calculation(const int matrix_size, const LaGenMatComplex& O, COMPLEX& 
     /* calculate det O */
     detO = my_matrix_determinant(matrix_size, O);
 }
-void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX& weight){//to test
+void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const int lambda, const int sigma, COMPLEX& weight){//to test
     /* initialise everything */
     int lattice_size = matrix_size, time_size = matrix_size, iterations = 1000;
     COMPLEX latticeDOWN[matrix_size];
@@ -548,8 +554,8 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     generate_H(matrix_size, H);
     //print_matrix(H, "H");
     /* generate V matrices */
-    V_calculation(latticeUP, time_size, VUP);
-    V_calculation(latticeDOWN, time_size, VDOWN);
+    V_calculation(latticeUP, time_size, lambda, sigma, VUP);
+    V_calculation(latticeDOWN, time_size, lambda, sigma, VDOWN);
     //print_matrix(VUP, "V up");
     //print_matrix(VDOWN, "V down");
     /* multiply B matrices */
@@ -574,7 +580,7 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], COMPLEX&
     scalar_multiplication(detOUP, detODOWN, weight);
     //print_scalar(weight, "weight");
 }
-void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
+void sweep_lattice(const int matrix_size, COMPLEX lattice[], const int lambda, const int sigma){//in progress
     /* initialise everything */
     int lattice_size = matrix_size, time_size = matrix_size;
     COMPLEX weightBefore;
@@ -594,11 +600,11 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
     for(int t = 0; t < 2; t++){
         for(int l = 0; l < lattice_size; l++){
             /* calculate the weight before the flip */
-            calculate_weight(matrix_size, lattice, weightBefore);
+            calculate_weight(matrix_size, lattice, lambda, sigma, weightBefore);
             /* propose the flip */
             flip_scalar(lattice[l]);
             /* calculate the weight after the flip */
-            calculate_weight(matrix_size, lattice, weightAfter);
+            calculate_weight(matrix_size, lattice, lambda, sigma, weightAfter);
             /* calculate the ratio of weights */
             probability = weightAfter.r / weightBefore.r;
             /* accept or reject the flip */
@@ -621,6 +627,8 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[]){//in progress
             print_array(lattice, matrix_size);
         }
     }
+    //results
+        // with most parameters = 1, it stabilised at all -1 spins
 }
 
 //46 - 7/9
@@ -973,9 +981,10 @@ void test_V_generation(const int time_size){//should work
     /* initialise everything */
     LaGenMatComplex V = LaGenMatComplex::zeros(time_size, time_size);
     COMPLEX elements[time_size];
+    int lambda = 1, sigma = 1;
     /* generate the lattice */
     generate_lattice_array(time_size, elements);
-    V_calculation(elements, time_size, V);
+    V_calculation(elements, time_size, lambda, sigma, V);
     /* print result */
     print_matrix(V);
 }
@@ -1009,12 +1018,13 @@ void test_O_generation(const int time_size, const int iterations){//should work
     LaGenMatComplex BD = LaGenMatComplex::zeros(time_size, time_size);
     LaGenMatComplex BE = LaGenMatComplex::zeros(time_size, time_size);
     LaGenMatComplex O = LaGenMatComplex::zeros(time_size, time_size);
+    int lambda = 1, sigma = 1;
     /* generate matrices */
     generate_H(time_size, H);
     for(int i = 0; i < time_size; i++){
         /* generate matrices */
         generate_lattice_array(time_size, elements);
-        V_calculation(elements, time_size, V);
+        V_calculation(elements, time_size, lambda, sigma, V);
         /* calculate B */
         if(i == 0){
             B_calculation(H, V, BA, time_size, iterations);
@@ -1048,15 +1058,15 @@ void test_weight(){//working
     /* generate the lattice */
     generate_lattice_array(matrix_size, lattice);
     /* calculate the weight */
-    calculate_weight(matrix_size, lattice, weight);
+    calculate_weight(matrix_size, lattice, lambda, sigma, weight);
 }
 void test_QMC(){//in progress
     /* initialise everything */
-    int matrix_size = 5;
+    int matrix_size = 5, lambda = 0, sigma = 1;
     COMPLEX lattice[matrix_size];
     /* generate the lattice */
     generate_lattice_array(matrix_size, lattice);
-    sweep_lattice(matrix_size, lattice);
+    sweep_lattice(matrix_size, lattice, lambda, sigma);
 }
 
 /* --- Main QMC Program --- */
