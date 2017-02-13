@@ -593,6 +593,9 @@ void sweep_lattice(const int matrix_size, COMPLEX lattice[], const int lambda, c
     //        lattice(l, t) = elements[l];                // change this later
     //    }
     //}
+    /* print parameters */
+    cout.width(11);
+    cout << "lambda = " << lambda << endl;
     /* sweep through the lattice */
     cout.width(11);
     cout << "weight";
