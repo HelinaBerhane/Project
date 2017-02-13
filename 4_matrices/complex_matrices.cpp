@@ -1052,7 +1052,7 @@ void test_detO(){//in progress
 }
 void test_weight(){//working
     /* initialise everything */
-    int matrix_size = 5;
+    int matrix_size = 5, lambda = 1, sigma = 1;
     COMPLEX lattice[matrix_size];
     COMPLEX weight;
     /* generate the lattice */
