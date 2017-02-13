@@ -485,7 +485,7 @@ void V_calculation(const COMPLEX lattice[], const int time_size, const int lambd
     COMPLEX elements[time_size];
     /* lambda sigma s_l */
     for(int i = 0; i < time_size; i++){
-        elements[i] = lambda * sigma * lattice[i];
+        scalar_multiplication(lattice[i], lambda * sigma, elements[i]);
     }
     /* given a lattice */
     array_to_diag(elements, time_size, V);
