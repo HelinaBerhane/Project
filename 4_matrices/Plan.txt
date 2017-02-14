@@ -1,8 +1,23 @@
 |--- Time ---|
  17:39 - Plan
  17:43 - Read Papers
+ 17:48 - Program
+ 17:51 - Read Papers
+ 17:57 - Make Notes
 
 |--- To Do ---|
-[ ] Figure out where U and Lambda are set
-[ ] Set U = 0 and lambda = 0
-[ ] Check if everything is always accepted
+[x] Figure out where U and Lambda are set
+    [x] lambda is in V, and is determined by U
+        if U = 0, lambda = 0
+[x] Set U = 0 and lambda = 0
+[x] Check if everything is always accepted
+        Everything is
+[ ] slowly start increasing U
+    [ ] U = 0.0000001
+    [ ] U = 0.000001
+    [ ] U = 0.00001
+    [ ] U = 0.0001
+    [ ] U = 0.001
+    [ ] U = 0.01
+    [ ] U = 0.1
+    [x] U = 1
