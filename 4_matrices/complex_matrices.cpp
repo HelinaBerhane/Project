@@ -492,7 +492,7 @@ void V_calculation(const COMPLEX lattice[], const int time_size, const int U, co
     COMPLEX elements[time_size];
     /* lambda sigma s_l */
     for(int i = 0; i < time_size; i++){
-        scalar_multiplication(lattice[i], lambda_calculation(U) * sigma / delta_tau(U), elements[i]);
+        scalar_multiplication(lattice[i], lambda(U) * sigma / delta_tau(U), elements[i]);
         elements[i].r = elements[i].r + U / 2;
     }
     /* given a lattice */
@@ -590,7 +590,7 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const in
 }
 void sweep_lattice(const int matrix_size, COMPLEX lattice[], const int U, const int sigma){//in progress
     /* initialise everything */
-    int lattice_size = matrix_size, time_size = matrix_size;
+    int lattice_size = matrix_size;//, time_size = matrix_size;
     COMPLEX weightBefore;
     COMPLEX weightAfter;
     float probability;
@@ -982,9 +982,9 @@ void test_lattice_generation(const int matrix_size, const int time_size){
     print_array(lattice_points, time_size, "string");
 }//working
 void test_parameter_calculation(){
-    U = 1;
-    l = lambda(U);
-    t = delta_tau(U);
+    float U = 1;
+    float l = lambda(U);
+    float t = delta_tau(U);
     cout << "U = " << U << endl;
     cout << "l = " << l << endl;
     cout << "t = " << t << endl;
