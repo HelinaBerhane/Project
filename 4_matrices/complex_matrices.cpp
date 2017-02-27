@@ -141,16 +141,16 @@ void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
         elements[i].i = 0;
     }
 }//working
-void generate_lattice_matrix(const int matrix_size, LaGenMatComplex& lattice){// should work
+void generate_lattice_matrix(const int matrix_size, LaGenMatComplex& lattice){
     lattice = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
             lattice(i, j).r = generate_spins();
         }
     }
-}
+}//working
 
-/* Matrix conversion [3/3] */
+/* Matrix conversion [5/5] */
 void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[]){
     for(int i = 0; i < len; i++){
         array[i] = vector(i);
@@ -178,7 +178,7 @@ void isolate_row(const LaGenMatComplex& matrix, const int len, const int row, CO
     }
 }
 
-/* Scalar manipulation [10/10] */
+/* Scalar manipulation [14/14] */
 int factorial(int x){
 	if(x <= 1){
         return 1;
@@ -297,7 +297,6 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
 //}
 // QMC - [/1]
 
-
 /* array manipulation [1/1] */
 //void array_powers(COMPLEX array[], const int len, const int power){/**/
     /*
@@ -313,7 +312,7 @@ void vector_exponential(const LaVectorComplex& vector, const int matrix_size, co
     //print_vector(result, "vector exponential");
 }//working
 
-/* Matrix manipulation [14/14]*/
+/* Matrix manipulation [15/15]*/
 void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -493,7 +492,8 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
         scalar_product(result, eigenvalues(i));
     }
 }//working
-// QMC - [3/4]
+
+// QMC [7/8]
 float lambda_calculation(const float U){
     return acoshf(exp(sqrt(0.125*U)/2));
 }//working
@@ -699,7 +699,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
         // with most parameters = 1, it stabilised at all -1 spins
 }
 
-/* Testing [15/15] - QMC [2/5]*/
+/* Testing [20/21] */
 void test_random_int(){
     int max_rand = 9, iterations = 1000000000, test;
     int zero = 0, one = 0, two = 0, three = 0, four = 0;
@@ -1014,7 +1014,7 @@ void test_matrix_determinant(){//in progress
     matrix_determinant(matrix_size, matrix, result);
     print_scalar(result, "eigenvalue determinant");
 }//working
-void test_isolate_row(){// should work
+void test_isolate_row(){
 
     /* initialise everything  */
     int matrix_size = 4, max_rand = 9;
@@ -1031,9 +1031,9 @@ void test_isolate_row(){// should work
         cout << " Row (" << row << "):";
         print_array(array, matrix_size);
     }
-}
+}//working
 
-// QMC [4/5]
+// QMC [8/10]
 void test_random_probability(){
     int count = 10;
     for (int i = 0; i < count; i++) {
@@ -1153,9 +1153,23 @@ void test_detO(){//in progress
 }
 void test_weight(){//working
 
+    /* Plan */
+        /* Input */
+            // matrix_size  - int
+            // slice        - COMPLEX[]
+            // U            - float
+
+        /* Processing */
+            // calculate initial parameters
+                // lambda    - float
+                // delta_tau - float
+            // calculate the weight
+
+        /* Output */
+            // the weight
+
     /* initialise everything */
-    int matrix_size = 5;
-    int matrix_volume = matrix_size * matrix_size;
+    int matrix_size = 5, matrix_volume = matrix_size * matrix_size;
     float U = 1, sigma = 1, lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
     COMPLEX lattice[matrix_volume];
     COMPLEX weight;
@@ -1165,6 +1179,9 @@ void test_weight(){//working
 
     /* calculate the weight */
     calculate_weight(matrix_size, lattice, U, lambda, sigma, delta_tau, weight);
+
+    /* output the weight */
+    print_scalar(weight, "weight");
 }
 void test_increasing_U(){//in progress
 
@@ -1220,10 +1237,6 @@ void test_increasing_U(){//in progress
 
 /* --- Main QMC Program --- */
 int main(){
-
-    cout << "---- TESTING ROW ISOLATION ----" << endl;
-    test_isolate_row();
-    /* notes */
 
     cout << "---- TESTING WEIGHT ----" << endl;
     test_weight();
