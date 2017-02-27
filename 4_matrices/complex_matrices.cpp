@@ -141,6 +141,14 @@ void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
         elements[i].i = 0;
     }
 }//working
+void generate_lattice_matrix(const int matrix_size, LaGenMatComplex& lattice){// should work
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            lattice(i, j).r = generate_spins();
+            lattice(i, j).i = o;
+        }
+    }
+}
 
 /* Matrix conversion [3/3] */
 void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[]){
@@ -626,6 +634,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
         // int lattice_size = matrix_size, time_size = matrix_size;
     COMPLEX weightBefore, weightAfter, slice[matrix_size];
     float probability, prob;
+    float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
 
     /* set up output headings */
     cout.width(11);
@@ -639,7 +648,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
             /* isolate the time slice as a COMPLEX array */
             isolate_row(lattice, matrix_size, time_slice, slice);
 
-            for(int lattice_site = 0; lattice_site < matrix_size; l++){
+            for(int lattice_site = 0; lattice_site < matrix_size; lattice_site++){
 
                 /* calculate the weight before the flip */
                 calculate_weight(matrix_size, slice, U, lambda, sigma, delta_tau, weightBefore);
@@ -678,7 +687,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
                         cout << "rejected" << endl;
                     }
                 }
-                print_array(array, matrix_size);
+                print_array(slice, matrix_size);
             }
             /* Comments */
                 //when you take measurements, there is noise
@@ -853,7 +862,7 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     int matrix_volume = matrix_size * matrix_size;
     /* generate matrix A */
     COMPLEX elements[matrix_volume];
-    generate_slice(elements, matrix_volume, max_rand);
+    generate_array(elements, matrix_volume, max_rand);
 	LaGenMatComplex matrixA = LaGenMatComplex(elements, matrix_size, matrix_size, false );
     print_matrix(matrixA, "Matrix A");
     /* generate matrix B */
@@ -1010,6 +1019,7 @@ void test_isolate_row(){// should work
     /* initialise everything  */
     int matrix_size = 4, max_rand = 9;
     LaGenMatComplex matrix;
+    COMPLEX array[matrix_size];
 
     /* generate matrix */
     generate_matrix(matrix_size, max_rand, matrix);
@@ -1061,12 +1071,11 @@ void test_V_generation(){//should work
 
     /* initialise everything */
         // float delta tau = ?, lamba = 1, sigma = 1, s_i(l) = \pm 1, mu = 0?
-    matrix_size = 5;
-    LaGenMatComplex V = LaGenMatComplex::zeros(time_size, time_size);
+    int matrix_size = 5;
+    LaGenMatComplex V = LaGenMatComplex::zeros(matrix_size, matrix_size);
     COMPLEX time_slice[matrix_size];
     float U = 1, sigma = 1;
-    float lambda = lambda_calculation(U);
-    float delta_tau = delta_tau_calculation(U);
+    float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
 
     /* generate the lattice */
     generate_lattice_array(matrix_size, time_slice);
@@ -1105,7 +1114,8 @@ void test_O_generation(const int time_size, const int iterations){//should work
     LaGenMatComplex BD = LaGenMatComplex::zeros(time_size, time_size);
     LaGenMatComplex BE = LaGenMatComplex::zeros(time_size, time_size);
     LaGenMatComplex O = LaGenMatComplex::zeros(time_size, time_size);
-    int U = 1, sigma = 1;
+    float U = 1, sigma = 1, lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
+
     /* generate matrices */
     generate_H(time_size, H);
     for(int i = 0; i < time_size; i++){
@@ -1142,9 +1152,7 @@ void test_weight(){//working
     /* initialise everything */
     int matrix_size = 5;
     int matrix_volume = matrix_size * matrix_size;
-    float U = 1, sigma = 1;
-    float lambda = lambda_calculation(U);
-    float delta_tau = delta_tau_calculation(U);
+    float U = 1, sigma = 1, lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
     COMPLEX lattice[matrix_volume];
     COMPLEX weight;
 
@@ -1157,10 +1165,10 @@ void test_weight(){//working
 void test_increasing_U(){//in progress
 
     /* initialise everything */
-    int matrix_size = 5, sigma = 1, iterations = 5;
+    int matrix_size = 5, iterations = 5;
     int matrix_volume = matrix_size * matrix_size;
     COMPLEX lattice[matrix_volume];     // change if time slices DON'T get own spin
-    float U, lambda, sigma = 1, delta_tau;
+    float U , sigma = 1, lambda, delta_tau;
 
     /* test U = 0 to 1 */
     for(int i = 0; i <= 10; i++){
@@ -1168,7 +1176,7 @@ void test_increasing_U(){//in progress
         /* calculate initial parameters */
         U = 0.2*i;
         lambda = lambda_calculation(U);
-        delta_tau= delta_tau_calculation(U);
+        delta_tau = delta_tau_calculation(U);
 
         /* print initial parameters */
         cout.width(11);
@@ -1178,8 +1186,7 @@ void test_increasing_U(){//in progress
         cout << "sigma = " << sigma << endl;
 
         /* generate random lattice and save as a matrix */
-        generate_lattice_array(matrix_volume, lattice);
-
+        generate_lattice_matrix(matrix_size, lattice);
         /* sweep the lattice */
         sweep_lattice(matrix_size, lattice, U, sigma, iterations);
     }
