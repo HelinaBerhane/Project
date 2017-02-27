@@ -1028,7 +1028,7 @@ void test_isolate_row(){// should work
     /* isolate and print rows */
     for(int row = 0; row < matrix_size; row++){
         isolate_row(matrix, matrix_size, row, array);
-        cout << " Row (" << row << "):" << endl;
+        cout << " Row (" << row << "):";
         print_array(array, matrix_size);
     }
 }
@@ -1220,12 +1220,13 @@ void test_increasing_U(){//in progress
 
 /* --- Main QMC Program --- */
 int main(){
-    cout << "---- TESTING LATTICE GENERATION ----" << endl;
-    test_lattice_generation();
 
     cout << "---- TESTING ROW ISOLATION ----" << endl;
     test_isolate_row();
+    /* notes */
 
     cout << "---- TESTING WEIGHT ----" << endl;
     test_weight();
+    /* notes */
+
 }
