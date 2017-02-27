@@ -1176,6 +1176,7 @@ void test_weight(){//working
 
     /* generate the lattice */
     generate_lattice_array(matrix_volume, lattice);
+    print_array(lattice, "lattice");
 
     /* calculate the weight */
     calculate_weight(matrix_size, lattice, U, lambda, sigma, delta_tau, weight);
