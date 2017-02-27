@@ -142,10 +142,10 @@ void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
     }
 }//working
 void generate_lattice_matrix(const int matrix_size, LaGenMatComplex& lattice){// should work
+    lattice = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
             lattice(i, j).r = generate_spins();
-            lattice(i, j).i = o;
         }
     }
 }
@@ -1026,7 +1026,7 @@ void test_isolate_row(){// should work
     print_matrix(matrix, "matrix");
 
     /* isolate and print rows */
-    for(int row = 0; row = matrix_size; row++){
+    for(int row = 0; row < matrix_size; row++){
         isolate_row(matrix, matrix_size, row, array);
         cout << " Row (" << row << "):" << endl;
         print_array(array, matrix_size);
@@ -1040,13 +1040,18 @@ void test_random_probability(){
         cout << random_probability() << endl;
     }
 }//working
-void test_lattice_generation(const int matrix_size, const int time_size){
+void test_lattice_generation(){
+
+    /* initialise everything */
+    int matrix_size = 5;
     LaGenMatComplex lattice;
-    generate_lattice(matrix_size, lattice);
-    print_matrix(lattice);
-    COMPLEX lattice_points[time_size];
-    generate_lattice_array(time_size, lattice_points);
-    print_array(lattice_points, time_size, "string");
+
+    /* generate the lattice */
+    generate_lattice_matrix(matrix_size, lattice);
+
+    /* print result */
+    print_matrix(lattice, "random spins");
+
 }//working
 void test_parameter_calculation(){
     float U = 1, lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
@@ -1074,8 +1079,7 @@ void test_V_generation(){//should work
     int matrix_size = 5;
     LaGenMatComplex V = LaGenMatComplex::zeros(matrix_size, matrix_size);
     COMPLEX time_slice[matrix_size];
-    float U = 1, sigma = 1;
-    float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
+    float U = 1, sigma = 1, lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
 
     /* generate the lattice */
     generate_lattice_array(matrix_size, time_slice);
@@ -1164,10 +1168,28 @@ void test_weight(){//working
 }
 void test_increasing_U(){//in progress
 
+    /* Plan */
+
+        /* [x] Input */
+            // [x] matrix_size  - int
+            // [x] iterations   - int
+            // [x] lattice      - LaGenMatComplex
+            // [x] U            - float
+
+        /* [x] Processing */
+            // [x] for n increasing values of U
+                // [x] calculate and print the initial parameters
+                    // [x] lambda    - float
+                    // [x] delta_tau - float
+                // [x] generate a lattice of spins
+                // [x] sweep the lattice
+
+        /* [ ] Output */
+            // [ ] acceptance probabilities
+
     /* initialise everything */
-    int matrix_size = 5, iterations = 5;
-    int matrix_volume = matrix_size * matrix_size;
-    COMPLEX lattice[matrix_volume];     // change if time slices DON'T get own spin
+    int matrix_size = 5, iterations = 5, matrix_volume = matrix_size * matrix_size;
+    LaGenMatComplex lattice;
     float U , sigma = 1, lambda, delta_tau;
 
     /* test U = 0 to 1 */
@@ -1181,12 +1203,16 @@ void test_increasing_U(){//in progress
         /* print initial parameters */
         cout.width(11);
         cout << "U = " << U << endl;
+        cout.width(11);
         cout << "lambda = " << lambda << endl;
+        cout.width(11);
         cout << "delta tau = " << delta_tau<< endl;
+        cout.width(11);
         cout << "sigma = " << sigma << endl;
 
-        /* generate random lattice and save as a matrix */
+        /* generate a lattice of spins */
         generate_lattice_matrix(matrix_size, lattice);
+
         /* sweep the lattice */
         sweep_lattice(matrix_size, lattice, U, sigma, iterations);
     }
@@ -1194,13 +1220,12 @@ void test_increasing_U(){//in progress
 
 /* --- Main QMC Program --- */
 int main(){
-    /* initialise everything */
-        //int matrix_size = 3, time_size = 5, max_rand = 9;
-        //int iterations = 500;
-    /* test */
-        cout << "---- TESTING ROW ISOLATION ----" << endl;
-        test_isolate_row(); // should work
+    cout << "---- TESTING LATTICE GENERATION ----" << endl;
+    test_lattice_generation();
 
-        cout << "---- TESTING WEIGHT ----" << endl;
-        test_weight();
+    cout << "---- TESTING ROW ISOLATION ----" << endl;
+    test_isolate_row();
+
+    cout << "---- TESTING WEIGHT ----" << endl;
+    test_weight();
 }
