@@ -680,8 +680,6 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
                     //for negative values, we do some integration
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
-
-                    }
                 print_matrix(lattice);
             }
             /* Comments */
