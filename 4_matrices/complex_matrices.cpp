@@ -1200,7 +1200,7 @@ void test_sweep(){
             // [ ] acceptance probabilities
 
     /* initialise everything */
-    int matrix_size = 5;
+    int matrix_size = 5, iterations = 5;
     LaGenMatComplex lattice;
     float U = 1;
     float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
