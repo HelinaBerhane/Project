@@ -1241,7 +1241,7 @@ void test_increasing_U(){//in progress
             // [ ] acceptance probabilities
 
     /* initialise everything */
-    int matrix_size = 5, iterations = 5;
+    int matrix_size = 5, iterations = 3;
     LaGenMatComplex lattice;
     float U, lambda, delta_tau;
 
