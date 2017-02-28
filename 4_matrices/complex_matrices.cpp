@@ -635,6 +635,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
     COMPLEX weightBefore, weightAfter, slice[matrix_size];
     float probability, prob;
     float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
+    string result;
 
     /* set up output headings */
     cout.width(11);
@@ -664,22 +665,26 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
 
                 /* accept or reject the flip */
                     // cout << "prob: " << probability << endl;
-                cout.width(11);
-                cout << probability;
                 if(abs(probability) >= 1){
                     flip_scalar(lattice(time_slice, lattice_site)); //accept
+                    result = "accepted";
                 }else{
                     prob = random_probability();
                     if(probability > prob){
                         flip_scalar(lattice(time_slice, lattice_site)); //accept
+                        result = "accepted";
                     }else{
                         // cout << " rejected" << endl;
+                        result = "rejected";
                     }
                 }
                 /* comments */
                     //for negative values, we do some integration
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
+
+                cout.width(11);
+                cout << probability << " - " << result << endl;
                 print_matrix(lattice);
             }
             /* Comments */
