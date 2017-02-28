@@ -340,6 +340,23 @@ void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatCompl
         }
     }
 }//should be working
+
+
+
+
+
+void n_matrix_product(LaGenMatComplex* product, LaGenMatComplex** matrices, int n){
+    if(n <= 0){
+        return;
+    }
+    Blas_Mat_Mat_Mult(product, matrices[0], product);
+    multiply(product, matrices + 1, n - 1 );
+}
+
+
+
+
+
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
@@ -909,6 +926,39 @@ void test_matrix_product(const int matrix_size, const int max_rand){
     matrix_product(matrixA, matrixB);
     print_matrix(matrixB, "result");
 }//working
+
+
+
+
+
+void test_n_matrix_product(){
+
+    /* initialise everything */
+    int n = 3, matrix_size = 5, max_rand = 9;
+    LaGenMatComplex* matrices[n] = new LaGenMatComplex[n];
+    LaGenMatComplex product = LaGenMatComplex::eye(2, 2);
+
+    for(int i = 0; i < n; i++){
+
+        /* generate everything */
+        generate_matrix(matrix_size, max_rand, matrix[n]);
+
+        /* print everything */
+        cout << "(" << n << ")" << endl;
+        print_matrix(matrix[n]);
+    }
+
+    /* multiply everything */
+    n_matrix_product(product, matrices, n);
+
+    /* print everything */
+    print_matrix(product, "result");
+}
+
+
+
+
+
 void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrixA;
@@ -1273,8 +1323,8 @@ void test_increasing_U(){//in progress
 /* --- Main QMC Program --- */
 int main(){
 
-    cout << "---- TESTING INCREASING U ----" << endl;
-    test_increasing_U();
+    cout << "---- TESTING N MATRIX MULTIPLICATION ----" << endl;
+    test_n_matrix_product();
     /* notes */
 
 }
