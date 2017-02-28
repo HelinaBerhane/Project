@@ -1272,8 +1272,8 @@ void test_increasing_U(){//in progress
 /* --- Main QMC Program --- */
 int main(){
 
-    cout << "---- TESTING SWEEP ----" << endl;
-    test_sweep();
+    cout << "---- TESTING INCREASING U ----" << endl;
+    test_increasing_U();
     /* notes */
 
 }
