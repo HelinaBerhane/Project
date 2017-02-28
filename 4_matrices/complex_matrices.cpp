@@ -601,6 +601,7 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const fl
     scalar_multiplication(detOUP, detODOWN, weight);
 
 }
+
 void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float U, const int iterations){//in progress
     /* Plan */
 
@@ -665,28 +666,23 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
                     // cout << "prob: " << probability << endl;
                 cout.width(11);
                 cout << probability;
-                if(abs(probability) < 1){
-                    /* generate random float */
+                if(abs(probability) >= 1){
+                    flip_scalar(lattice(time_slice, lattice_site)); //accept
+                }else{
                     prob = random_probability();
-                    /* n/a */
-                        // cout << "ran = " << prob << endl;
-                        // cout << prob << endl;
-                        // float diff = prob - probability;
-                        // cout << "diff = " << diff << endl;
-
-                    /* check acceptance */
-                    if(probability < prob){
-                        flip_scalar(slice[lattice_site]);
-                        //for negative values, we do some integration
-                            //P\to\tilde{P} = |P| and  F\to \tilde
-                            //you have to multiply each quan you measure bu the sign
-                        cout << "rejected" << endl;
+                    if(probability > prob){
+                        flip_scalar(lattice(time_slice, lattice_site)); //accept
                     }else{
-                        flip_scalar(lattice(time_slice, lattice_site));
-                        cout << "rejected" << endl;
+                        // cout << " rejected" << endl;
                     }
                 }
-                print_array(slice, matrix_size);
+                /* comments */
+                    //for negative values, we do some integration
+                    //P\to\tilde{P} = |P| and  F\to \tilde
+                    //you have to multiply each quan you measure bu the sign
+
+                    }
+                print_matrix(lattice);
             }
             /* Comments */
                 //when you take measurements, there is noise
