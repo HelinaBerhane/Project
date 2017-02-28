@@ -601,7 +601,6 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const fl
     scalar_multiplication(detOUP, detODOWN, weight);
 
 }
-
 void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float U, const int iterations){//in progress
     /* Plan */
 
@@ -684,7 +683,8 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
                 count++;
-                cout << " (" << count <<") " << result << " - " << probability << endl;
+                cout << " (" << count <<") " << result << " - " << probability;
+                cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
                 // if(result == "accepted"){
                 //     print_matrix(lattice);
                 // }else{
@@ -1241,7 +1241,7 @@ void test_increasing_U(){//in progress
             // [ ] acceptance probabilities
 
     /* initialise everything */
-    int matrix_size = 5, iterations = 3;
+    int matrix_size = 5, iterations = 1;
     LaGenMatComplex lattice;
     float U, lambda, delta_tau;
 
@@ -1249,7 +1249,7 @@ void test_increasing_U(){//in progress
     for(int i = 0; i <= 10; i++){
 
         /* calculate initial parameters */
-        U = 0.2*i;
+        U = 2 + 0.8*i;
         lambda = lambda_calculation(U);
         delta_tau = delta_tau_calculation(U);
 
