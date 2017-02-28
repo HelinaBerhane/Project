@@ -345,11 +345,11 @@ void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatCompl
 
 
 
-void n_matrix_product(LaGenMatComplex* product, LaGenMatComplex** matrices, int n){
+void n_matrix_product(LaGenMatComplex& product, LaGenMatComplex* matrices[], int n){
     if(n <= 0){
         return;
     }
-    Blas_Mat_Mat_Mult(product, matrices[0], product);
+    Blas_Mat_Mat_Mult(product, *matrices[0], product);
     multiply(product, matrices + 1, n - 1 );
 }
 
