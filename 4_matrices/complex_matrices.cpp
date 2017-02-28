@@ -1183,6 +1183,42 @@ void test_weight(){//working
     /* output the weight */
     print_scalar(weight, "weight");
 }
+void test_sweep(){
+    /* Plan */
+        /* [x] Input */
+            // [x] matrix_size  - int
+            // [x] iterations   - int
+            // [x] lattice      - LaGenMatComplex
+            // [x] U            - float
+
+        /* [x] Processing */
+            // [x] generate a lattice of spins
+            // [x] sweep the lattice
+
+        /* [ ] Output */
+            // [ ] average spins
+            // [ ] acceptance probabilities
+
+    /* initialise everything */
+    int matrix_size = 5;
+    LaGenMatComplex lattice;
+    float U = 1;
+    float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
+
+    /* print initial parameters */
+    cout.width(11);
+    cout << "U = " << U << endl;
+    cout.width(11);
+    cout << "lambda = " << lambda << endl;
+    cout.width(11);
+    cout << "delta tau = " << delta_tau<< endl;
+
+    /* generate a lattice of spins */
+    generate_lattice_matrix(matrix_size, lattice);
+
+    /* sweep the lattice */
+    sweep_lattice(matrix_size, lattice, U, iterations);
+}
 void test_increasing_U(){//in progress
 
     /* Plan */
@@ -1195,9 +1231,6 @@ void test_increasing_U(){//in progress
 
         /* [x] Processing */
             // [x] for n increasing values of U
-                // [x] calculate and print the initial parameters
-                    // [x] lambda    - float
-                    // [x] delta_tau - float
                 // [x] generate a lattice of spins
                 // [x] sweep the lattice
 
@@ -1236,8 +1269,8 @@ void test_increasing_U(){//in progress
 /* --- Main QMC Program --- */
 int main(){
 
-    cout << "---- TESTING WEIGHT ----" << endl;
-    test_weight();
+    cout << "---- TESTING SWEEP ----" << endl;
+    test_sweep();
     /* notes */
 
 }
