@@ -684,9 +684,11 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
                 count++;
-                cout << " (" << count <<")" << result << " - " << probability << endl;
+                cout << " (" << count <<") D" << result << " - " << probability << endl;
                 if(result == "accepted"){
                     print_matrix(lattice);
+                }else{
+                    cout << endl;
                 }
             }
             /* Comments */
@@ -1201,7 +1203,7 @@ void test_sweep(){
             // [ ] acceptance probabilities
 
     /* initialise everything */
-    int matrix_size = 5, iterations = 5;
+    int matrix_size = 5, iterations = 3;
     LaGenMatComplex lattice;
     float U = 1;
     float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
