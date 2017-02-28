@@ -941,11 +941,11 @@ void test_n_matrix_product(){
     for(int i = 0; i < n; i++){
 
         /* generate everything */
-        generate_matrix(matrix_size, max_rand, matrices[n]);
+        generate_matrix(matrix_size, max_rand, *matrices[n]);
 
         /* print everything */
         cout << "(" << n << ")" << endl;
-        print_matrix(matrices[n]);
+        print_matrix(*matrices[n]);
     }
 
     /* multiply everything */
