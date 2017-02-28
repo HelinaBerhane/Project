@@ -684,6 +684,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
                     //you have to multiply each quan you measure bu the sign
                 count++;
                 cout << " (" << count <<") " << result << " - " << probability;
+                cout.width(15);
                 cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
                 // if(result == "accepted"){
                 //     print_matrix(lattice);
