@@ -688,7 +688,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
                 // if(result == "accepted"){
                 //     print_matrix(lattice);
                 // }else{
-                    cout << endl;
+                //     cout << endl;
                 // }
             }
             /* Comments */
