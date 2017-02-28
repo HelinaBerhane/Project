@@ -636,6 +636,7 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
     float probability, prob;
     float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
     string result;
+    int count = 0;
 
     /* set up output headings */
     cout.width(11);
@@ -682,9 +683,9 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
                     //for negative values, we do some integration
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
-
+                count++;
                 cout.width(11);
-                cout << probability << " - " << result << endl;
+                cout << " (" << count <<")" << result << " - " << probability << endl;
                 print_matrix(lattice);
             }
             /* Comments */
