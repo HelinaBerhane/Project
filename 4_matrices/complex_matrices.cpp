@@ -350,7 +350,7 @@ void n_matrix_product(LaGenMatComplex& product, LaGenMatComplex* matrices[], int
         return;
     }
     Blas_Mat_Mat_Mult(product, *matrices[0], product);
-    multiply(product, matrices + 1, n - 1 );
+    n_matrix_product(product, matrices + 1, n - 1 );
 }
 
 
@@ -935,17 +935,17 @@ void test_n_matrix_product(){
 
     /* initialise everything */
     int n = 3, matrix_size = 5, max_rand = 9;
-    LaGenMatComplex* matrices[n] = new LaGenMatComplex[n];
+    LaGenMatComplex* matrices[n];
     LaGenMatComplex product = LaGenMatComplex::eye(2, 2);
 
     for(int i = 0; i < n; i++){
 
         /* generate everything */
-        generate_matrix(matrix_size, max_rand, matrix[n]);
+        generate_matrix(matrix_size, max_rand, matrices[n]);
 
         /* print everything */
         cout << "(" << n << ")" << endl;
-        print_matrix(matrix[n]);
+        print_matrix(matrices[n]);
     }
 
     /* multiply everything */
