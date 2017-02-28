@@ -1,6 +1,6 @@
 #include <iostream> //cout
 #include <string>
-#include "complex_matrices.h"
+#include "qmc.h"
 #include <gmc.h> 	//LaGenMatComplex
 #include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
 #include <blas3pp.h>
