@@ -931,11 +931,15 @@ void test_matrix_product(const int matrix_size, const int max_rand){
 
 
 void test_matrix_arrays(){
+
+    /* initialise everything */
     // int n = 3, matrix_size = 5, max_rand = 9;
     LaGenMatComplex* matrices[1];
 
-    cout << matrices[0] << endl;
+    /* generate everything */
+    generate_matrix(matrix_size, max_rand, *matrices[n]);
 
+    cout << matrices[0] << endl;
     cout << *matrices[0] << endl;
         // this is an array of pointers to matrices
     // LaGenMatComplex product = LaGenMatComplex::eye(2, 2);
