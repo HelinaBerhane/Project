@@ -942,7 +942,7 @@ void test_matrix_arrays(){
     // *matrices[0] = LaGenMatComplex::eye(matrix_size, matrix_size);
 
     cout << matrices[0] << endl;
-    cout << *matrices[0] << endl;
+    cout << *matrices[0](1,1) << endl;
         // this is an array of pointers to matrices
     // LaGenMatComplex product = LaGenMatComplex::eye(2, 2);
     //
