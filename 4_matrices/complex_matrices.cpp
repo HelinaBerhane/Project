@@ -938,7 +938,7 @@ void test_matrix_arrays(){
 
     /* generate everything */
     // generate_matrix(matrix_size, max_rand, matrices[0]);
-    *matrices[0] = LaGenMatComplex::eye(matrix_size), matrix_size);
+    *matrices[0] = LaGenMatComplex::eye(matrix_size, matrix_size);
 
     cout << matrices[0] << endl;
     cout << *matrices[0] << endl;
