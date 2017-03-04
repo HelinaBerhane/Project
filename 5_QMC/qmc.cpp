@@ -67,7 +67,7 @@ void generate_lattice_array(const int array_size, int array[]){
 void test_generate_lattice_array(){
     int array_size = 5, array[5];
     generate_lattice_array(array_size, array);
-    print_sites(array, matrix_size);
+    print_sites(array, array_size);
 }
 
 void test_sweep(){
