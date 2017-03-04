@@ -57,7 +57,7 @@ void print_sites(const int array[], const int array_size){
 
 
 /* Generation */
-void generate_lattice_array(const int array_size, int array[];){
+void generate_lattice_array(const int array_size, int array[]){
     for(int i = 0; i < array_size; i++){
         array[i] = random_spin();
     }
