@@ -24,7 +24,7 @@ int random_spin(){
 /* Testing */
 void test_spin_generation(){
     for(int i = 0; i < 5; i++){
-        cout.width(5);
+        cout.width(10);
         cout << random_spin();
     }
     cout << endl;
