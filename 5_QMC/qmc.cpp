@@ -10,13 +10,28 @@
 
 using namespace std;
 
-/* Randomisation [1/1]*/
+
+
+/* ---- WORKING ---- */
+/* Randomisation */
 int random_spin(){
     random_device rd;
     mt19937 gen(rd());
     std::uniform_int_distribution<> dist(0, 1);
     return dist(gen)*2 - 1;
 }
+
+/* Testing */
+void test_spin_generation(){
+    for(int i = 0; i < 5; i++){
+        cout.width(5);
+        cout << random_spin();
+    }
+    cout << endl;
+}
+
+/* ---- TESTING ----*/
+/* Randomisation */
 float random_probability(){
     random_device rd;
     mt19937 gen(rd());
@@ -24,16 +39,18 @@ float random_probability(){
     return dist(gen);
 }
 
-
+/* Generation */
 void generate_spin_array(){
     // for()
 }
 
-void test_spin_generation(){
+/* Testing */
+void test_probability_generation(){
     for(int i = 0; i < 5; i++){
         cout.width(5);
-        cout << random_spin();
+        cout << random_probability();
     }
+    cout << endl;
 }
 void test_sweep(){
     /* Plan */
@@ -52,8 +69,8 @@ void test_sweep(){
         // [ ] average spins
         // [ ] acceptance probabilities
 
-    int lattice_size = 5, time_slices = 4;
-    int matrix_size = lattice_size * time_slices;
+    // int lattice_size = 5, time_slices = 4;
+    // int matrix_size = lattice_size * time_slices;
 
 }
 void test_increasing_U(){
@@ -76,5 +93,5 @@ void test_increasing_U(){
 
 /* --- Main QMC Program --- */
 int main(){
-    test_spin_generation();
+    test_probability_generation();
 }
