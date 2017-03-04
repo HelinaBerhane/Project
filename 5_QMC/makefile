@@ -13,4 +13,5 @@ matrix: qmc.o
 	$(CXX) qmc.o -I$(Inc) -L$(Lib) $(CXXFLAGS) -o qmc
 
 qmc.o: qmc.cpp qmc.h
+	git pull origin master
 	$(CXX) -I$(Inc) -L$(Lib) $(CXXFLAGS) -c qmc.cpp
