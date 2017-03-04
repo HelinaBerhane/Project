@@ -20,6 +20,12 @@ int random_spin(){
     std::uniform_int_distribution<> dist(0, 1);
     return dist(gen)*2 - 1;
 }
+float random_probability(){
+    random_device rd;
+    mt19937 gen(rd());
+    std::uniform_real_distribution<> dist(0, 1);
+    return dist(gen);
+}
 
 /* Testing */
 void test_spin_generation(){
@@ -29,22 +35,6 @@ void test_spin_generation(){
     }
     cout << endl;
 }
-
-/* ---- TESTING ----*/
-/* Randomisation */
-float random_probability(){
-    random_device rd;
-    mt19937 gen(rd());
-    std::uniform_real_distribution<> dist(0, 1);
-    return dist(gen);
-}
-
-/* Generation */
-void generate_spin_array(){
-    // for()
-}
-
-/* Testing */
 void test_probability_generation(){
     for(int i = 0; i < 5; i++){
         cout.width(5);
@@ -52,6 +42,34 @@ void test_probability_generation(){
     }
     cout << endl;
 }
+
+/* ---- TESTING ----*/
+/* Output */
+void print_sites(const int array[], const int array_size){
+    for(int i = 0; i < array_size; i++){
+        cout.width(7);
+        cout << array[i];
+    }
+    cout << endl;
+}
+
+/* Randomisation */
+
+
+/* Generation */
+void generate_lattice_array(const int array_size, int array[];){
+    for(int i = 0; i < array_size; i++){
+        array[i] = random_spin();
+    }
+}
+
+/* Testing */
+void test_generate_lattice_array(){
+    int array_size = 5, array[5];
+    generate_lattice_array(array_size, array);
+    print_sites(array, matrix_size);
+}
+
 void test_sweep(){
     /* Plan */
     /* [ ] Input */
@@ -93,5 +111,5 @@ void test_increasing_U(){
 
 /* --- Main QMC Program --- */
 int main(){
-    test_probability_generation();
+    test_generate_lattice_array();
 }
