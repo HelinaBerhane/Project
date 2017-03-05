@@ -99,11 +99,11 @@ void test_matrix_storage(){
     for(int i = 0; i < array_size; i++){
         array[i] = i;
     }
-    LaGenMatDouble matrix(array, array_size, array_size, false);
+    LaGenMatDouble matrix(array, array_width, array_width, false);
     /* test the results */
     print_matrix(matrix, "false");
     array[5] = -array[5];
-    print_matrix(matrix, "false");
+    print_matrix(matrix, "false (changed)");
 }
 
 /* ------ TO IMPLEMENT ------*/
