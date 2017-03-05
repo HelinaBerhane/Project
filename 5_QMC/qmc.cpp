@@ -9,7 +9,8 @@
 #include <math.h>
 
 using namespace std;
-
+/* TIME */
+    //PLAN - 12:06
 
 
 /* ---- WORKING ---- */
@@ -80,15 +81,9 @@ void test_lattice_array_generation(){
 
 
 /* -- Calculation -- */
-double lambda_calculation(const double U){
-    return acoshf(exp(sqrt(0.125*U)/2));
-}
-double delta_tau_calculation(const double U){
-    return sqrt(0.125 / U);
-}
 void initial_parameter_calculation(const double beta, const double U, double lambda, double delta_tau, int time_slices){
-    delta_tau = delta_tau_calculation(U);
-    lambda = lambda_calculation(U);
+    delta_tau = sqrt(0.125 / U);
+    lambda = acosh(exp(sqrt(0.125*U)/2));
     time_slices = beta / lambda;
 }
 
