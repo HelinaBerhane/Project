@@ -80,6 +80,11 @@ void test_lattice_array_generation(){
 
 
 /* -- Calculation -- */
+void initial_parameter_calculation(const double beta, const double U, double lambda, double delta_tau, int time_slices){
+    delta_tau = delta_tau_calculation(U);
+    lambda = lambda_calculation(U);
+    time_slices = beta / lambda;
+}
 double lambda_calculation(const double U){
     return acoshf(exp(sqrt(0.125*U)/2));
 }
@@ -105,10 +110,13 @@ double delta_tau_calculation(const double U){
 
 /* Testing */
 void test_parameter_calculation(){
-    double U = 5, beta = 1;
-    cout << "lambda = " << lambda_calculation(U) << endl;
-    cout << "delta tau = " << delta_tau_calculation(U) << endl;
+    double beta = 10, U = 1, lambda, delta_tau, time_slices;
+    initial_parameter_calculation(beta, U, lambda, delta_tau, time_slices);
+    cout << "lambda = " << lambda << endl;
+    cout << "delta tau = " << delta_tau << endl;
+    cout << "time slices = " << time_slices << endl;
 }
+
 
 void test_sweep(){
     /* Plan */
@@ -150,6 +158,7 @@ void test_increasing_U(){
     /* [ ] Output */
         // [ ] acceptance probabilities
 }
+
 
 /* --- Main QMC Program --- */
 int main(){
