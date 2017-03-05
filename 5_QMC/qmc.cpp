@@ -192,5 +192,5 @@ void test_matrix_storage(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_parameter_calculation();
+    test_lattice_array_generation();
 }
