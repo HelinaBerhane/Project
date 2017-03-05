@@ -84,7 +84,6 @@ void test_parameter_calculation(){
 
 
 
-
 /* ------ TO TEST ------ */
 void print_matrix(const LaGenMatDouble& matrix){
 	cout << matrix << endl;
@@ -93,7 +92,18 @@ void print_matrix(const LaGenMatDouble& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }
 void test_matrix_storage(){
-    // int array_size = 10, array[array_size];
+    /* initialise everything */
+    int array_width = 5, array_size = array_width * array_width;
+    double array[array_size];
+    /* generate the lattice */
+    for(int i = 0; i < array_size; i++){
+        array[i] = i;
+    }
+    LaGenMatDouble matrix(array, array_size, array_size, false);
+    /* test the results */
+    print_matrix(matrix, "false");
+    array[5] = -array[5];
+    print_matrix(matrix, "false");
 }
 
 /* ------ TO IMPLEMENT ------*/
