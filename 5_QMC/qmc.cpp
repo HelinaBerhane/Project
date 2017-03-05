@@ -80,7 +80,6 @@ void test_lattice_array_generation(){
 
 
 /* -- Calculation -- */
-
 double lambda_calculation(const double U){
     return acoshf(exp(sqrt(0.125*U)/2));
 }
