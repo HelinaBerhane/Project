@@ -71,7 +71,7 @@ void test_probability_generation(){
 void test_lattice_array_generation(){
     int array_size = 10;
     double array[array_size];
-    generate_lattice_array(array_size, array);
+    generate_lattice_array(array, array_size);
     print_sites(array, array_size);
 }
 void test_parameter_calculation(){
@@ -93,7 +93,7 @@ void print_matrix(const LaGenMatDouble& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }
 void test_matrix_storage(){
-    int array_size = 10, array[array_size];
+    // int array_size = 10, array[array_size];
 }
 
 /* ------ TO IMPLEMENT ------*/
