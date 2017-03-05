@@ -80,18 +80,18 @@ void test_lattice_array_generation(){
 
 
 /* -- Calculation -- */
-void initial_parameter_calculation(const double beta, const double U, double lambda, double delta_tau, int time_slices){
-    delta_tau = delta_tau_calculation(U);
-    lambda = lambda_calculation(U);
-    time_slices = beta / lambda;
-}
+
 double lambda_calculation(const double U){
     return acoshf(exp(sqrt(0.125*U)/2));
 }
 double delta_tau_calculation(const double U){
     return sqrt(0.125 / U);
 }
-
+void initial_parameter_calculation(const double beta, const double U, double lambda, double delta_tau, int time_slices){
+    delta_tau = delta_tau_calculation(U);
+    lambda = lambda_calculation(U);
+    time_slices = beta / lambda;
+}
 
 // void V_calculation(const double lattice[], const int time_size, const double U, const double lambda, const int sigma, const double delta_tau, LaGenMatComplex& V){//should be working
 //     /* initialise everything */
