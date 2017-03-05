@@ -81,7 +81,7 @@ void test_lattice_array_generation(){
 
 
 /* -- Calculation -- */
-void initial_parameter_calculation(const double beta, const double U, double& lambda, double& delta_tau, int& time_slices){
+void initial_parameter_calculation(const double beta, const double U, double& lambda, double& delta_tau, double& time_slices){
     delta_tau = sqrt(0.125 / U);
     lambda = acosh(exp(sqrt(0.125*U)/2));
     time_slices = beta / lambda;
