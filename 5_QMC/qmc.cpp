@@ -1,7 +1,7 @@
 #include <iostream> //cout
 #include <string>
 #include "qmc.h"
-#include <gmc.h> 	//LaGenMatComplex
+#include <gmd.h> 	//LaGenMatComplex
 #include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
 #include <blas3pp.h>
 #include <random>   //random_device, mt19937
