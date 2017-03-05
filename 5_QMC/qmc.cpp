@@ -13,21 +13,42 @@ using namespace std;
 
 
 /* ---- WORKING ---- */
-/* Randomisation */
+/* -- Output -- */
+void print_sites(const int array[], const int array_size){
+    for(int i = 0; i < array_size; i++){
+        cout.width(7);
+        cout << array[i];
+    }
+    cout << endl;
+}
+
+
+/* -- Generation -- */
+/* Random Numbers */
 int random_spin(){
     random_device rd;
     mt19937 gen(rd());
     std::uniform_int_distribution<> dist(0, 1);
     return dist(gen)*2 - 1;
 }
-float random_probability(){
+double random_probability(){
     random_device rd;
     mt19937 gen(rd());
     std::uniform_real_distribution<> dist(0, 1);
     return dist(gen);
 }
+/* Structures */
+void generate_lattice_array(const int array_size, int array[]){
+    for(int i = 0; i < array_size; i++){
+        array[i] = random_spin();
+    }
+}
 
-/* Testing */
+/* -- Calculation -- */
+/* Initial Parameters */
+/* Weights */
+
+/* -- Testing -- */
 void test_spin_generation(){
     for(int i = 0; i < 5; i++){
         cout.width(10);
@@ -42,32 +63,51 @@ void test_probability_generation(){
     }
     cout << endl;
 }
+void test_lattice_array_generation(){
+    int array_size = 10, array[array_size];
+    generate_lattice_array(array_size, array);
+    print_sites(array, array_size);
+}
 
 /* ---- TESTING ----*/
 /* Output */
-void print_sites(const int array[], const int array_size){
-    for(int i = 0; i < array_size; i++){
-        cout.width(7);
-        cout << array[i];
-    }
-    cout << endl;
-}
+
 
 /* Randomisation */
 
 
 /* Generation */
-void generate_lattice_array(const int array_size, int array[]){
-    for(int i = 0; i < array_size; i++){
-        array[i] = random_spin();
-    }
+
+
+/* -- Calculation -- */
+double lambda_calculation(const double U){
+    return acoshf(exp(sqrt(0.125*U)/2));
+}
+double delta_tau_calculation(const double U){
+    return sqrt(0.125 / U);
 }
 
+
+// void V_calculation(const double lattice[], const int time_size, const double U, const double lambda, const int sigma, const double delta_tau, LaGenMatComplex& V){//should be working
+//     /* initialise everything */
+//     double elements[time_size];
+//     // double mu = 0;
+//
+//     /* calculate lambda sigma s_l */
+//     for(int i = 0; i < time_size; i++){
+//         scalar_multiplication(lattice[i], lambda / delta_tau, elements[i]);
+//         elements[i].r = elements[i].r + mu - U / 2;
+//     }
+//     /* given a lattice */
+//     array_to_diag(elements, time_size, V);
+// }
+
+
 /* Testing */
-void test_generate_lattice_array(){
-    int array_size = 10, array[array_size];
-    generate_lattice_array(array_size, array);
-    print_sites(array, array_size);
+void test_parameter_calculation(){
+    double U = 5, beta = 1;
+    cout << "lambda = " << lambda_calculation(U) << endl;
+    cout << "delta tau = " << delta_tau_calculation(U) << endl;
 }
 
 void test_sweep(){
@@ -77,7 +117,7 @@ void test_sweep(){
         // [ ] time_slices  - int
         // [ ] iterations   - int
         // [ ] lattice      - LaGenMatComplex
-        // [ ] U            - float
+        // [ ] U            - double
 
     /* [ ] Processing */
         // [ ] generate a lattice of spins
@@ -89,6 +129,8 @@ void test_sweep(){
 
     // int lattice_size = 5, time_slices = 4;
     // int matrix_size = lattice_size * time_slices;
+    // int lattice_array[matrix_size];
+    // generate_lattice_array(matrix_size, lattice_array);
 
 }
 void test_increasing_U(){
@@ -98,7 +140,7 @@ void test_increasing_U(){
         // [ ] matrix_size  - int
         // [ ] iterations   - int
         // [ ] lattice      - LaGenMatComplex
-        // [ ] U            - float
+        // [ ] U            - double
 
     /* [ ] Processing */
         // [ ] for n increasing values of U
@@ -111,5 +153,5 @@ void test_increasing_U(){
 
 /* --- Main QMC Program --- */
 int main(){
-    test_generate_lattice_array();
+    test_parameter_calculation();
 }
