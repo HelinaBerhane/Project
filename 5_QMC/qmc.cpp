@@ -99,11 +99,13 @@ void test_matrix_storage(){
     for(int i = 0; i < array_size; i++){
         array[i] = i;
     }
-    LaGenMatDouble matrix(array, array_width, array_width, false);
+    LaGenMatDouble matrix(array, array_width, array_width, true);
     /* test the results */
-    print_matrix(matrix, "false");
+    print_matrix(matrix, "true");
     array[5] = -array[5];
-    print_matrix(matrix, "false (changed)");
+        // row_ordering = false does change the matrix, so they're linked
+    print_matrix(matrix, "true (changed)");
+
 }
 
 /* ------ TO IMPLEMENT ------*/
