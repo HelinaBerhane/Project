@@ -13,6 +13,12 @@ using namespace std;
 /* ------ WORKING ------ */
 
 /* -- Output -- */
+void print_matrix(const LaGenMatDouble& matrix){
+	cout << matrix << endl;
+}
+void print_matrix(const LaGenMatDouble& matrix, const string name){
+	cout << name << ":" << endl << matrix << endl;
+}
 void print_sites(const double array[], const int array_size){
     for(int i = 0; i < array_size; i++){
         cout.width(7);
@@ -81,16 +87,6 @@ void test_parameter_calculation(){
     cout << "delta tau = " << delta_tau << endl;
     cout << "time slices = " << time_slices << endl;
 }
-
-
-
-/* ------ TO TEST ------ */
-void print_matrix(const LaGenMatDouble& matrix){
-	cout << matrix << endl;
-}
-void print_matrix(const LaGenMatDouble& matrix, const string name){
-	cout << name << ":" << endl << matrix << endl;
-}
 void test_matrix_storage(){
     /* initialise everything */
     int array_width = 5, array_size = array_width * array_width;
@@ -104,103 +100,48 @@ void test_matrix_storage(){
     print_matrix(matrix, "true");
     array[5] = -array[5];
         // row_ordering = false does change the matrix, so they're linked
+        // row_ordering = tru does not change the matrix, so they're copied
     print_matrix(matrix, "true (changed)");
 
 }
 
-/* ------ TO IMPLEMENT ------*/
-/* Output */
-/* Randomisation */
-/* Generation */
-// void generate_H(const int matrix_size, LaGenMatDouble& H){
-//     /* initialise everything */
-//     int matrix_volume = matrix_size * matrix_size, i;
-//     COMPLEX elements[matrix_volume];
-//
-//     /* generate the matrix */
-//     for(int row = 0; row < matrix_size; row++){
-//         for (int column = 0; column < matrix_size; column++) {
-//             i = (matrix_size * row) + column;
-//             if(abs(row - column) == 1 || abs(row - column) == matrix_size - 1){
-//                 elements[i] = -1;
-//             }else{
-//                 elements[i] = 0;
-//             }
-//         }
-//     }
-//     H = LaGenMatDouble(elements, matrix_size, matrix_size, false);
-//
-//     /* print the matrix */
-//     print_matrix(H, "H");
-// }
-/* -- Calculation -- */
-// void V_calculation(const double lattice[], const int time_size, const double U, const double lambda, const int sigma, const double delta_tau, LaGenMatDouble& V){//should be working
-//     /* initialise everything */
-//     double elements[time_size];
-//     // double mu = 0;
-//
-//     /* calculate lambda sigma s_l */
-//     for(int i = 0; i < time_size; i++){
-//         scalar_multiplication(lattice[i], lambda / delta_tau, elements[i]);
-//         elements[i].r = elements[i].r + mu - U / 2;
-//     }
-//     /* given a lattice */
-//     array_to_diag(elements, time_size, V);
-// }
-/* Testing */
-// void test_H(const int matrix_size){
-//     /* initialise everything */
-//     LaGenMatDouble H;
-//     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
-//     LaGenMatDouble eigenvectors = LaGenMatDouble::zeros(matrix_size, matrix_size);
-//     /* generate matrix */
-//     generate_H(matrix_size, H);
-//     print_matrix(H);
-//     /* calculate eigenstuff */
-//     matrix_eigenvstuff(H, eigenvalues, eigenvectors);
-//     print_vector(eigenvalues, "eigenvalues");
-//     // eigenvalues are 2 cos(n pi / q), where q = the matrix size
-// }
-// void test_sweep(){
-//     /* Plan */
-//         /* [ ] Input */
-//             // [ ] lattice_size - int
-//             // [ ] time_slices  - int
-//             // [ ] iterations   - int
-//             // [ ] lattice      - LaGenMatDouble
-//             // [ ] U            - double
-//
-//         /* [ ] Processing */
-//             // [ ] generate a lattice of spins
-//             // [ ] sweep the lattice
-//
-//         /* [ ] Output */
-//             // [ ] average spins
-//             // [ ] acceptance probabilities
-//
-//         // int lattice_size = 5, time_slices = 4;
-//         // int matrix_size = lattice_size * time_slices;
-//         // int lattice_array[matrix_size];
-//         // generate_lattice_array(matrix_size, lattice_array);
-//
-// }
-// void test_increasing_U(){
-//     /* Plan */
-//
-//     /* [ ] Input */
-//         // [ ] matrix_size  - int
-//         // [ ] iterations   - int
-//         // [ ] lattice      - LaGenMatDouble
-//         // [ ] U            - double
-//
-//     /* [ ] Processing */
-//         // [ ] for n increasing values of U
-//             // [ ] generate a lattice of spins
-//             // [ ] sweep the lattice
-//
-//     /* [ ] Output */
-//         // [ ] acceptance probabilities
-// }
+
+
+/* ------ TO TEST ------ */
+void generate_H(const int matrix_size, LaGenMatDouble& H){
+    /* initialise everything */
+    int matrix_volume = matrix_size * matrix_size, i;
+    COMPLEX elements[matrix_volume];
+
+    /* generate the matrix */
+    for(int row = 0; row < matrix_size; row++){
+        for (int column = 0; column < matrix_size; column++) {
+            i = (matrix_size * row) + column;
+            if(abs(row - column) == 1 || abs(row - column) == matrix_size - 1){
+                elements[i] = -1;
+            }else{
+                elements[i] = 0;
+            }
+        }
+    }
+    H = LaGenMatDouble(elements, matrix_size, matrix_size, false);
+
+    /* print the matrix */
+    print_matrix(H, "H");
+}
+void test_H(const int matrix_size){
+    /* initialise everything */
+    LaGenMatDouble H;
+    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
+    LaGenMatDouble eigenvectors = LaGenMatDouble::zeros(matrix_size, matrix_size);
+    /* generate matrix */
+    generate_H(matrix_size, H);
+    print_matrix(H);
+    /* calculate eigenstuff */
+    LaEigSolve(matrix, eigenvalues, eigenvectors);
+    print_vector(eigenvalues, "eigenvalues");
+    // eigenvalues are 2 cos(n pi / q), where q = the matrix size
+}/
 
 /* ------ Main QMC Program ------ */
 int main(){
