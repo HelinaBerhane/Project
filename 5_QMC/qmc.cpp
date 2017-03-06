@@ -195,12 +195,12 @@ void V_calculation(const double time_slice[], const int lattice_size, const doub
 void test_V_generation(){//should work
 
     /* initialise everything */
-    int lattice_size = 5, time_slices;
+    int lattice_size = 5, time_size;
     double time_slice[lattice_size], U = 1, beta = 10, lambda, sigma, delta_tau;
     LaGenMatDouble V = LaGenMatDouble::zeros(lattice_size, lattice_size);
 
     /* calculate initial parameters */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_slices);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
 
     /* generate the time_slice */
     generate_lattice_array(time_slice, lattice_size);
