@@ -53,10 +53,11 @@ void generate_lattice_array(double array[], const int array_size){
 
 /* -- Calculation -- */
 // Initial Parameters
-void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, double& time_slices){
-    delta_tau = sqrt(0.125 / U);
-    lambda = acosh(exp(sqrt(0.125*U)/2));
-    time_slices = beta / lambda;
+void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_slices){
+    // delta_tau = sqrt(0.125 / U);            // by convension
+    lambda = acosh(exp(sqrt(0.125*U)/2));   // by definition
+    time_slices = ceil(beta / lambda);      // by definition
+    delta_tau = beta / time_slices
 }
 // Weights
 void generate_H(const int matrix_size, LaGenMatDouble& H){
@@ -117,7 +118,8 @@ void test_lattice_array_generation(){
     print_sites(array, array_size);
 }
 void test_parameter_calculation(){
-    double beta = 10, U = 1, lambda, delta_tau, time_slices;
+    double beta = 10, U = 1, lambda, delta_tau;
+    int time_slices;
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_slices);
     cout << "lambda = " << lambda << endl;
     cout << "delta tau = " << delta_tau << endl;
@@ -168,15 +170,15 @@ void V_calculation(const double time_slice[], const int time_size, const double 
 void test_V_generation(){//should work
 
     /* initialise everything */
-    int matrix_size = 5, placeholder_time_slices = 5;
-    double time_slice[matrix_size], U = 1, beta = 10, lambda, sigma, delta_tau, time_slices;
+    int matrix_size = 5, time_slices;
+    double time_slice[matrix_size], U = 1, beta = 10, lambda, sigma, delta_tau;
     LaGenMatDouble V = LaGenMatDouble::zeros(matrix_size, matrix_size);
 
     /* calculate initial parameters */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_slices);
 
     /* generate the time_slice */
-    generate_lattice_array(time_slice, placeholder_time_slices);
+    generate_lattice_array(time_slice, time_slices);
     V_calculation(time_slice, matrix_size, U, lambda, sigma, delta_tau, V);
 
     /* print result */
