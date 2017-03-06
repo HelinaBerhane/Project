@@ -239,18 +239,23 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatDouble& 
 }
 void matrix_to_array(const LaGenMatDouble& matrix, const int matrix_size, double array[]){
 	/* initialise everything */
-	int matrix_volume = matrix_size * matrix_size, i = j * matrix_size + k;
+	int matrix_volume = matrix_size * matrix_size;
 
 	/* convert everything */
 	for(int j = 0; j < matrix_size; j++){
 		for(int k = 0; k < matrix_size; k++){
-			array[e] = matrix(j, k);
+			int i = j * matrix_size + k
+			array[i] = matrix(j, k);
 		}
 	}
 }
 void vec_to_array(const LaVectorComplex& vector, const int array_size, double array[]){
     for(int i = 0; i < array_size; i++){
-        array[i] = vector(i);
+        array[i].r = vector(i);
+		if(array[i].i > 0){
+			cout << "array(" << i << ") = "array[i].i << endl;
+			cout << "Check this!" << endl;
+		}
     }
 }
 void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatDouble& diag){
@@ -261,7 +266,7 @@ void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatDo
 void test_matrix_multiplication(){
 
 	/* initialise everything */
-	int matrix_size = 5, max_rand = 9,
+	int matrix_size = 5, max_rand = 9;
     int matrix_volume = matrix_size * matrix_size;
 	LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
 
@@ -390,7 +395,7 @@ void matrix_negative(const int matrix_size, const LaGenMatDouble& matrix, LaGenM
         }
     }
 }
-void scalar_exponential_main(const double& number, const int iterations, double& result){
+void scalar_exponential(const double& number, double& result){
     double division, product, total_division;
     result = 1;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
@@ -399,12 +404,12 @@ void scalar_exponential_main(const double& number, const int iterations, double&
 			division = number / i;
             total_division *= division;
         }
-        result += total_division
+        result += total_division;
     }
 }
 void test_scalar_exponential(const int max_rand, const int iterations){
-    double number, result;
-    generate_scalar(number, max_rand);
+    int number = random_int(max_rand);
+	double result;
     cout << endl << "scalar exponential test no.: " << number << endl << endl;
     scalar_exponential_main(number, iterations, result);
     cout << "e^" << number << " = " << result << endl;
@@ -449,15 +454,13 @@ void test_matrix_exponential(const int matrix_size, const int max_rand, const in
     print_matrix(result, "e^(matrix)");
 }
 void test_idenpotent_exponential(const int iterations){
-    /* generate the matrix */
-    int numbers [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
-    double elements[9];
-    for(int i = 0; i < 9; i++){
-        elements[i] = numbers[i];
-    }
-    LaGenMatDouble matrix = LaGenMatDouble(elements, 3, 3, false);
+
+	/* initialise everything */
+    double numbers[] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
+    LaGenMatDouble matrix = LaGenMatDouble(numbers, 3, 3, false);
     LaGenMatDouble result = LaGenMatDouble::zeros(3, 3);
-    //print_matrix(matrix, "initial matrix");
+    print_matrix(matrix, "initial matrix");
+
     /* calculate the exponential */
     for(int j = 1; j <= 5; j++){
         matrix_exponential(matrix, 3, j, result);
@@ -528,6 +531,8 @@ void test_B_generation(){
 							// generate_H		  -> H_generation
 							// scalar_...		  -> + - / ...
 							// basic_random_int   -> random_int
+							// generate_scalar	  -> random_int
+							// scalar_exponential -> exp()
 //
 
 // void n_matrix_product(const double matrices[], const int matrix_size, const int n, LaGenMatDouble& product){
