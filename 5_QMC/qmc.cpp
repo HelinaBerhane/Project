@@ -269,12 +269,12 @@ void test_matrix_multiplication(){
     /* generate matrix A */
     double elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
-	LaGenMatDouble matrixA = LaGenMatDouble(elements, matrix_size, matrix_size, false );
+	LaGenMatDouble matrixA = LaGenMatDouble(elements, matrix_size, matrix_size, true );
     print_matrix(matrixA, "initial Matrix A");
 
     /* generate matrix B */
     generate_array(elements, matrix_volume, max_rand);
-	LaGenMatDouble matrixB = LaGenMatDouble(elements, matrix_size, matrix_size, false );
+	LaGenMatDouble matrixB = LaGenMatDouble(elements, matrix_size, matrix_size, true );
 
     /* A * B */
     print_matrix(matrixA, "Matrix A");
