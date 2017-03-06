@@ -157,6 +157,14 @@ void test_matrix_storage(){
 // matrix_size 		 -> lattice_size or time_size
 // len 				 -> array_size
 
+void print_initial_parameters(double U, double beta, double lambda, double delta_tau, int time_size, int lattice_size){
+	cout << "no of lattice points" << lattice_size << end;
+	cout << "no of time slices = " << time_size << end;
+	cout << "U = " << U << end;
+	cout << "beta = " << beta << end;
+	cout << "lambda = " << lambda << end;
+	cout << "delta tau = " << delta_tau << end;
+}
 void print_array(const double array[], int array_size, const string name){
 	cout << name << ":" << endl;
     for(int i = 0; i < array_size; i++){
@@ -199,6 +207,7 @@ void test_V_generation(){//should work
     V_calculation(time_slice, lattice_size, U, lambda, sigma, delta_tau, V);
 
     /* print result */
+	print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
 	print_array(time_slice, lattice_size, "slice");
     print_matrix(V, "V");
 }
