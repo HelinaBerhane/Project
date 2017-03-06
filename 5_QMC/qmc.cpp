@@ -270,16 +270,17 @@ void test_matrix_multiplication(){
     double elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
 	LaGenMatDouble matrixA = LaGenMatDouble(elements, matrix_size, matrix_size, false );
-    print_matrix(matrixA, "Matrix A");
 
     /* generate matrix B */
     generate_array(elements, matrix_volume, max_rand);
 	LaGenMatDouble matrixB = LaGenMatDouble(elements, matrix_size, matrix_size, false );
-    print_matrix(matrixB, "Matrix B");
 
     /* A * B */
+    print_matrix(matrixA, "Matrix A");
+    print_matrix(matrixB, "Matrix B");
+	print_matrix(result, "initial result");
     Blas_Mat_Mat_Mult(matrixA, matrixB, result);
-    print_matrix(result, "Matrix A * Matrix B");
+    print_matrix(result, "result = Matrix A * Matrix B");
 }
 
 void matrix_inverse(LaGenMatDouble& matrix, int matrix_size){
