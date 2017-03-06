@@ -298,7 +298,7 @@ void matrix_product(LaGenMatDouble& product, const LaGenMatDouble& matrix){
 
 void test_inverse(){
 	/* initialise everything */
-	int matrix_size = 3, max_rand = 9;
+	int matrix_size = 2, max_rand = 9;
 	LaGenMatDouble matrix = LaGenMatDouble::zeros(matrix_size, matrix_size);
 	LaGenMatDouble product =  LaGenMatDouble::eye(matrix_size, matrix_size);
 	/* generate the matrix */
