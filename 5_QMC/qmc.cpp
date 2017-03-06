@@ -244,15 +244,15 @@ void matrix_to_array(const LaGenMatDouble& matrix, const int matrix_size, double
 	/* convert everything */
 	for(int j = 0; j < matrix_size; j++){
 		for(int k = 0; k < matrix_size; k++){
-			int i = j * matrix_size + k
+			int i = j * matrix_size + k;
 			array[i] = matrix(j, k);
 		}
 	}
 }
 void vec_to_array(const LaVectorComplex& vector, const int array_size, double array[]){
     for(int i = 0; i < array_size; i++){
-        array[i].r = vector(i);
-		if(array[i].i > 0){
+        array[i] = vector(i).r;
+		if(vector(i).i > 0){
 			cout << "array(" << i << ") = "array[i].i << endl;
 			cout << "Check this!" << endl;
 		}
@@ -263,6 +263,7 @@ void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatDo
     vec_to_array(vector, array_size, array);
     array_to_diag(array, array_size, diag);
 }
+
 void test_matrix_multiplication(){
 
 	/* initialise everything */
@@ -281,31 +282,9 @@ void test_matrix_multiplication(){
 	LaGenMatDouble matrixB = LaGenMatDouble(elements, matrix_size, matrix_size, false );
     print_matrix(matrixB, "Matrix B");
 
-    /* generate matrix A^T */
-    LaGenMatDouble transposeA;
-    matrix_transpose(matrixA, matrix_size, transposeA);
-    print_matrix(transposeA, "transpose A");
-
-    /* generate matrix B^T */
-    LaGenMatDouble transposeB;
-    matrix_transpose(matrixB, matrix_size, transposeB);
-    print_matrix(transposeB, "transpose B");
-
     /* A * B */
     Blas_Mat_Mat_Mult(matrixA, matrixB, result);
     print_matrix(result, "Matrix A * Matrix B");
-
-    /* A^T * B */
-    Blas_Mat_Mat_Mult(transposeA, matrixB, result);
-    print_matrix(result, "Matrix A^T * Matrix B");
-
-    /* A * B^T */
-    Blas_Mat_Mat_Mult(matrixA, transposeB, result);
-    print_matrix(result, "Matrix A * Matrix B^T");
-
-    /* A^T * B^T */
-    Blas_Mat_Mat_Mult(transposeA, transposeB, result);
-    print_matrix(result, "Matrix A^T * Matrix B^T");
 }
 
 void matrix_inverse(LaGenMatDouble& matrix, int matrix_size){
