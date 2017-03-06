@@ -379,7 +379,7 @@ void test_scalar_exponential(double& number, const int iterations, double& resul
     cout << "e^" << number << " = " << exp(number) << endl;
 }
 
-void vector_exponential(LaVectorComplex& vector, const int matrix_size, LaVectorComplex& result){
+void vector_exponential(const LaVectorComplex& vector, const int matrix_size, LaVectorComplex& result){
     for(int i = 0; i < matrix_size; i++){
 		result(i).r = exp(vector(i).r);
     }
@@ -396,7 +396,7 @@ void matrix_exponential(const LaGenMatDouble& matrix, const int matrix_size, con
     LaEigSolve(matrix, eigenvalues, eigenvectors);
 
     /* calculate exponentials */
-    vector_exponential(eigenvalues, matrix_size, iterations, eigenExponential);
+    vector_exponential(eigenvalues, matrix_size, eigenExponential);
 
     /* multiply them back together to get the matrix */
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
