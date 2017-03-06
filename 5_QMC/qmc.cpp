@@ -188,5 +188,5 @@ void test_V_generation(){//should work
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_parameter_calculation();
+    test_V_generation();
 }
