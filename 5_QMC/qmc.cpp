@@ -186,6 +186,9 @@ void V_calculation(const double time_slice[], const int lattice_size, const doub
     /* calculate V */
     for(int l = 0; l < lattice_size; l++){
         V_elements[l] = lambda * sigma * time_slice[l] / delta_tau + mu - U/2;
+		/* Testing */
+		print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+		cout << time_slice[l] << endl;
     }
 
     /* save to diagonal matrix */
@@ -206,7 +209,6 @@ void test_V_generation(){//should work
     V_calculation(time_slice, lattice_size, U, lambda, sigma, delta_tau, V);
 
     /* print result */
-	print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
 	print_array(time_slice, lattice_size, "slice");
     print_matrix(V, "V");
 }
