@@ -176,7 +176,7 @@ void test_V_generation(){//should work
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_slices);
 
     /* generate the time_slice */
-    generate_lattice_array(matrix_size, placeholder_time_slices);
+    generate_lattice_array(time_slice, placeholder_time_slices);
     V_calculation(time_slice, matrix_size, U, lambda, sigma, delta_tau, V);
 
     /* print result */
