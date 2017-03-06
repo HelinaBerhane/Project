@@ -182,7 +182,7 @@ void V_calculation(const double time_slice[], const int lattice_size, const doub
 
     /* initialise everything */
     double V_elements[lattice_size];
-	double mu = 0 beta = 0, time_size = 0;
+	double mu = 0, beta = 0, time_size = 0;
 
     /* calculate V */
     for(int l = 0; l < lattice_size; l++){
