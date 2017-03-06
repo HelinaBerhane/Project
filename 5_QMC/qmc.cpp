@@ -583,5 +583,5 @@ void test_B_generation(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_idenpotent_exponential();
+    test_matrix_multiplication();
 }
