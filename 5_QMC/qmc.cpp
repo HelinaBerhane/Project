@@ -13,6 +13,7 @@ using namespace std;
 // be careful with row ordering
 	// true = row ordered + DOES NOT link to the array it was made with
 	// false = column ordered + LINKS to the array it was made with
+// check that everything is reset to 0 or I where needed
 
 						/* ------ WORKING ------ */
 
@@ -289,23 +290,28 @@ void matrix_inverse(LaGenMatDouble& matrix, int matrix_size){
     LUFactorizeIP(matrix, PIV);
     LaLUInverseIP(matrix, PIV);
 }
-void test_inverse(){
-	/* initialise everything */
-	int matrix_size = 3, max_rand = 9;
-	LaGenMatDouble matrix = LaGenMatDouble::zeros(matrix_size, matrix_size);
-	/* generate the matrix */
-	generate_matrix(matrix_size, max_rand, matrix);
-	/* calculate the inverse */
-	print_matrix(matrix, "initial matrix");
-    matrix_inverse(matrix, matrix_size);
-    print_matrix(matrix, "inverse matrix");
-}
-
 void matrix_product(LaGenMatDouble& product, const LaGenMatDouble& matrix){
     LaGenMatDouble result = matrix.copy();
     Blas_Mat_Mat_Mult(product, matrix, result);
     product = result.copy();
 }
+
+void test_inverse(){
+	/* initialise everything */
+	int matrix_size = 3, max_rand = 9;
+	LaGenMatDouble matrix = LaGenMatDouble::zeros(matrix_size, matrix_size);
+	LaGenMatDouble product =  LaGenMatDouble::eye(matrix_size, matrix_size);
+	/* generate the matrix */
+	generate_matrix(matrix_size, max_rand, matrix);
+	/* calculate the inverse + test*/
+	print_matrix(matrix, "initial matrix");
+	matrix_product(product, matrix);
+    matrix_inverse(matrix, matrix_size);
+    print_matrix(matrix, "inverse matrix");
+	matrix_product(product, matrix);
+    print_matrix(product, "I");
+}
+
 void test_matrix_product(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatDouble matrixA;
