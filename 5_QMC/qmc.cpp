@@ -267,7 +267,7 @@ void test_matrix_multiplication(){
 	LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
 
     /* generate matrix A */
-    double elements[matrix_volume];
+    int elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
 	LaGenMatDouble matrixA = LaGenMatDouble(elements, matrix_size, matrix_size, false );
     print_matrix(matrixA, "Matrix A");
