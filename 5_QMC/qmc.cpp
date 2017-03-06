@@ -158,7 +158,7 @@ void test_matrix_storage(){
 // len 				 -> array_size
 
 void print_initial_parameters(double U, double beta, double lambda, double delta_tau, int time_size, int lattice_size){
-	cout << "no of lattice points" << lattice_size << endl;
+	cout << "no of lattice points = " << lattice_size << endl;
 	cout << "no of time slices = " << time_size << endl;
 	cout << "U = " << U << endl;
 	cout << "beta = " << beta << endl;
@@ -189,7 +189,8 @@ void V_calculation(const double time_slice[], const int lattice_size, const doub
         V_elements[l] = lambda * sigma * time_slice[l] / delta_tau + mu - U/2;
 		/* Testing */
 		print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
-		cout << "lattice point = " << time_slice[l] << endl << endl;
+		cout << "lattice point = " << time_slice[l] << endl;
+		cout << "V_ll = lambda * sigma * time_slice[l] / delta_tau + mu - U/2 = " << V_elements[l] << endl << endl;
     }
 
     /* save to diagonal matrix */
