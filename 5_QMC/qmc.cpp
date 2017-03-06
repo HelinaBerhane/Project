@@ -133,7 +133,7 @@ void generate_H(const int matrix_size, LaGenMatDouble& H){
 }
 void test_H(){
     /* initialise everything */
-    int matrix_size = 5
+    int matrix_size = 5;
     LaGenMatDouble H;
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatDouble eigenvectors = LaGenMatDouble::zeros(matrix_size, matrix_size);
