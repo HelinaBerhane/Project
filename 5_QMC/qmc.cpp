@@ -253,7 +253,7 @@ void vec_to_array(const LaVectorComplex& vector, const int array_size, double ar
     for(int i = 0; i < array_size; i++){
         array[i] = vector(i).r;
 		if(vector(i).i > 0){
-			cout << "array(" << i << ") = "array[i].i << endl;
+			cout << "array(" << i << ") = " << vector(i).i << endl;
 			cout << "Check this!" << endl;
 		}
     }
@@ -374,33 +374,14 @@ void matrix_negative(const int matrix_size, const LaGenMatDouble& matrix, LaGenM
         }
     }
 }
-void scalar_exponential(const double& number, double& result){
-    double division, product, total_division;
-    result = 1;
-    for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
-        total_division = 1;
-        for(int i = 1; i <= step; i++){        //    ( num^n / n!)
-			division = number / i;
-            total_division *= division;
-        }
-        result += total_division;
-    }
-}
-void test_scalar_exponential(const int max_rand, const int iterations){
-    int number = random_int(max_rand);
-	double result;
-    cout << endl << "scalar exponential test no.: " << number << endl << endl;
-    scalar_exponential_main(number, iterations, result);
-    cout << "e^" << number << " = " << result << endl;
-}
+
 void test_scalar_exponential(double& number, const int iterations, double& result){
-    scalar_exponential_main(number, iterations, result);
-    cout << "e^" << number << " = " << result << endl;
+    cout << "e^" << number << " = " << exp(number) << endl;
 }
 
-void vector_exponential(const LaVectorComplex& vector, const int matrix_size, const int iterations, LaVectorComplex& result){
+void vector_exponential(const LaVectorComplex& vector, const int matrix_size, LaVectorComplex& result){
     for(int i = 0; i < matrix_size; i++){
-        scalar_exponential_main(vector(i), iterations, result(i));
+		result(i) = exp(vector(i));
     }
 }
 void matrix_exponential(const LaGenMatDouble& matrix, const int matrix_size, const int iterations, LaGenMatDouble& result){
