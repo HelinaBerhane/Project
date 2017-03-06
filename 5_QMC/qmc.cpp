@@ -13,13 +13,7 @@ using namespace std;
 /* ------ WORKING ------ */
 
 /* -- Output -- */
-void print_matrix(const LaGenMatDouble& matrix){
-	cout << matrix << endl;
-}
-void print_matrix(const LaGenMatDouble& matrix, const string name){
-	cout << name << ":" << endl << matrix << endl;
-}
-void print_sites(const double array[], const int array_size){
+void print_array(const double array[], const int array_size){
     for(int i = 0; i < array_size; i++){
         cout.width(7);
         cout << array[i];
@@ -28,6 +22,12 @@ void print_sites(const double array[], const int array_size){
 }
 void print_vector(const LaVectorComplex& vector, const string name){
     cout << name << ":" << endl << vector << endl;
+}
+void print_matrix(const LaGenMatDouble& matrix){
+	cout << matrix << endl;
+}
+void print_matrix(const LaGenMatDouble& matrix, const string name){
+	cout << name << ":" << endl << matrix << endl;
 }
 
 /* -- Generation -- */
@@ -120,7 +120,7 @@ void test_lattice_array_generation(){
     int array_size = 10;
     double array[array_size];
     generate_lattice_array(array, array_size);
-    print_sites(array, array_size);
+    print_array(array, array_size);
 }
 void test_parameter_calculation(){
     double beta = 10, U = 1, lambda, delta_tau;
@@ -150,15 +150,24 @@ void test_matrix_storage(){
 
 
 /* ------ TO TEST ------ */
-// COMPLEX -> double
-// float -> double
-// LaVectorComplex -> LaGenMatDouble
-// .r ->
-// .i ->
+// COMPLEX 			 -> double
+// float			 -> double
+// LaVectorComplex 	 -> LaGenMatDouble
+// .r and .i		 ->
+// matrix_size 		 -> lattice_size or time_size
+// len 				 -> array_size
 
-void array_to_diag(const double array[], const int len, LaGenMatDouble& diag){
+void print_array(const double array[], int array_size, const string name){
+	cout << name << ":" << endl;
+    for(int i = 0; i < array_size; i++){
+		cout.width(7);
+        cout << array[i];
+    }
+    cout << endl;
+}
+void array_to_diag(const double array[], const int array_size, LaGenMatDouble& diag){
     diag = 0;
-    for(int i = 0; i < len; i++){
+    for(int i = 0; i < array_size; i++){
         diag(i, i) = array[i];
     }
 }
@@ -171,6 +180,7 @@ void V_calculation(const double time_slice[], const int lattice_size, const doub
     for(int l = 0; l < lattice_size; l++){
         V_elements[l] = lambda * sigma * time_slice[l] / delta_tau + mu - U/2;
     }
+
     /* save to diagonal matrix */
     array_to_diag(V_elements, lattice_size, V);
 }
@@ -189,6 +199,7 @@ void test_V_generation(){//should work
     V_calculation(time_slice, lattice_size, U, lambda, sigma, delta_tau, V);
 
     /* print result */
+	print_array(time_slice, lattice_size, "slice");
     print_matrix(V, "V");
 }
 
