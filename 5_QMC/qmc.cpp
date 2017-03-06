@@ -106,12 +106,14 @@ void test_matrix_storage(){
 }
 
 
-
 /* ------ TO TEST ------ */
+void print_vector(const LaVectorComplex& vector, const string name){
+    cout << name << ":" << endl << vector << endl;
+}
 void generate_H(const int matrix_size, LaGenMatDouble& H){
     /* initialise everything */
     int matrix_volume = matrix_size * matrix_size, i;
-    COMPLEX elements[matrix_volume];
+    double elements[matrix_volume];
 
     /* generate the matrix */
     for(int row = 0; row < matrix_size; row++){
@@ -129,8 +131,9 @@ void generate_H(const int matrix_size, LaGenMatDouble& H){
     /* print the matrix */
     print_matrix(H, "H");
 }
-void test_H(const int matrix_size){
+void test_H(){
     /* initialise everything */
+    int matrix_size = 5
     LaGenMatDouble H;
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatDouble eigenvectors = LaGenMatDouble::zeros(matrix_size, matrix_size);
@@ -138,12 +141,12 @@ void test_H(const int matrix_size){
     generate_H(matrix_size, H);
     print_matrix(H);
     /* calculate eigenstuff */
-    LaEigSolve(matrix, eigenvalues, eigenvectors);
+    LaEigSolve(H, eigenvalues, eigenvectors);
     print_vector(eigenvalues, "eigenvalues");
     // eigenvalues are 2 cos(n pi / q), where q = the matrix size
-}/
+}
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_storage();
+    test_H();
 }
