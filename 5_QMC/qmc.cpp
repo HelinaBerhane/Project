@@ -181,7 +181,8 @@ void array_to_diag(const double array[], const int array_size, LaGenMatDouble& d
 void V_calculation(const double time_slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatDouble& V){
 
     /* initialise everything */
-    double V_elements[lattice_size], mu = 0;
+    double V_elements[lattice_size];
+	double mu = 0 beta = 0, time_size = 0;
 
     /* calculate V */
     for(int l = 0; l < lattice_size; l++){
