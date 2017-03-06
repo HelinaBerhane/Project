@@ -381,7 +381,7 @@ void test_scalar_exponential(double& number, const int iterations, double& resul
 
 void vector_exponential(LaVectorComplex& vector, const int matrix_size, LaVectorComplex& result){
     for(int i = 0; i < matrix_size; i++){
-		result(i) = exp(vector(i).r);
+		result(i).r = exp(vector(i).r);
     }
 }
 void matrix_exponential(const LaGenMatDouble& matrix, const int matrix_size, const int iterations, LaGenMatDouble& result){
