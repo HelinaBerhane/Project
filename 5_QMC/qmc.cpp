@@ -158,12 +158,12 @@ void test_matrix_storage(){
 // len 				 -> array_size
 
 void print_initial_parameters(double U, double beta, double lambda, double delta_tau, int time_size, int lattice_size){
-	cout << "no of lattice points" << lattice_size << end;
-	cout << "no of time slices = " << time_size << end;
-	cout << "U = " << U << end;
-	cout << "beta = " << beta << end;
-	cout << "lambda = " << lambda << end;
-	cout << "delta tau = " << delta_tau << end;
+	cout << "no of lattice points" << lattice_size << endl;
+	cout << "no of time slices = " << time_size << endl;
+	cout << "U = " << U << endl;
+	cout << "beta = " << beta << endl;
+	cout << "lambda = " << lambda << endl;
+	cout << "delta tau = " << delta_tau << endl;
 }
 void print_array(const double array[], int array_size, const string name){
 	cout << name << ":" << endl;
