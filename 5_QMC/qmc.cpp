@@ -267,7 +267,7 @@ void test_matrix_multiplication(){
 	LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
 
     /* generate matrix A */
-    int elements[matrix_volume];
+    double elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
 	LaGenMatDouble matrixA = LaGenMatDouble(elements, matrix_size, matrix_size, false );
     print_matrix(matrixA, "Matrix A");
@@ -488,6 +488,7 @@ void test_B_generation(){
 							// basic_random_int   -> random_int
 							// generate_scalar	  -> random_int
 							// scalar_exponential -> exp()
+							// generate_spins	  -> random_spin
 //
 
 // void n_matrix_product(const double matrices[], const int matrix_size, const int n, LaGenMatDouble& product){
