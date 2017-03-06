@@ -174,7 +174,6 @@ void print_array(const double array[], int array_size, const string name){
     cout << endl;
 }
 void array_to_diag(const double array[], const int array_size, LaGenMatDouble& diag){
-    diag = 0;
     for(int i = 0; i < array_size; i++){
         diag(i, i) = array[i];
     }
