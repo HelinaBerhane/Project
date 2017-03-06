@@ -194,10 +194,11 @@ void V_calculation(const double time_slice[], const int lattice_size, const doub
 		cout << "V_" << l << l << " = lambda * sigma * lattice point / delta_tau + mu - U/2 = " << endl;
 
 		cout << "     = " << lambda << " * " << sigma << " * " << time_slice[l];
-		cout << " / " << delta_tau << " + " << mu << " - " << U << " / " << 2
+		cout << " / " << delta_tau << " + " << mu << " - " << U << " / " << 2;
 		cout << " = " << V_elements[l] << endl << endl;
 
-		cout << "     = " << lambda * sigma * time_slice[l] / delta_tau << " + " << mu << " - " << U / 2 << " = "
+		cout << "     = " << lambda * sigma * time_slice[l] / delta_tau;
+		cout << " + " << mu << " - " << U / 2 << " = ";
 		cout << V_elements[l] << endl << endl;
     }
 
