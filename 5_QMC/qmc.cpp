@@ -238,10 +238,6 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatDouble& 
     matrix = LaGenMatDouble(elements, matrix_size, matrix_size, false);
 }
 void matrix_to_array(const LaGenMatDouble& matrix, const int matrix_size, double array[]){
-	/* initialise everything */
-	int matrix_volume = matrix_size * matrix_size;
-
-	/* convert everything */
 	for(int j = 0; j < matrix_size; j++){
 		for(int k = 0; k < matrix_size; k++){
 			int i = j * matrix_size + k;
@@ -263,11 +259,10 @@ void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatDo
     vec_to_array(vector, array_size, array);
     array_to_diag(array, array_size, diag);
 }
-
 void test_matrix_multiplication(){
 
 	/* initialise everything */
-	int matrix_size = 5, max_rand = 9;
+	int matrix_size = 2, max_rand = 9;
     int matrix_volume = matrix_size * matrix_size;
 	LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
 
