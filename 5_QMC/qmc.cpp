@@ -57,7 +57,7 @@ void initial_parameter_calculation(const double U, const double beta, double& la
     // delta_tau = sqrt(0.125 / U);            // by convension
     lambda = acosh(exp(sqrt(0.125*U)/2));   // by definition
     time_slices = ceil(beta / lambda);      // by definition
-    delta_tau = beta / time_slices
+    delta_tau = beta / time_slices;
 }
 // Weights
 void generate_H(const int matrix_size, LaGenMatDouble& H){
