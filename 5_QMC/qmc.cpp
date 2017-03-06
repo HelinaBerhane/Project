@@ -190,7 +190,8 @@ void V_calculation(const double time_slice[], const int lattice_size, const doub
 		/* Testing */
 		print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
 		cout << "lattice point = " << time_slice[l] << endl;
-		cout << "V_" << l << l << " = lambda * sigma * lattice point / delta_tau + mu - U/2 = " << V_elements[l] << endl << endl;
+		cout << "V_" << l << l << " = lambda * sigma * lattice point / delta_tau + mu - U/2 = " << endl;
+		cout << "     = " << lambda << " * " << sigma << " * " << time_slice[l] << " / " << delta_tau << " + " << mu << " - " << U << " / " << 2 << " = " << V_elements[l] << endl << endl;
     }
 
     /* save to diagonal matrix */
