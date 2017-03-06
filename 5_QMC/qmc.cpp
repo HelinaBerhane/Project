@@ -296,6 +296,7 @@ void test_inverse(){
 	/* generate the matrix */
 	generate_matrix(matrix_size, max_rand, matrix);
 	/* calculate the inverse */
+	print_matrix(matrix, "initial matrix");
     matrix_inverse(matrix, matrix_size);
     print_matrix(matrix, "inverse matrix");
 }
