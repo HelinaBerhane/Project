@@ -113,14 +113,14 @@ void V_calculation(const double time_slice[], const int lattice_size, const doub
 
     /* initialise everything */
     double V_elements[lattice_size];
-	double mu = 0, beta = 0, time_size = 0;
+	double mu = 0;
 
     /* calculate V */
     for(int l = 0; l < lattice_size; l++){
         V_elements[l] = lambda * sigma * time_slice[l] / delta_tau + mu - U/2;
 
 		// /* Testing */
-		// print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+		// print_initial_parameters(U, 10, lambda, delta_tau, 1, lattice_size);
 		//
 		// cout << "lattice point = " << time_slice[l] << endl;
 		// cout << "V_" << l << l << " = lambda * sigma * lattice point / delta_tau + mu - U/2 = " << endl;
@@ -379,9 +379,9 @@ void test_scalar_exponential(double& number, const int iterations, double& resul
     cout << "e^" << number << " = " << exp(number) << endl;
 }
 
-void vector_exponential(const LaVectorComplex& vector, const int matrix_size, LaVectorComplex& result){
+void vector_exponential(LaVectorComplex& vector, const int matrix_size, LaVectorComplex& result){
     for(int i = 0; i < matrix_size; i++){
-		result(i) = exp(vector(i));
+		result(i) = exp(vector(i).r);
     }
 }
 void matrix_exponential(const LaGenMatDouble& matrix, const int matrix_size, const int iterations, LaGenMatDouble& result){
