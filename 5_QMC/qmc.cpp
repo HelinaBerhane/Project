@@ -270,6 +270,7 @@ void test_matrix_multiplication(){
     double elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
 	LaGenMatDouble matrixA = LaGenMatDouble(elements, matrix_size, matrix_size, false );
+    print_matrix(matrixA, "initial Matrix A");
 
     /* generate matrix B */
     generate_array(elements, matrix_volume, max_rand);
