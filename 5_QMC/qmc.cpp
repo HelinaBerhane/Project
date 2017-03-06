@@ -53,7 +53,7 @@ void generate_lattice_array(double array[], const int array_size){
 
 /* -- Calculation -- */
 // Initial Parameters
-void initial_parameter_calculation(const double beta, const double U, double& lambda, double& delta_tau, double& time_slices){
+void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, double& time_slices){
     delta_tau = sqrt(0.125 / U);
     lambda = acosh(exp(sqrt(0.125*U)/2));
     time_slices = beta / lambda;
@@ -118,7 +118,7 @@ void test_lattice_array_generation(){
 }
 void test_parameter_calculation(){
     double beta = 10, U = 1, lambda, delta_tau, time_slices;
-    initial_parameter_calculation(beta, U, lambda, delta_tau, time_slices);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_slices);
     cout << "lambda = " << lambda << endl;
     cout << "delta tau = " << delta_tau << endl;
     cout << "time slices = " << time_slices << endl;
@@ -168,16 +168,16 @@ void V_calculation(const double time_slice[], const int time_size, const double 
 void test_V_generation(){//should work
 
     /* initialise everything */
-    int matrix_size = 5;
-    double time_slice[matrix_size], U = 1, beta = 10, lambda, sigma, delta_tau;
+    int matrix_size = 5, placeholder_time_slices = 5;
+    double time_slice[matrix_size], U = 1, beta = 10, lambda, sigma, delta_tau, time_slices;
     LaGenMatDouble V = LaGenMatDouble::zeros(matrix_size, matrix_size);
 
     /* calculate initial parameters */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_slices);
 
     /* generate the time_slice */
-    generate_lattice_array(matrix_size, time_slice);
-    V_calculation(time_slice, matrix_size, U, lambda, delta_tau, V);
+    generate_lattice_array(matrix_size, placeholder_time_slices);
+    V_calculation(time_slice, matrix_size, U, lambda, sigma, delta_tau, V);
 
     /* print result */
     print_matrix(V, "V");
