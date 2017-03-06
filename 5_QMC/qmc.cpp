@@ -258,9 +258,10 @@ void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatDo
     vec_to_array(vector, array_size, array);
     array_to_diag(array, array_size, diag);
 }
-void test_matrix_multiplication(const int matrix_size, const int max_rand){
+void test_matrix_multiplication(){
 
 	/* initialise everything */
+	int matrix_size = 5, max_rand = 9,
     int matrix_volume = matrix_size * matrix_size;
 	LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
 
@@ -301,6 +302,7 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     Blas_Mat_Mat_Mult(transposeA, transposeB, result);
     print_matrix(result, "Matrix A^T * Matrix B^T");
 }
+
 void matrix_inverse(LaGenMatDouble& matrix, int matrix_size){
     LaVectorLongInt PIV = LaVectorLongInt(matrix_size);
     LUFactorizeIP(matrix, PIV);
@@ -312,6 +314,7 @@ void test_inverse(const LaGenMatDouble& initialMatrix, const int matrix_size){
     matrix_inverse(inverseMatrix, matrix_size);
     print_matrix(inverseMatrix, "inverse matrix");
 }
+
 void matrix_product(LaGenMatDouble& product, const LaGenMatDouble& matrix){
     LaGenMatDouble result = matrix.copy();
     Blas_Mat_Mat_Mult(product, matrix, result);
@@ -331,6 +334,7 @@ void test_matrix_product(const int matrix_size, const int max_rand){
     matrix_product(matrixA, matrixB);
     print_matrix(matrixB, "result");
 }
+
 void recombine_diagonalised_matrices(const int matrix_size, LaGenMatDouble& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatDouble& result){
     /* initialise  everything */
     LaGenMatDouble eigenvalueMatrix = LaGenMatDouble::zeros(matrix_size, matrix_size);
@@ -366,6 +370,7 @@ void test_eigenvalues(const int matrix_size, const int max_rand){
         // 2x2 real:
         // 3x3 complex: {{1+7i, 1+3i, 5+7i},{7i, 6+i, 5+4i},{5+7i, 5+4i, 6}}
 }
+
 void matrix_negative(const int matrix_size, LaGenMatDouble& matrix){
     LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
 
@@ -408,6 +413,7 @@ void test_scalar_exponential(double& number, const int iterations, double& resul
     scalar_exponential_main(number, iterations, result);
     cout << "e^" << number << " = " << result << endl;
 }
+
 void vector_exponential(const LaVectorComplex& vector, const int matrix_size, const int iterations, LaVectorComplex& result){
     for(int i = 0; i < matrix_size; i++){
         scalar_exponential_main(vector(i), iterations, result(i));
@@ -614,5 +620,5 @@ void test_B_generation(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_V_generation();
+    test_matrix_multiplication();
 }
