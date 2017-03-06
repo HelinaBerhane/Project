@@ -53,6 +53,12 @@ void print_initial_parameters(double U, double beta, double lambda, double delta
 /* -- Generation -- */
 
 // Random Numbers
+int random_int(const int max_rand){
+    random_device rd;
+    mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, max_rand);
+    return dist(gen);
+}
 int random_spin(){
     random_device rd;
     mt19937 gen(rd());
@@ -67,10 +73,21 @@ double random_probability(){
 }
 
 // Structures
+void generate_array(double array[], const int array_length, const int max_rand){
+    for(int i = 0; i < array_length; i++){
+        array[i] = random_int(max_rand);
+	}
+}
 void generate_lattice_array(double array[], const int array_size){
     for(int i = 0; i < array_size; i++){
         array[i] = random_spin();
     }
+}
+void generate_matrix(const int matrix_size, const int max_rand, LaGenMatDouble& matrix){
+    int matrix_volume = matrix_size * matrix_size;
+    double elements[matrix_volume];
+    generate_array(elements, matrix_volume, max_rand);
+    matrix = LaGenMatDouble(elements, matrix_size, matrix_size, true);
 }
 void array_to_diag(const double array[], const int array_size, LaGenMatDouble& diag){
 	diag = LaGenMatDouble::eye(array_size, array_size);
@@ -189,6 +206,26 @@ void test_matrix_storage(){
     print_matrix(matrix, "true (changed)");
 
 }
+void test_matrix_multiplication(){
+
+	/* initialise everything */
+	int matrix_size = 2, max_rand = 9;
+    int matrix_volume = matrix_size * matrix_size;
+	LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
+	LaGenMatDouble matrixA = LaGenMatDouble::zeros(matrix_size, matrix_size);
+	LaGenMatDouble matrixB = LaGenMatDouble::zeros(matrix_size, matrix_size);
+	double elements[matrix_volume];
+
+    /* generate the matrices */
+	generate_matrix(matrix_size, max_rand, matrixA);
+	generate_matrix(matrix_size, max_rand, matrixB);
+
+    /* A * B */
+    print_matrix(matrixA, "Matrix A");
+    print_matrix(matrixB, "Matrix B");
+    Blas_Mat_Mat_Mult(matrixA, matrixB, result);
+    print_matrix(result, "result = Matrix A * Matrix B");
+}
 void test_H(){
     /* initialise everything */
     int lattice_size = 5;
@@ -224,23 +261,6 @@ void test_V_generation(){//should work
 
 
 						/* ------ TO TEST ------ */
-int random_int(const int max_rand){
-    random_device rd;
-    mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(0, max_rand);
-    return dist(gen);
-}
-void generate_array(double array[], const int array_length, const int max_rand){
-    for(int i = 0; i < array_length; i++){
-        array[i] = random_int(max_rand);
-	}
-}
-void generate_matrix(const int matrix_size, const int max_rand, LaGenMatDouble& matrix){
-    int matrix_volume = matrix_size * matrix_size;
-    double elements[matrix_volume];
-    generate_array(elements, matrix_volume, max_rand);
-    matrix = LaGenMatDouble(elements, matrix_size, matrix_size, true);
-}
 void matrix_to_array(const LaGenMatDouble& matrix, const int matrix_size, double array[]){
 	for(int j = 0; j < matrix_size; j++){
 		for(int k = 0; k < matrix_size; k++){
@@ -263,37 +283,21 @@ void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatDo
     vec_to_array(vector, array_size, array);
     array_to_diag(array, array_size, diag);
 }
-void test_matrix_multiplication(){
-
-	/* initialise everything */
-	int matrix_size = 2, max_rand = 9;
-    int matrix_volume = matrix_size * matrix_size;
-	LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
-	LaGenMatDouble matrixA = LaGenMatDouble::zeros(matrix_size, matrix_size);
-	LaGenMatDouble matrixB = LaGenMatDouble::zeros(matrix_size, matrix_size);
-	double elements[matrix_volume];
-
-    /* generate the matrices */
-	generate_matrix(matrix_size, max_rand, matrixA);
-	generate_matrix(matrix_size, max_rand, matrixB);
-
-    /* A * B */
-    print_matrix(matrixA, "Matrix A");
-    print_matrix(matrixB, "Matrix B");
-    Blas_Mat_Mat_Mult(matrixA, matrixB, result);
-    print_matrix(result, "result = Matrix A * Matrix B");
-}
 
 void matrix_inverse(LaGenMatDouble& matrix, int matrix_size){
     LaVectorLongInt PIV = LaVectorLongInt(matrix_size);
     LUFactorizeIP(matrix, PIV);
     LaLUInverseIP(matrix, PIV);
 }
-void test_inverse(const LaGenMatDouble& initialMatrix, const int matrix_size){
-    LaGenMatDouble inverseMatrix;
-    inverseMatrix = initialMatrix.copy();
-    matrix_inverse(inverseMatrix, matrix_size);
-    print_matrix(inverseMatrix, "inverse matrix");
+void test_inverse(){
+	/* initialise everything */
+	int matrix_size = 3, max_rand = 9;
+	LaGenMatDouble matrix = LaGenMatDouble::zeros(matrix_size, matrix_size);
+	/* generate the matrix */
+	generate_matrix(matrix_size, max_rand, matrix);
+	/* calculate the inverse */
+    matrix_inverse(matrix, matrix_size);
+    print_matrix(matrix, "inverse matrix");
 }
 
 void matrix_product(LaGenMatDouble& product, const LaGenMatDouble& matrix){
@@ -583,5 +587,5 @@ void test_B_generation(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_multiplication();
+    test_inverse();
 }
