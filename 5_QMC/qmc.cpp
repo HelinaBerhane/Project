@@ -69,6 +69,7 @@ void generate_lattice_array(double array[], const int array_size){
     }
 }
 void array_to_diag(const double array[], const int array_size, LaGenMatDouble& diag){
+	diag = LaGenMatDouble::eye(array_size, array_size);
     for(int i = 0; i < array_size; i++){
         diag(i, i) = array[i];
     }
@@ -83,6 +84,8 @@ void initial_parameter_calculation(const double U, const double beta, double& la
     time_size = ceil(beta / lambda);      // by definition
     delta_tau = beta / time_size;
 }
+
+// Matrix Operations
 
 // Weights
 void H_generation(const int lattice_size, LaGenMatDouble& H){
@@ -217,17 +220,23 @@ void test_V_generation(){//should work
 
 
 						/* ------ TO TEST ------ */
-
-// LaGenMatComplex 	  -> LaGenMatDouble
-// COMPLEX 			  -> double
-// float			  -> double
-// .r and .i		  ->
-// matrix_size 		  -> lattice_size or time_size
-// len 				  -> array_size
-// matrix_eigenvstuff -> LaEigSolve
-// generate_H		  -> H_generation
-
-
+int random_int(const int max_rand){
+    random_device rd;
+    mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, max_rand);
+    return dist(gen);
+}
+void generate_array(double array[], const int array_length, const int max_rand){
+    for(int i = 0; i < array_length; i++){
+        array[i] = random_int(max_rand);
+	}
+}
+void generate_matrix(const int matrix_size, const int max_rand, LaGenMatDouble& matrix){
+    int matrix_volume = matrix_size * matrix_size;
+    double elements[matrix_volume];
+    generate_array(elements, matrix_volume, max_rand);
+    matrix = LaGenMatDouble(elements, matrix_size, matrix_size, false);
+}
 void matrix_to_array(const LaGenMatDouble& matrix, const int matrix_size, double array[]){
 	/* initialise everything */
 	int matrix_volume = matrix_size * matrix_size, i = j * matrix_size + k;
@@ -239,17 +248,106 @@ void matrix_to_array(const LaGenMatDouble& matrix, const int matrix_size, double
 		}
 	}
 }
+void vec_to_array(const LaVectorComplex& vector, const int array_size, double array[]){
+    for(int i = 0; i < array_size; i++){
+        array[i] = vector(i);
+    }
+}
+void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatDouble& diag){
+    double array[array_size];
+    vec_to_array(vector, array_size, array);
+    array_to_diag(array, array_size, diag);
+}
+void test_matrix_multiplication(const int matrix_size, const int max_rand){
 
-
-
-
-
-						/* ------ TO WRITE ------ */
-void generate_matrix(const int matrix_size, const int max_rand, LaGenMatDouble& matrix){
+	/* initialise everything */
     int matrix_volume = matrix_size * matrix_size;
-    COMPLEX elements[matrix_volume];
+	LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
+
+    /* generate matrix A */
+    double elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
-    matrix = LaGenMatDouble(elements, matrix_size, matrix_size, false);
+	LaGenMatDouble matrixA = LaGenMatDouble(elements, matrix_size, matrix_size, false );
+    print_matrix(matrixA, "Matrix A");
+
+    /* generate matrix B */
+    generate_array(elements, matrix_volume, max_rand);
+	LaGenMatDouble matrixB = LaGenMatDouble(elements, matrix_size, matrix_size, false );
+    print_matrix(matrixB, "Matrix B");
+
+    /* generate matrix A^T */
+    LaGenMatDouble transposeA;
+    matrix_transpose(matrixA, matrix_size, transposeA);
+    print_matrix(transposeA, "transpose A");
+
+    /* generate matrix B^T */
+    LaGenMatDouble transposeB;
+    matrix_transpose(matrixB, matrix_size, transposeB);
+    print_matrix(transposeB, "transpose B");
+
+    /* A * B */
+    Blas_Mat_Mat_Mult(matrixA, matrixB, result);
+    print_matrix(result, "Matrix A * Matrix B");
+
+    /* A^T * B */
+    Blas_Mat_Mat_Mult(transposeA, matrixB, result);
+    print_matrix(result, "Matrix A^T * Matrix B");
+
+    /* A * B^T */
+    Blas_Mat_Mat_Mult(matrixA, transposeB, result);
+    print_matrix(result, "Matrix A * Matrix B^T");
+
+    /* A^T * B^T */
+    Blas_Mat_Mat_Mult(transposeA, transposeB, result);
+    print_matrix(result, "Matrix A^T * Matrix B^T");
+}
+void matrix_inverse(LaGenMatDouble& matrix, int matrix_size){
+    LaVectorLongInt PIV = LaVectorLongInt(matrix_size);
+    LUFactorizeIP(matrix, PIV);
+    LaLUInverseIP(matrix, PIV);
+}
+void test_inverse(const LaGenMatDouble& initialMatrix, const int matrix_size){
+    LaGenMatDouble inverseMatrix;
+    inverseMatrix = initialMatrix.copy();
+    matrix_inverse(inverseMatrix, matrix_size);
+    print_matrix(inverseMatrix, "inverse matrix");
+}
+void matrix_product(LaGenMatDouble& product, const LaGenMatDouble& matrix){
+    LaGenMatDouble result = matrix.copy();
+    Blas_Mat_Mat_Mult(product, matrix, result);
+    product = result.copy();
+}
+void test_matrix_product(const int matrix_size, const int max_rand){
+    /* initialise everything */
+    LaGenMatDouble matrixA;
+    LaGenMatDouble matrixB;
+    /* generate everything */
+    generate_matrix(matrix_size, max_rand, matrixA);
+    generate_matrix(matrix_size, max_rand, matrixB);
+    /* print everything */
+    print_matrix(matrixA, "Matrix A");
+    print_matrix(matrixB, "Matrix B");
+    /* matrix product */
+    matrix_product(matrixA, matrixB);
+    print_matrix(matrixB, "result");
+}
+void recombine_diagonalised_matrices(const int matrix_size, LaGenMatDouble& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatDouble& result){
+    /* initialise  everything */
+    LaGenMatDouble eigenvalueMatrix = LaGenMatDouble::zeros(matrix_size, matrix_size);
+    LaGenMatDouble transposeEigenvectors;
+    /* process matrices */
+    result = eigenvectors.copy();
+    vec_to_diag(eigenvalues, matrix_size, eigenvalueMatrix);
+    matrix_inverse(eigenvectors, matrix_size);
+    /* print matrices */
+    //print_matrix(result, "U - eigenvectors (check if column based?)");
+    //print_matrix(eigenvalueMatrix, "D - eigenvalues (vector)");
+    //print_matrix(eigenvectors, "U^-1 - inverse eigenvectors");
+    /* multiply results */
+    matrix_product(result, eigenvalueMatrix);
+    matrix_product(result, eigenvectors);
+    /* print results */
+    //print_matrix(result, "U D U^-1");
 }
 void test_eigenvalues(const int matrix_size, const int max_rand){
     /* initialise everything */
@@ -267,94 +365,8 @@ void test_eigenvalues(const int matrix_size, const int max_rand){
     /* wolfram test */
         // 2x2 real:
         // 3x3 complex: {{1+7i, 1+3i, 5+7i},{7i, 6+i, 5+4i},{5+7i, 5+4i, 6}}
-}//working
-
-void test_matrix_product(const int matrix_size, const int max_rand){
-    /* initialise everything */
-    LaGenMatDouble matrixA;
-    LaGenMatDouble matrixB;
-    /* generate everything */
-    generate_matrix(matrix_size, max_rand, matrixA);
-    generate_matrix(matrix_size, max_rand, matrixB);
-    /* print everything */
-    print_matrix(matrixA, "Matrix A");
-    print_matrix(matrixB, "Matrix B");
-    /* matrix product */
-    matrix_product(matrixA, matrixB);
-    print_matrix(matrixB, "result");
-}//working
-
-void n_matrix_product(const double matrices[], const int matrix_size, const int n, LaGenMatDouble& product){
-
-	/* Plan */
-		// I want to multiply an arbitrary number of matrices
-		// to do this, i'll store each matrix as an array
-		// and convert from an array to matrix as needed
-		// ideally, if i could do this with lapackpp
-			// but lapack only does this with column ordered matrices
-			// i only need to do this with the B matrices
-				// B = exp(-H) * exp(-V)
-				// H doesn't care if it's row ordered or column ordered
-				// V also doesnt care
-				// so neither does B?
-		// so the steps are
-
-		/* [ ] Input */
-			// [ ] no of matrices		- int
-			// [ ] point[matrix_size] 	- double
-
-		/* [ ] Processing */
-			// [ ] convert the first pointer to a matrix
-			// [ ] the product = the first matrix
-			// [ ] for each subsequent pointer (matrix)
-				// [ ] convert the pointer to a matrix
-				// [ ] multiply it with the ongoing product
-
-		/* [ ] Output */
-			// [ ] return the product
-
-	/* initialise everything */
-
-	/* multiply the matrices */
-
-
-
-
-
-    // if(n <= 0){
-    //     return;
-    // }
-    // Blas_Mat_Mat_Mult(product, * matrices[0], product);
-    // n_matrix_product(product, matrices + 1, n - 1 );
-
 }
-void test_n_matrix_product(){
-
-    /* initialise everything */
-    int n = 3, matrix_size = 5, max_rand = 9;
-    LaGenMatDouble* matrices[n];
-        // this is an array of pointers
-    LaGenMatDouble product = LaGenMatDouble::eye(2, 2);
-
-    for(int i = 0; i < n; i++){
-
-        /* generate everything */
-        generate_matrix(matrix_size, max_rand, *matrices[n]);
-
-        /* print everything */
-        cout << "(" << n << ")" << endl;
-        print_matrix(*matrices[n]);
-    }
-
-    /* multiply everything */
-    n_matrix_product(product, matrices, n);
-
-    /* print everything */
-    print_matrix(product, "result");
-}
-
 void matrix_negative(const int matrix_size, LaGenMatDouble& matrix){
-
     LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
 
     for(int i = 0; i < matrix_size; i++){
@@ -373,28 +385,34 @@ void matrix_negative(const int matrix_size, const LaGenMatDouble& matrix, LaGenM
         }
     }
 }
-
 void scalar_exponential_main(const double& number, const int iterations, double& result){
-
-    double division, total_division;
-    result.r = 1;
+    double division, product, total_division;
+    result = 1;
     for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
-        total_division.r = 1;
-        total_division.i= 0;
+        total_division = 1;
         for(int i = 1; i <= step; i++){        //    ( num^n / n!)
-            scalar_division(number, i, division);
-            scalar_product(total_division, division);
+			division = number / i;
+            total_division *= division;
         }
-        scalar_sum(result, total_division);
+        result += total_division
     }
-}//probably working
-
+}
+void test_scalar_exponential(const int max_rand, const int iterations){
+    double number, result;
+    generate_scalar(number, max_rand);
+    cout << endl << "scalar exponential test no.: " << number << endl << endl;
+    scalar_exponential_main(number, iterations, result);
+    cout << "e^" << number << " = " << result << endl;
+}
+void test_scalar_exponential(double& number, const int iterations, double& result){
+    scalar_exponential_main(number, iterations, result);
+    cout << "e^" << number << " = " << result << endl;
+}
 void vector_exponential(const LaVectorComplex& vector, const int matrix_size, const int iterations, LaVectorComplex& result){
     for(int i = 0; i < matrix_size; i++){
         scalar_exponential_main(vector(i), iterations, result(i));
     }
 }
-
 void matrix_exponential(const LaGenMatDouble& matrix, const int matrix_size, const int iterations, LaGenMatDouble& result){
 
     /* initialise everything */
@@ -427,12 +445,11 @@ void test_matrix_exponential(const int matrix_size, const int max_rand, const in
 void test_idenpotent_exponential(const int iterations){
     /* generate the matrix */
     int numbers [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
-    COMPLEX elements[9];
+    double elements[9];
     for(int i = 0; i < 9; i++){
-        elements[i].r = numbers[i];
-        elements[i].i = 0;
+        elements[i] = numbers[i];
     }
-    LaGenMatDouble matrix = LaGenMatDouble(elements, 3, 3, false );
+    LaGenMatDouble matrix = LaGenMatDouble(elements, 3, 3, false);
     LaGenMatDouble result = LaGenMatDouble::zeros(3, 3);
     //print_matrix(matrix, "initial matrix");
     /* calculate the exponential */
@@ -444,8 +461,6 @@ void test_idenpotent_exponential(const int iterations){
     matrix_exponential(matrix, 3, iterations, result);
     print_matrix(result, "idenpotent exponential");
 }
-
-
 void B_calculation(LaGenMatDouble& H, LaGenMatDouble& V, LaGenMatDouble& B, const int lattice_size, const int iterations){
 
 	/* Plan */
@@ -469,7 +484,6 @@ void B_calculation(LaGenMatDouble& H, LaGenMatDouble& V, LaGenMatDouble& B, cons
 	/* calculate B */
     B = expH.copy();
     matrix_product(B, expV);
-
 }
 void test_B_generation(){
 
@@ -481,8 +495,8 @@ void test_B_generation(){
 
     /* generate matrices */
     for(int i = 0; i < time_size; i++){
-        H(i,i) = basic_random_int(max_rand);
-        V(i,i) = basic_random_int(max_rand);
+        H(i,i) = random_int(max_rand);
+        V(i,i) = random_int(max_rand);
     }
 
     /* print matrices */
@@ -495,6 +509,91 @@ void test_B_generation(){
     /* print result */
     print_matrix(B,"B = e^-H e^-V");
 }
+
+							/* ------ TO CONVERT ------ */
+
+							// LaGenMatComplex 	  -> LaGenMatDouble
+							// COMPLEX 			  -> double
+							// float			  -> double
+							// .r and .i		  ->
+							// matrix_size 		  -> lattice_size or time_size
+							// len 				  -> array_size
+							// matrix_eigenvstuff -> LaEigSolve
+							// generate_H		  -> H_generation
+							// scalar_...		  -> + - / ...
+							// basic_random_int   -> random_int
+//
+
+// void n_matrix_product(const double matrices[], const int matrix_size, const int n, LaGenMatDouble& product){
+//
+// 	/* Plan */
+// 		// I want to multiply an arbitrary number of matrices
+// 		// to do this, i'll store each matrix as an array
+// 		// and convert from an array to matrix as needed
+// 		// ideally, if i could do this with lapackpp
+// 			// but lapack only does this with column ordered matrices
+// 			// i only need to do this with the B matrices
+// 				// B = exp(-H) * exp(-V)
+// 				// H doesn't care if it's row ordered or column ordered
+// 				// V also doesnt care
+// 				// so neither does B?
+// 		// so the steps are
+//
+// 		/* [ ] Input */
+// 			// [ ] no of matrices		- int
+// 			// [ ] point[matrix_size] 	- double
+//
+// 		/* [ ] Processing */
+// 			// [ ] convert the first pointer to a matrix
+// 			// [ ] the product = the first matrix
+// 			// [ ] for each subsequent pointer (matrix)
+// 				// [ ] convert the pointer to a matrix
+// 				// [ ] multiply it with the ongoing product
+//
+// 		/* [ ] Output */
+// 			// [ ] return the product
+//
+// 	/* initialise everything */
+//
+// 	/* multiply the matrices */
+//
+//
+//
+//
+//
+//     if(n <= 0){
+//         return;
+//     }
+//     Blas_Mat_Mat_Mult(product, * matrices[0], product);
+//     n_matrix_product(product, matrices + 1, n - 1 );
+//
+// }
+// void test_n_matrix_product(){
+//
+//     /* initialise everything */
+//     int n = 3, matrix_size = 5, max_rand = 9;
+//     LaGenMatDouble* matrices[n];
+//         // this is an array of pointers
+//     LaGenMatDouble product = LaGenMatDouble::eye(2, 2);
+//
+//     for(int i = 0; i < n; i++){
+//
+//         /* generate everything */
+//         generate_matrix(matrix_size, max_rand, *matrices[n]);
+//
+//         /* print everything */
+//         cout << "(" << n << ")" << endl;
+//         print_matrix(*matrices[n]);
+//     }
+//
+//     /* multiply everything */
+//     n_matrix_product(product, matrices, n);
+//
+//     /* print everything */
+//     print_matrix(product, "result");
+// }
+
+//18:49
 
 // void O_stuff(){
 // 	/* initialise everything */
