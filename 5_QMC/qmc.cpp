@@ -9,6 +9,10 @@
 #include <math.h>
 
 using namespace std;
+						/* ------ NOTES ------ */
+// be careful with row ordering
+	// true = row ordered + DOES NOT link to the array it was made with
+	// false = column ordered + LINKS to the array it was made with
 
 						/* ------ WORKING ------ */
 
@@ -235,7 +239,7 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatDouble& 
     int matrix_volume = matrix_size * matrix_size;
     double elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
-    matrix = LaGenMatDouble(elements, matrix_size, matrix_size, false);
+    matrix = LaGenMatDouble(elements, matrix_size, matrix_size, true);
 }
 void matrix_to_array(const LaGenMatDouble& matrix, const int matrix_size, double array[]){
 	for(int j = 0; j < matrix_size; j++){
@@ -265,21 +269,17 @@ void test_matrix_multiplication(){
 	int matrix_size = 2, max_rand = 9;
     int matrix_volume = matrix_size * matrix_size;
 	LaGenMatDouble result = LaGenMatDouble::zeros(matrix_size, matrix_size);
+	LaGenMatDouble matrixA = LaGenMatDouble::zeros(matrix_size, matrix_size);
+	LaGenMatDouble matrixB = LaGenMatDouble::zeros(matrix_size, matrix_size);
+	double elements[matrix_volume];
 
-    /* generate matrix A */
-    double elements[matrix_volume];
-    generate_array(elements, matrix_volume, max_rand);
-	LaGenMatDouble matrixA = LaGenMatDouble(elements, matrix_size, matrix_size, true );
-    print_matrix(matrixA, "initial Matrix A");
-
-    /* generate matrix B */
-    generate_array(elements, matrix_volume, max_rand);
-	LaGenMatDouble matrixB = LaGenMatDouble(elements, matrix_size, matrix_size, true );
+    /* generate the matrices */
+	generate_matrix(matrix_size, max_rand, matrixA);
+	generate_matrix(matrix_size, max_rand, matrixB);
 
     /* A * B */
     print_matrix(matrixA, "Matrix A");
     print_matrix(matrixB, "Matrix B");
-	print_matrix(result, "initial result");
     Blas_Mat_Mat_Mult(matrixA, matrixB, result);
     print_matrix(result, "result = Matrix A * Matrix B");
 }
@@ -414,7 +414,7 @@ void test_idenpotent_exponential(const int iterations){
 
 	/* initialise everything */
     double numbers[] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
-    LaGenMatDouble matrix = LaGenMatDouble(numbers, 3, 3, false);
+    LaGenMatDouble matrix = LaGenMatDouble(numbers, 3, 3, false);		// test this row ordering!!!
     LaGenMatDouble result = LaGenMatDouble::zeros(3, 3);
     print_matrix(matrix, "initial matrix");
 
@@ -583,5 +583,5 @@ void test_B_generation(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_multiplication();
+    test_idenpotent_exponential();
 }
