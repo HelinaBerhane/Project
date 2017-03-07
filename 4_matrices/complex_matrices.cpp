@@ -1442,7 +1442,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
     // for sigma = +-1
     for(int s = 0; s < 1; s++){
         // reset all variables
-        O = LaGenMatComplex::zeros(lattice_size, lattice_size);
+        O = LaGenMatComplex::eye(lattice_size, lattice_size);
         sigma = s * 2 - 1;
         // cout << "sigma = " << sigma << endl;
         // for each time_slice
@@ -1481,15 +1481,19 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             // print_array(storage, storage_size, "storage");
             /* multiply the matrices */
             n_matrix_product(storage, lattice_size, time_size, O);
+            print_array(storage, storage_size, "storage");
+            print_matrix(O, "B_1 B_2 B_...");
         }
         // print_array(storage, storage_size, "storage");
         // add 1
         matrix_sum(lattice_size, O, I);
+        print_matrix(O, "O");
         // calculate det O
         matrix_determinant(lattice_size, O, detO);
+        print_scalar(detO, "detO");
         // calculate det O up * det O down
         scalar_product(weight, detO);
-        print_scalar(detO, "detO");
+        print_scalar(weight, "weight");
     }
 }
 void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const float lambda, const float delta_tau, const int time_size, const int iterations){
