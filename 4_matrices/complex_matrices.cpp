@@ -150,8 +150,8 @@ void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
 }//working
 void generate_lattice_matrix(const int lattice_size, const int time_size, LaGenMatComplex& lattice){
     lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    for(int l = 0; l < lattice_size; l++){
-        for(int t = 0; t < time_size; t++){
+    for(int l = 0; l < time_size; l++){
+        for(int t = 0; t < lattice_size; t++){
             lattice(l, t).r = generate_spins();
         }
     }
