@@ -1474,7 +1474,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             /* multiply the matrices */
             n_matrix_product(storage, lattice_size, time_size, O);
         }
-        print_array(storage, storage_size, "storage");
+        // print_array(storage, storage_size, "storage");
         // add 1
         matrix_sum(lattice_size, O, I);
         // calculate det O
