@@ -1456,16 +1456,16 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
 
             // isolate the time slice
             isolate_row(lattice, lattice_size, t, slice);
-            print_matrix(lattice, "lattice");
-            cout << endl << "current time slice = " << t << endl;
-            print_array(slice, lattice_size, "lattice");
+            // print_matrix(lattice, "lattice");
+            // cout << endl << "current time slice = " << t << endl;
+            // print_array(slice, lattice_size, "lattice");
 
             // calculate all variables
             // print_array(slice, lattice_size, "slice");
             V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
             // print_matrix(V, "V");
             B_calculation(H, V, B, lattice_size, iterations);
-            print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+
             // print_matrix(B, "B");
 
             // store the elements of the B matrix in an array
@@ -1490,6 +1490,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
         matrix_determinant(lattice_size, O, detO);
         // calculate det O up * det O down
         scalar_product(product, detO);
+        print_scalar(detO, "detO");
     }
 }
 void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const float lambda, const float delta_tau, const int time_size, const int iterations){
