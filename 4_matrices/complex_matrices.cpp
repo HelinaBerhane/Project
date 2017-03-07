@@ -1425,7 +1425,9 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
     LaGenMatComplex B;
     LaGenMatComplex O;
     LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
-    COMPLEX product = LaGenMatComplex::eye(lattice_size, lattice_size);
+    COMPLEX product;
+    product.r = 1;
+    product.i = 0;
     COMPLEX detO;
     COMPLEX slice[lattice_size];
     COMPLEX storage[storage_size];
