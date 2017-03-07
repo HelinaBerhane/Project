@@ -533,14 +533,6 @@ void V_calculation(const COMPLEX slice[], const int lattice_size, const float U,
     /* initialise everything */
     float V_test = 0, mu = 0, beta = 10, time_size = 17;
     COMPLEX V_ii[lattice_size];
-    for(int i = 0; i < lattice_size; i++){
-        V_ii[i].r = i;
-        V_ii[i].i = 0;
-    }
-    print_array(V_ii, lattice_size, "initial V");
-
-    print_array(slice, lattice_size, "slice");
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
 
     /* V_ii = lambda sigma s_l + + mu - U / 2 */
     for(int i = 0; i < lattice_size; i++){
@@ -548,7 +540,7 @@ void V_calculation(const COMPLEX slice[], const int lattice_size, const float U,
         // cout << "V test = " << V_test << endl;
         scalar_multiplication_f(slice[i], V_test, V_ii[i]);
         V_ii[i].r = V_ii[i].r + mu - (U / 2);
-        cout << "V test = " << V_ii[i].r << endl;
+        // cout << "V test = " << V_ii[i].r << endl;
     }
     /* given a lattice */
     array_to_diag(V_ii, lattice_size, V);
@@ -1455,10 +1447,11 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             // isolate the time slice
             isolate_row(lattice, lattice_size, t, slice);
             // calculate all variables
+            print_array(slice, lattice_size, "slice");
             V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
-            print_matrix(V, "V");
+            // print_matrix(V, "V");
             B_calculation(H, V, B, lattice_size, iterations);
-            print_matrix(B, "B");
+            // print_matrix(B, "B");
             // store the elements of the B matrix in an array
             for(int r = 0; r < lattice_size; r++){
                 for(int c = 0; c < lattice_size; c++){
