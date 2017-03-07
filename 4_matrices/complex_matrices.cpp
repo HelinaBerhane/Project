@@ -1415,7 +1415,7 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
     COMPLEX detO;
     COMPLEX storage[storage_size];
     for(int i = 0; i < storage_size; i++){
-        storage[i].r = i;
+        storage[i].r = 0;
         storage[i].i = 0;
     }
     print_array(storage, storage_size, "storage");
@@ -1442,13 +1442,14 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
             print_matrix(B, "B");
             for(int r = 0; r < lattice_size; r++){
                 for(int c = 0; c < lattice_size; c++){
-                    int e = r * lattice_size + c;
-                    int i = t * lattice_volume + e;
+                    int i = (t * lattice_volume) + (r * lattice_size) + c;
                     storage[i].r = B(r, c).r;
                     storage[i].i = B(r, c).i;
-                    print_scalar(storage[i]);
+                    // print_scalar(storage[i]);
                 }
             }
+            cout << endl;
+            print_array(storage, storage_size, "storage");
             /* multiply the matrices */
             n_matrix_product(storage, lattice_size, time_size, O);
         }
