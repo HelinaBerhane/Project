@@ -1359,7 +1359,7 @@ void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int 
         matrix_product(result, matrix);
         // test
         print_matrix(matrix, "current matrix");
-        print_matrix(result, "current product");
+        // print_matrix(result, "current product");
     }
 }
 
