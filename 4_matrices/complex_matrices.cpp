@@ -1417,6 +1417,8 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
     generate_H(lattice_size, H);
     // for sigma = +-1
     for(int s = 0; s < 1; s++){
+        // reset all variables
+        O = LaGenMatComplex::zeros(lattice_size, lattice_size);
         sigma = s * 2 - 1;
         cout << "sigma = " << sigma << endl;
         // for each time_slice
@@ -1425,8 +1427,6 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
             // reset all variables
             V = LaGenMatComplex::zeros(lattice_size, lattice_size);
             B = LaGenMatComplex::zeros(lattice_size, lattice_size);
-            O = LaGenMatComplex::zeros(lattice_size, lattice_size);
-            detO = LaGenMatComplex::zeros(lattice_size, lattice_size);
             // calculate all variables
             V_calculation(lattice, time_size, U, lambda, sigma, delta_tau, V);
             B_calculation(H, V, B, lattice_size, iterations);
