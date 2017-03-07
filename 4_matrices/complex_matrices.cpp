@@ -1616,7 +1616,7 @@ void test_general_sweep(){
 int main(){
 
     cout << "---- TESTING LATTICE GENERATION ----" << endl;
-    test_isolate_row();
+    test_general_sweep();
     /* notes */
 
 }
