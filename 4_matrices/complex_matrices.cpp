@@ -1487,7 +1487,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
         scalar_product(product, detO);
     }
 }
-void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const float lambda, const float delta_tau, const int time_size; const int iterations){
+void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const float lambda, const float delta_tau, const int time_size, const int iterations){
     /* Plan */
 
         /* Input */
