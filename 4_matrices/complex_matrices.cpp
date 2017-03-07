@@ -1445,7 +1445,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
         sigma = s * 2 - 1;
         // cout << "sigma = " << sigma << endl;
         // for each time_slice
-        cout << "no of time slices = " << time_size << endl;
+        // cout << "no of time slices = " << time_size << endl;
         for(int t = 0; t < time_size; t++){    // check the order of multiplication!!!
             // cout << "current time slice = " << t << endl;
             // reset all variables
@@ -1473,7 +1473,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
                     // print_scalar(storage[i]);
                 }
             }
-            cout << endl;
+            // cout << endl;
             // print_array(storage, storage_size, "storage");
             /* multiply the matrices */
             n_matrix_product(storage, lattice_size, time_size, O);
