@@ -1120,11 +1120,11 @@ void test_random_probability(){
 void test_lattice_generation(){
 
     /* initialise everything */
-    int matrix_size = 5;
+    int lattice_size = 3, time_size = 4;
     LaGenMatComplex lattice;
 
     /* generate the lattice */
-    generate_lattice_matrix(matrix_size, lattice);
+    generate_lattice_matrix(lattice_size, time_size, lattice);
 
     /* print result */
     print_matrix(lattice, "random spins");
@@ -1292,7 +1292,7 @@ void test_sweep(){
     cout << "delta tau = " << delta_tau<< endl;
 
     /* generate a lattice of spins */
-    generate_lattice_matrix(matrix_size, lattice);
+    generate_lattice_matrix(matrix_size, matrix_size, lattice);
 
     /* sweep the lattice */
     sweep_lattice(matrix_size, lattice, U, iterations);
@@ -1337,7 +1337,7 @@ void test_increasing_U(){//in progress
         cout << "delta tau = " << delta_tau<< endl;
 
         /* generate a lattice of spins */
-        generate_lattice_matrix(matrix_size, lattice);
+        generate_lattice_matrix(matrix_size, matrix_size, lattice);
 
         /* sweep the lattice */
         sweep_lattice(matrix_size, lattice, U, iterations);
@@ -1599,7 +1599,7 @@ void test_general_sweep(){
     int lattice_volume = lattice_size * time_size;
 
     /* generate the lattice */
-    generate_lattice_matrix(lattice_volume, lattice);
+    generate_lattice_matrix(lattice_size, time_size, lattice);
 
     /* sweep the lattice */
     general_sweep(lattice_size, lattice, U, beta, iterations);
@@ -1609,8 +1609,8 @@ void test_general_sweep(){
 /* --- Main QMC Program --- */
 int main(){
 
-    cout << "---- TESTING GENERALISED SWEEP ----" << endl;
-    test_general_sweep();
+    cout << "---- TESTING LATTICE GENERATION ----" << endl;
+    test_lattice_generation();
     /* notes */
 
 }
