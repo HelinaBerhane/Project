@@ -9,11 +9,8 @@ CXXFLAGS = -llapackpp -Wall -g
 
 all: matrix
 
-matrix: complex_matrices.o complex_matrices.h pull
+matrix: complex_matrices.o complex_matrices.h
 	$(CXX) complex_matrices.o -I$(Inc) -L$(Lib) $(CXXFLAGS) -o matrix
 
 complex_matrices.o: complex_matrices.cpp complex_matrices.h
 	$(CXX) -I$(Inc) -L$(Lib) $(CXXFLAGS) -c complex_matrices.cpp
-
-pull:
-	git pull origin master
