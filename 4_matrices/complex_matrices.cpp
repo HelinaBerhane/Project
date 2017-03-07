@@ -1445,6 +1445,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             V = LaGenMatComplex::zeros(lattice_size, lattice_size);
             B = LaGenMatComplex::zeros(lattice_size, lattice_size);
             // isolate the time slice
+            print_matrix(lattice, "lattice");
             isolate_row(lattice, lattice_size, t, slice);
             // calculate all variables
             print_array(slice, lattice_size, "slice");
