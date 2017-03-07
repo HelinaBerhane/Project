@@ -148,11 +148,11 @@ void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
         elements[i].i = 0;
     }
 }//working
-void generate_lattice_matrix(const int matrix_size, LaGenMatComplex& lattice){
-    lattice = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    for(int i = 0; i < matrix_size; i++){
-        for(int j = 0; j < matrix_size; j++){
-            lattice(i, j).r = generate_spins();
+void generate_lattice_matrix(const int lattice_size, const int time_size, LaGenMatComplex& lattice){
+    lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    for(int l = 0; l < lattice_size; l++){
+        for(int t = 0; t < time_size; t++){
+            lattice(l, t).r = generate_spins();
         }
     }
 }//working
@@ -1411,7 +1411,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
 
     /* initialise everything */
     int iterations = 100;
-    int lattice_volume = lattice_size * lattice_size;
+    int lattice_volume = lattice_size * time_size;
     int storage_size = lattice_volume * time_size;
     float sigma, beta = 10;
     LaGenMatComplex H;
@@ -1477,7 +1477,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
         scalar_product(product, detO);
     }
 }
-void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const int iterations){
+void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const float lambda, const float delta_tau, const int iterations){
     /* Plan */
 
         /* Input */
@@ -1510,10 +1510,6 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
     float probability, prob, lambda, delta_tau;
     string result;
     int time_size, count = 0;
-
-    /* calculate initial parameters */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
 
     /* set up output headings */
     cout.width(11);
@@ -1593,11 +1589,17 @@ void test_general_sweep(){
 
     /* initialise everything */
     int lattice_size = 5, iterations = 3;
-    float U = 1, beta = 10;
+    float U = 1, beta = 10, lambda, delta_tau;
+    int time_size;
     LaGenMatComplex lattice;
 
+    /* calculate initial parameters */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    int lattice_volume = lattice_size * time_size;
+
     /* generate the lattice */
-    generate_lattice_matrix(lattice_size, lattice);
+    generate_lattice_matrix(lattice_volume, lattice);
 
     /* sweep the lattice */
     general_sweep(lattice_size, lattice, U, beta, iterations);
