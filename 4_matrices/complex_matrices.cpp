@@ -1507,7 +1507,7 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
 
     /* initialise everything */
     COMPLEX weightBefore, weightAfter, slice[lattice_size];
-    float probability, prob, lambda, delta_tau;
+    float probability, prob;
     string result;
     int time_size, count = 0;
 
@@ -1602,7 +1602,7 @@ void test_general_sweep(){
     generate_lattice_matrix(lattice_size, time_size, lattice);
 
     /* sweep the lattice */
-    general_sweep(lattice_size, lattice, U, beta, iterations);
+    general_sweep(lattice_size, lattice, U, beta, lambda, delta_tau, iterations);
 }
 
 
