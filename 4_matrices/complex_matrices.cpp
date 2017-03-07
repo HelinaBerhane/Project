@@ -185,8 +185,8 @@ void copy_array(const int len, const COMPLEX array[], COMPLEX copy[]){//in progr
         //
     }
 }
-void isolate_row(const LaGenMatComplex& matrix, const int len, const int row, COMPLEX array[]){
-    for(int i = 0; i < len; i++){
+void isolate_row(const LaGenMatComplex& matrix, const int matrix_width, const int row, COMPLEX array[]){
+    for(int i = 0; i < matrix_width; i++){
         array[i] = matrix(row, i);
     }
 }
@@ -1110,9 +1110,9 @@ void test_isolate_row(){
 
     /* isolate and print rows */
     for(int row = 0; row < matrix_length; row++){
-        isolate_row(matrix, matrix_size, row, array);
+        isolate_row(matrix, matrix_width, row, array);
         cout << " Row (" << row << "):";
-        print_array(array, matrix_size);
+        print_array(array, matrix_width);
     }
 }//working
 
