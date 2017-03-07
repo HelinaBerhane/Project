@@ -950,7 +950,6 @@ void test_matrix_product(const int matrix_size, const int max_rand){
 
 
 
-
 // void test_matrix_arrays(){
 //
 //     /* initialise everything */
