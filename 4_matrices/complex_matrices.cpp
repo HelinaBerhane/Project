@@ -1373,7 +1373,7 @@ void test_n_matrix_product(){
 
     /* generate matrices (skip to storage) */
     generate_real_array(storage, storage_size, max_rand);
-    print_array(storage, storage_size, storage);
+    print_array(storage, storage_size, "storage");
 
     /* multiply everything */
     n_matrix_product(storage, matrix_size, n, result);
