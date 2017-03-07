@@ -1405,7 +1405,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
     int iterations = 100;
     int lattice_volume = lattice_size * lattice_size;
     int storage_size = lattice_volume * time_size;
-    float sigma;
+    float sigma, beta = 10;
     LaGenMatComplex H;
     LaGenMatComplex V;
     LaGenMatComplex B;
