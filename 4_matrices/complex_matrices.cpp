@@ -1535,7 +1535,9 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
                 /* calculate the weight before the flip */
                 general_weight(lattice_size, time_size, lattice, U, lambda, delta_tau, weightBefore);
                 /* propose the flip */
+                print_scalar(lattice(t,l), "before");
                 flip_scalar(lattice(t,l));
+                print_scalar(lattice(t,l), "after");
 
                 /* calculate the weight after the flip */
                 general_weight(lattice_size, time_size, lattice, U, lambda, delta_tau, weightAfter);
@@ -1545,15 +1547,14 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
 
                 /* accept or reject the flip */
                 if(abs(probability) >= 1){
-                    flip_scalar(lattice(t, l)); //accept
                     result = "accepted";
                 }else{
                     prob = random_probability();
                     if(probability > prob){
-                        flip_scalar(lattice(t, l)); //accept
                         result = "accepted";
                     }else{
                         // cout << " rejected" << endl;
+                        flip_scalar(lattice(t, l));
                         result = "rejected";
                     }
                 }
