@@ -1100,8 +1100,9 @@ void test_isolate_row(){
 
     /* initialise everything  */
     int matrix_width = 3, matrix_length = 5, max_rand = 9;
+
     LaGenMatComplex matrix;
-    COMPLEX array[matrix_size];
+    COMPLEX array[matrix_width];
 
     /* generate matrix */
     generate_general_matrix(matrix_width, matrix_length, max_rand, matrix);
