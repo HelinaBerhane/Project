@@ -1617,13 +1617,19 @@ void test_general_sweep(){
     /* sweep the lattice */
     general_sweep(lattice_size, lattice, U, beta, lambda, delta_tau, time_size, iterations);
 }
+void test_generate_lattice_matrix(){
+    int lattice_size = 5, time_size = 17;
+    LaGenMatComplex lattice;
+    generate_lattice_matrix(lattice_size, time_size, lattice);
+    print_matrix(lattice);
+}
 
 
 /* --- Main QMC Program --- */
 int main(){
 
     cout << "---- TESTING LATTICE GENERATION ----" << endl;
-    test_general_sweep();
+    test_generate_lattice_matrix();
     /* notes */
 
 }
