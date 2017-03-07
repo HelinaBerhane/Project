@@ -936,38 +936,35 @@ void test_matrix_product(const int matrix_size, const int max_rand){
 
 
 
-void test_matrix_arrays(){
-
-    /* initialise everything */
-    int n = 3, matrix_size = 5, max_rand = 9;
-    LaGenMatComplex* matrices[1];
-    *matrices[0] = LaGenMatComplex::eye(2, 2);
-
-    LaGenMatComplex mgds;
-
-    /* generate everything */
-    // generate_matrix(matrix_size, max_rand, matrices[0]);
-    // *matrices[0] = LaGenMatComplex::eye(matrix_size, matrix_size);
-
-    mgds = *matrices[0];
-    cout << matrices[0] << endl;
-    cout << mgds(1,1) << endl;
-        // this is an array of pointers to matrices
-    // LaGenMatComplex product = LaGenMatComplex::eye(2, 2);
-    //
-    // for(int i = 0; i < n; i++){
-    //
-    //     /* generate everything */
-    //     generate_matrix(matrix_size, max_rand, *matrices[n]);
-    //
-    //     /* print everything */
-    //     cout << "(" << n << ")" << endl;
-    //     print_matrix(*matrices[n]);
-    // }
-}
-
-
-
+// void test_matrix_arrays(){
+//
+//     /* initialise everything */
+//     int n = 3, matrix_size = 5, max_rand = 9;
+//     LaGenMatComplex* matrices[1];
+//     *matrices[0] = LaGenMatComplex::eye(2, 2);
+//
+//     LaGenMatComplex mgds;
+//
+//     /* generate everything */
+//     // generate_matrix(matrix_size, max_rand, matrices[0]);
+//     // *matrices[0] = LaGenMatComplex::eye(matrix_size, matrix_size);
+//
+//     mgds = *matrices[0];
+//     cout << matrices[0] << endl;
+//     cout << mgds(1,1) << endl;
+//         // this is an array of pointers to matrices
+//     // LaGenMatComplex product = LaGenMatComplex::eye(2, 2);
+//     //
+//     // for(int i = 0; i < n; i++){
+//     //
+//     //     /* generate everything */
+//     //     generate_matrix(matrix_size, max_rand, *matrices[n]);
+//     //
+//     //     /* print everything */
+//     //     cout << "(" << n << ")" << endl;
+//     //     print_matrix(*matrices[n]);
+//     // }
+// }
 
 
 
@@ -1339,14 +1336,14 @@ void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int 
     /* reset variables */
     result = LaGenMatComplex::eye(matrix_size, matrix_size);
     //for each matrix
-    for(int m = 0, m < n, m++){
+    for(int m = 0; m < n; m++){
         // reset variables
         matrix = LaGenMatComplex::eye(matrix_size, matrix_size);
         // convert the storage to a matrix
         for(int r = 0; r < matrix_size; r++){
             for(int c = 0; c < matrix_size; c++){
-                e = r * matrix_size + c;
-                i = m * n + e;
+                int e = r * matrix_size + c;
+                int i = m * n + e;
                 matrix(r, c).r = storage[i].r;
                 matrix(r, c).i = storage[i].i;
             }
@@ -1361,7 +1358,7 @@ void test_n_matrix_product(){
 
     /* initialise everything */
     int n = 3, matrix_size = 2, max_rand = 4;
-    storage_size = matrix_size * matrix_size * n;
+    int storage_size = matrix_size * matrix_size * n;
     COMPLEX storage[storage_size];
     LaGenMatComplex result = LaGenMatComplex::eye(matrix_size, matrix_size);
 
@@ -1559,33 +1556,33 @@ void test_n_matrix_product(){
 //     general_sweep(matrix_size, lattice, U, beta; iterations);
 // }
 // void test_general_sweep(){
-    /* Plan */
-        /* [x] Input */
-            // [x] matrix_size  - int
-            // [x] iterations   - int
-            // [x] lattice      - LaGenMatComplex
-            // [x] U            - float
-            // [x] beta         - float
-
-        /* [x] Processing */
-            // [x] generate a lattice of spins
-            // [x] sweep the lattice
-
-        /* [ ] Output */
-            // [ ] average spins
-            // [ ] acceptance probabilities
-
-    /* initialise everything */
-    int matrix_size = 5, iterations = 3;
-    float U = 1, beta = 10;
-    LaGenMatComplex lattice;
-
-    /* generate the lattice */
-    generate_lattice_matrix(matrix_size, lattice);
-
-    /* sweep the lattice */
-    general_sweep(matrix_size, lattice, U, beta, iterations);
-}
+//     /* Plan */
+//         /* [x] Input */
+//             // [x] matrix_size  - int
+//             // [x] iterations   - int
+//             // [x] lattice      - LaGenMatComplex
+//             // [x] U            - float
+//             // [x] beta         - float
+//
+//         /* [x] Processing */
+//             // [x] generate a lattice of spins
+//             // [x] sweep the lattice
+//
+//         /* [ ] Output */
+//             // [ ] average spins
+//             // [ ] acceptance probabilities
+//
+//     /* initialise everything */
+//     int matrix_size = 5, iterations = 3;
+//     float U = 1, beta = 10;
+//     LaGenMatComplex lattice;
+//
+//     /* generate the lattice */
+//     generate_lattice_matrix(matrix_size, lattice);
+//
+//     /* sweep the lattice */
+//     general_sweep(matrix_size, lattice, U, beta, iterations);
+// }
 
 
 /* --- Main QMC Program --- */
