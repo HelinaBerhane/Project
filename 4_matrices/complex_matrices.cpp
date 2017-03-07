@@ -535,7 +535,7 @@ void V_calculation(const COMPLEX slice[], const int lattice_size, const float U,
         V_ii[i].r = V_ii[i].r + mu - U / 2;
     }
     /* given a lattice */
-    array_to_diag(elements, lattice_size, V);
+    array_to_diag(V_ii, lattice_size, V);
 }
 void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
     //B = exp(-H)exp(-V)
