@@ -1438,21 +1438,24 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             B = LaGenMatComplex::zeros(lattice_size, lattice_size);
             // isolate the time slice
             isolate_row(lattice, lattice_size, t, slice);
+            print_array(slice, lattice_size, "slice");
             // calculate all variables
             V_calculation(slice, time_size, U, lambda, sigma, delta_tau, V);
+            print_matrix(V, "V");
             B_calculation(H, V, B, lattice_size, iterations);
-            // store the elements of the B matrix in an array
             print_matrix(B, "B");
+            // store the elements of the B matrix in an array
             for(int r = 0; r < lattice_size; r++){
                 for(int c = 0; c < lattice_size; c++){
                     int i = (t * lattice_volume) + (r * lattice_size) + c;
+                    cout << "i = " << i << endl;
                     storage[i].r = B(r, c).r;
                     storage[i].i = B(r, c).i;
                     // print_scalar(storage[i]);
                 }
             }
             cout << endl;
-            print_array(storage, storage_size, "storage");
+            // print_array(storage, storage_size, "storage");
             /* multiply the matrices */
             n_matrix_product(storage, lattice_size, time_size, O);
         }
