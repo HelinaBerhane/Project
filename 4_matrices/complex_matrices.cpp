@@ -95,7 +95,7 @@ void generate_general_matrix(const int matrix_width, const int matrix_length, co
     int matrix_volume = matrix_width * matrix_length;
     COMPLEX elements[matrix_volume];
     generate_array(elements, matrix_volume, max_rand);
-    matrix = LaGenMatComplex(elements, matrix_size, matrix_size, true);
+    matrix = LaGenMatComplex(elements, matrix_length, matrix_width, true);
 }//working
 void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int element, LaGenMatComplex& cofactorMatrix){
     for(int r = 1; r < matrix_size; r++){ // skip first row
@@ -1099,7 +1099,7 @@ void test_matrix_determinant(){//in progress
 void test_isolate_row(){
 
     /* initialise everything  */
-    int matrix_width = 4, matrix_length = 5, max_rand = 9;
+    int matrix_width = 3, matrix_length = 5, max_rand = 9;
     LaGenMatComplex matrix;
     COMPLEX array[matrix_size];
 
