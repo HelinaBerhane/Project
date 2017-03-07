@@ -525,7 +525,7 @@ void print_initial_parameters(float U, float beta, float lambda, float delta_tau
 }
 
 
-void V_calculation(const COMPLEX lattice[], const int time_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){//should be working
+void V_calculation(const COMPLEX slice[], const int time_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){//should be working
     /* initialise everything */
     COMPLEX elements[time_size];
     float mu = 0;
@@ -1413,6 +1413,7 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
     LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
     COMPLEX product;
     COMPLEX detO;
+    COMPLEX slice;
     COMPLEX storage[storage_size];
     for(int i = 0; i < storage_size; i++){
         storage[i].r = 0;
@@ -1435,8 +1436,10 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
             // reset all variables
             V = LaGenMatComplex::zeros(lattice_size, lattice_size);
             B = LaGenMatComplex::zeros(lattice_size, lattice_size);
+            // isolate the time slice
+            isolate_row(lattice, lattice_size, t, slice);
             // calculate all variables
-            V_calculation(lattice, time_size, U, lambda, sigma, delta_tau, V);
+            V_calculation(slice, time_size, U, lambda, sigma, delta_tau, V);
             B_calculation(H, V, B, lattice_size, iterations);
             // store the elements of the B matrix in an array
             print_matrix(B, "B");
@@ -1508,9 +1511,6 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
     /* sweep through the lattice */
     for(int i = 0; i < iterations; i++){
         for(int t = 0; t < time_size; t++){
-
-            /* isolate the time slice as a COMPLEX array */
-            isolate_row(lattice, lattice_size, t, slice);
 
             for(int lattice_site = 0; lattice_site < lattice_size; lattice_site++){
 
