@@ -91,6 +91,12 @@ void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex&
     generate_array(elements, matrix_volume, max_rand);
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//working
+void generate_general_matrix(const int matrix_width, const int matrix_length, const int max_rand, LaGenMatComplex& matrix){
+    int matrix_volume = matrix_width * matrix_length;
+    COMPLEX elements[matrix_volume];
+    generate_array(elements, matrix_volume, max_rand);
+    matrix = LaGenMatComplex(elements, matrix_size, matrix_size, true);
+}//working
 void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int element, LaGenMatComplex& cofactorMatrix){
     for(int r = 1; r < matrix_size; r++){ // skip first row
         int newC = 0;
@@ -1093,16 +1099,16 @@ void test_matrix_determinant(){//in progress
 void test_isolate_row(){
 
     /* initialise everything  */
-    int matrix_size = 4, max_rand = 9;
+    int matrix_width = 4, matrix_length = 5, max_rand = 9;
     LaGenMatComplex matrix;
     COMPLEX array[matrix_size];
 
     /* generate matrix */
-    generate_matrix(matrix_size, max_rand, matrix);
+    generate_general_matrix(matrix_width, matrix_length, max_rand, matrix);
     print_matrix(matrix, "matrix");
 
     /* isolate and print rows */
-    for(int row = 0; row < matrix_size; row++){
+    for(int row = 0; row < matrix_length; row++){
         isolate_row(matrix, matrix_size, row, array);
         cout << " Row (" << row << "):";
         print_array(array, matrix_size);
@@ -1609,7 +1615,7 @@ void test_general_sweep(){
 int main(){
 
     cout << "---- TESTING LATTICE GENERATION ----" << endl;
-    test_lattice_generation();
+    test_isolate_row();
     /* notes */
 
 }
