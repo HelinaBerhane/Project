@@ -525,17 +525,17 @@ void print_initial_parameters(float U, float beta, float lambda, float delta_tau
 }
 
 
-void V_calculation(const COMPLEX slice[], const int time_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){//should be working
+void V_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){//should be working
     /* initialise everything */
-    COMPLEX elements[time_size];
+    COMPLEX V_ii[lattice_size];
     float mu = 0;
-    /* V = lambda sigma s_l + + mu - U / 2 */
-    for(int i = 0; i < time_size; i++){
-        scalar_multiplication(slice[i], lambda * sigma / delta_tau, elements[i]);
+    /* V_ii = lambda sigma s_l + + mu - U / 2 */
+    for(int i = 0; i < lattice_size; i++){
+        scalar_multiplication(slice[i], lambda * sigma / delta_tau, V_ii[i]);
         elements[i].r = elements[i].r + mu - U / 2;
     }
     /* given a lattice */
-    array_to_diag(elements, time_size, V);
+    array_to_diag(elements, lattice_size, V);
 }
 void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
     //B = exp(-H)exp(-V)
