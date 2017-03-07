@@ -1340,6 +1340,7 @@ void test_increasing_U(){//in progress
 void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int n, LaGenMatComplex& result){
     /* initialise everything */
     LaGenMatComplex matrix;
+    int matrix_volume = matrix_size * matrix_size;
     /* reset variables */
     result = LaGenMatComplex::eye(matrix_size, matrix_size);
     //for each matrix
@@ -1350,7 +1351,7 @@ void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int 
         for(int r = 0; r < matrix_size; r++){
             for(int c = 0; c < matrix_size; c++){
                 int e = r * matrix_size + c;
-                int i = m * n + e;
+                int i = m * matrix_volume + e;
                 matrix(r, c).r = storage[i].r;
                 matrix(r, c).i = storage[i].i;
             }
@@ -1366,7 +1367,7 @@ void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int 
 void test_n_matrix_product(){
 
     /* initialise everything */
-    int n = 3, matrix_size = 3, max_rand = 5;
+    int n = 4, matrix_size = 3, max_rand = 5;
     int storage_size = matrix_size * matrix_size * n;
     COMPLEX storage[storage_size];
     LaGenMatComplex result = LaGenMatComplex::eye(matrix_size, matrix_size);
