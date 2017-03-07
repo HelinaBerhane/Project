@@ -529,9 +529,9 @@ void V_calculation(const COMPLEX slice[], const int time_size, const float U, co
     /* initialise everything */
     COMPLEX elements[time_size];
     float mu = 0;
-    /* lambda sigma s_l */
+    /* V = lambda sigma s_l + + mu - U / 2 */
     for(int i = 0; i < time_size; i++){
-        scalar_multiplication(lattice[i], lambda * sigma / delta_tau, elements[i]);
+        scalar_multiplication(slice[i], lambda * sigma / delta_tau, elements[i]);
         elements[i].r = elements[i].r + mu - U / 2;
     }
     /* given a lattice */
@@ -1383,7 +1383,7 @@ void test_n_matrix_product(){
 }
 
 /* - Testing - */
-void general_weight(const int lattice_size, const int time_size, const COMPLEX lattice[], const float U, const float lambda, const float delta_tau, COMPLEX& weight){
+void general_weight(const int lattice_size, const int time_size, const LaGenMatComplex& lattice[], const float U, const float lambda, const float delta_tau, COMPLEX& weight){
     /* Plan */
         /* Input */
             // a lattice        - LaGenMatComplex
@@ -1515,12 +1515,12 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
             for(int lattice_site = 0; lattice_site < lattice_size; lattice_site++){
 
                 /* calculate the weight before the flip */
-                general_weight(lattice_size, time_size, slice, U, lambda, delta_tau, weightBefore);
+                general_weight(lattice_size, time_size, lattice, U, lambda, delta_tau, weightBefore);
                 /* propose the flip */
                 flip_scalar(slice[lattice_site]);
 
                 /* calculate the weight after the flip */
-                general_weight(lattice_size, time_size, slice, U, lambda, delta_tau, weightAfter);
+                general_weight(lattice_size, time_size, lattice, U, lambda, delta_tau, weightAfter);
 
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
