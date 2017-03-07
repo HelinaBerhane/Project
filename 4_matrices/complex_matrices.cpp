@@ -217,6 +217,10 @@ void scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result){//to 
     result.r = A.r * B;
     result.i = A.i * B;
 }//working
+void scalar_multiplication_f(const COMPLEX& A, const float B, COMPLEX& result){//to test
+    result.r = A.r * B;
+    result.i = A.i * B;
+}//working
 void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     la::complex<double> laA = la::complex<double>(A); //convert to la::complex<double>
     la::complex<double> laB = la::complex<double>(B);
@@ -527,11 +531,22 @@ void print_initial_parameters(float U, float beta, float lambda, float delta_tau
 
 void V_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){//should be working
     /* initialise everything */
+    float V_test = 0, mu = 0, beta = 10, time_size = 17;
     COMPLEX V_ii[lattice_size];
-    float mu = 0;
+    for(int i = 0; i < lattice_size; i++){
+        V_ii[i].r = i;
+        V_ii[i].i = 0;
+    }
+    print_array(V_ii, lattice_size, "initial V");
+
+    print_array(slice, lattice_size, "slice");
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+
     /* V_ii = lambda sigma s_l + + mu - U / 2 */
     for(int i = 0; i < lattice_size; i++){
-        scalar_multiplication(slice[i], lambda * sigma / delta_tau, V_ii[i]);
+        V_test = lambda * sigma / delta_tau;
+        cout << "V test = " << V_test;
+        scalar_multiplication_f(slice[i], V_test, V_ii[i]);
         V_ii[i].r = V_ii[i].r + mu - U / 2;
     }
     /* given a lattice */
@@ -1438,8 +1453,6 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             B = LaGenMatComplex::zeros(lattice_size, lattice_size);
             // isolate the time slice
             isolate_row(lattice, lattice_size, t, slice);
-            print_array(slice, lattice_size, "slice");
-            print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
             // calculate all variables
             V_calculation(slice, time_size, U, lambda, sigma, delta_tau, V);
             print_matrix(V, "V");
