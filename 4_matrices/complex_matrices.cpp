@@ -1364,7 +1364,7 @@ void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int 
 void test_n_matrix_product(){
 
     /* initialise everything */
-    int n = 5, matrix_size = 2, max_rand = 4;
+    int n = 10, matrix_size = 3, max_rand = 5;
     int storage_size = matrix_size * matrix_size * n;
     COMPLEX storage[storage_size];
     LaGenMatComplex result = LaGenMatComplex::eye(matrix_size, matrix_size);
