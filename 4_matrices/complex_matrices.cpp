@@ -1445,7 +1445,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
         // reset all variables
         O = LaGenMatComplex::zeros(lattice_size, lattice_size);
         sigma = s * 2 - 1;
-        cout << "sigma = " << sigma << endl;
+        // cout << "sigma = " << sigma << endl;
         // for each time_slice
         for(int t = 0; t < time_size; t++){    // check the order of multiplication!!!
             cout << "current time slice = " << t << endl;
@@ -1463,7 +1463,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             for(int r = 0; r < lattice_size; r++){
                 for(int c = 0; c < lattice_size; c++){
                     int i = (t * lattice_volume) + (r * lattice_size) + c;
-                    cout << "i = " << i << endl;
+                    // cout << "i = " << i << endl;
                     storage[i].r = B(r, c).r;
                     storage[i].i = B(r, c).i;
                     // print_scalar(storage[i]);
