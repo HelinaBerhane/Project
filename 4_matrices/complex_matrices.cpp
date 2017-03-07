@@ -1506,13 +1506,12 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
             for(int lattice_site = 0; lattice_site < lattice_size; lattice_site++){
 
                 /* calculate the weight before the flip */
-                general_weight(lattice_size, slice, U, lambda, delta_tau, weightBefore);
-
+                general_weight(lattice_size, time_size, slice, U, lambda, delta_tau, weightBefore);
                 /* propose the flip */
                 flip_scalar(slice[lattice_site]);
 
                 /* calculate the weight after the flip */
-                general_weight(lattice_size, slice, U, lambda, delta_tau, weightAfter);
+                general_weight(lattice_size, time_size, slice, U, lambda, delta_tau, weightAfter);
 
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
