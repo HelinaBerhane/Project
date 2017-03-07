@@ -13,4 +13,5 @@ matrix: complex_matrices.o
 	$(CXX) complex_matrices.o -I$(Inc) -L$(Lib) $(CXXFLAGS) -o matrix
 
 complex_matrices.o: complex_matrices.cpp complex_matrices.h
+	git pull origin master
 	$(CXX) -I$(Inc) -L$(Lib) $(CXXFLAGS) -c complex_matrices.cpp
