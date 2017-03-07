@@ -1418,6 +1418,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
     /* initialise everything */
     int iterations = 4;
     int lattice_volume = lattice_size * time_size;
+    int matrix_volume = lattice_size * lattice_size;
     int storage_size = lattice_volume * time_size;
     float sigma, beta = 10;
     LaGenMatComplex H;
@@ -1452,7 +1453,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             storage[i].r = 8;
             storage[i].i = 8;
         }
-        
+
         for(int t = 0; t < time_size; t++){    // check the order of multiplication!!!
             // cout << "current time slice = " << t << endl;
             // reset all variables
@@ -1476,18 +1477,18 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             // store the elements of the B matrix in an array
             for(int r = 0; r < lattice_size; r++){
                 for(int c = 0; c < lattice_size; c++){
-                    int i = (t * lattice_volume) + (r * lattice_size) + c;
+                    int i = (t * matrix_volume) + (r * lattice_size) + c;
                     // cout << "i = " << i << endl;
                     storage[i].r = B(r, c).r;
                     storage[i].i = B(r, c).i;
                     // print_scalar(storage[i]);
                 }
             }
+            print_array(storage, storage_size, "storage");
             // cout << endl;
             // print_array(storage, storage_size, "storage");
             /* multiply the matrices */
             n_matrix_product(storage, lattice_size, time_size, O);
-            print_array(storage, storage_size, "storage");
             print_matrix(O, "B_1 B_2 B_...");
         }
         // print_array(storage, storage_size, "storage");
