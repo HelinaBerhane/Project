@@ -1447,6 +1447,12 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
         // cout << "sigma = " << sigma << endl;
         // for each time_slice
         // cout << "no of time slices = " << time_size << endl;
+
+        for(int i = 0; i < storage_size; i++){
+            storage[i].r = 8;
+            storage[i].i = 8;
+        }
+        
         for(int t = 0; t < time_size; t++){    // check the order of multiplication!!!
             // cout << "current time slice = " << t << endl;
             // reset all variables
@@ -1468,10 +1474,6 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             // print_matrix(B, "B");
 
             // store the elements of the B matrix in an array
-            for(int i = 0; i < storage_size; i++){
-                storage[i].r = 8;
-                storage[i].i = 8;
-            }
             for(int r = 0; r < lattice_size; r++){
                 for(int c = 0; c < lattice_size; c++){
                     int i = (t * lattice_volume) + (r * lattice_size) + c;
