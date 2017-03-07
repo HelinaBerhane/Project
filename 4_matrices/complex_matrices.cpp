@@ -1416,7 +1416,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
     /* initialise everything */
 
     /* initialise everything */
-    int iterations = 100;
+    int iterations = 4;
     int lattice_volume = lattice_size * time_size;
     int storage_size = lattice_volume * time_size;
     float sigma, beta = 10;
@@ -1425,7 +1425,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
     LaGenMatComplex B;
     LaGenMatComplex O;
     LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
-    COMPLEX product;
+    COMPLEX product = LaGenMatComplex::eye(lattice_size, lattice_size);
     COMPLEX detO;
     COMPLEX slice[lattice_size];
     COMPLEX storage[storage_size];
@@ -1453,14 +1453,16 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             B = LaGenMatComplex::zeros(lattice_size, lattice_size);
 
             // isolate the time slice
-            // print_matrix(lattice, "lattice");
             isolate_row(lattice, lattice_size, t, slice);
+            print_matrix(lattice, "lattice");
+            print_array(slice, lattice_size, "lattice");
 
             // calculate all variables
             // print_array(slice, lattice_size, "slice");
             V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
             // print_matrix(V, "V");
             B_calculation(H, V, B, lattice_size, iterations);
+            print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
             // print_matrix(B, "B");
 
             // store the elements of the B matrix in an array
@@ -1628,8 +1630,8 @@ void test_generate_lattice_matrix(){
 /* --- Main QMC Program --- */
 int main(){
 
-    cout << "---- TESTING LATTICE GENERATION ----" << endl;
-    test_generate_lattice_matrix();
+    cout << "---- TESTING GENERAL SWEEP ----" << endl;
+    test_general_sweep();
     /* notes */
 
 }
