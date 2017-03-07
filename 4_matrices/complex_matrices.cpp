@@ -1414,7 +1414,7 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
     COMPLEX detO;
 
     /* generate H */
-    generate_H(matrix_size, H);
+    generate_H(lattice_size, H);
     // for sigma = +-1
     for(int s = 0; s < 1; s++){
         sigma = s * 2 - 1;
@@ -1444,20 +1444,20 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
             /* multiply the matrices */
             n_matrix_product(storage, lattice_size, time_size, O);
         }
-        print_array(storage, "storage");
+        print_array(storage, storage_size, "storage");
         // add 1
-        matrix_sum(matrix_size, O, I);
+        matrix_sum(lattice_size, O, I);
         // calculate det O
-        matrix_determinant(matrix_size, O, detO);
+        matrix_determinant(lattice_size, O, detO);
         // calculate det O up * det O down
         scalar_product(product, detO);
     }
 }
-void general_sweep(const int matrix_size, LaGenMatComplex& lattice, const float U, const float beta; const int iterations){
+void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const int iterations){
     /* Plan */
 
         /* Input */
-            // matrix_size      - int
+            // lattice_size      - int
             // lattice          - LaGenMatComplex&
             // U                - float
             // iterations       - int
@@ -1482,7 +1482,7 @@ void general_sweep(const int matrix_size, LaGenMatComplex& lattice, const float 
             // ... ?
 
     /* initialise everything */
-    COMPLEX weightBefore, weightAfter, slice[matrix_size];
+    COMPLEX weightBefore, weightAfter, slice[lattice_size];
     float probability, prob, lambda, delta_tau;
     string result;
     int time_size, count = 0;
@@ -1501,18 +1501,18 @@ void general_sweep(const int matrix_size, LaGenMatComplex& lattice, const float 
         for(int t = 0; t < time_size; t++){
 
             /* isolate the time slice as a COMPLEX array */
-            isolate_row(lattice, matrix_size, t, slice);
+            isolate_row(lattice, lattice_size, t, slice);
 
-            for(int lattice_site = 0; lattice_site < matrix_size; lattice_site++){
+            for(int lattice_site = 0; lattice_site < lattice_size; lattice_site++){
 
                 /* calculate the weight before the flip */
-                general_weight(matrix_size, slice, U, lambda, delta_tau, weightBefore);
+                general_weight(lattice_size, slice, U, lambda, delta_tau, weightBefore);
 
                 /* propose the flip */
                 flip_scalar(slice[lattice_site]);
 
                 /* calculate the weight after the flip */
-                general_weight(matrix_size, slice, U, lambda, delta_tau, weightAfter);
+                general_weight(lattice_size, slice, U, lambda, delta_tau, weightAfter);
 
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
@@ -1557,7 +1557,7 @@ void general_sweep(const int matrix_size, LaGenMatComplex& lattice, const float 
 void test_general_sweep(){
     /* Plan */
         /* [x] Input */
-            // [x] matrix_size  - int
+            // [x] lattice_size  - int
             // [x] iterations   - int
             // [x] lattice      - LaGenMatComplex
             // [x] U            - float
@@ -1572,15 +1572,15 @@ void test_general_sweep(){
             // [ ] acceptance probabilities
 
     /* initialise everything */
-    int matrix_size = 5, iterations = 3;
+    int lattice_size = 5, iterations = 3;
     float U = 1, beta = 10;
     LaGenMatComplex lattice;
 
     /* generate the lattice */
-    generate_lattice_matrix(matrix_size, lattice);
+    generate_lattice_matrix(lattice_size, lattice);
 
     /* sweep the lattice */
-    general_sweep(matrix_size, lattice, U, beta, iterations);
+    general_sweep(lattice_size, lattice, U, beta, iterations);
 }
 
 
