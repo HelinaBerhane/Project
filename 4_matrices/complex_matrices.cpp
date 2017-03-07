@@ -532,7 +532,7 @@ void V_calculation(const COMPLEX slice[], const int lattice_size, const float U,
     /* V_ii = lambda sigma s_l + + mu - U / 2 */
     for(int i = 0; i < lattice_size; i++){
         scalar_multiplication(slice[i], lambda * sigma / delta_tau, V_ii[i]);
-        elements[i].r = elements[i].r + mu - U / 2;
+        V_ii[i].r = V_ii[i].r + mu - U / 2;
     }
     /* given a lattice */
     array_to_diag(elements, lattice_size, V);
