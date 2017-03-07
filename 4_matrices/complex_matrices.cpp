@@ -1537,7 +1537,7 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
                 /* propose the flip */
                 print_scalar(lattice(t,l), "before");
                 flip_scalar(lattice(t,l));
-                print_scalar(lattice(t,l), "after");
+                // print_scalar(lattice(t,l), "after");
 
                 /* calculate the weight after the flip */
                 general_weight(lattice_size, time_size, lattice, U, lambda, delta_tau, weightAfter);
@@ -1558,6 +1558,7 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
                         result = "rejected";
                     }
                 }
+                print_scalar(lattice(t,l), "after");
                 /* comments */
                     //for negative values, we do some integration
                     //P\to\tilde{P} = |P| and  F\to \tilde
