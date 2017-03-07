@@ -1383,7 +1383,7 @@ void test_n_matrix_product(){
 }
 
 /* - Testing - */
-void general_weight(const int lattice_size, const int time_size, const LaGenMatComplex& lattice[], const float U, const float lambda, const float delta_tau, COMPLEX& weight){
+void general_weight(const int lattice_size, const int time_size, const LaGenMatComplex& lattice, const float U, const float lambda, const float delta_tau, COMPLEX& weight){
     /* Plan */
         /* Input */
             // a lattice        - LaGenMatComplex
