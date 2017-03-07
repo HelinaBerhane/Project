@@ -1457,6 +1457,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             // isolate the time slice
             isolate_row(lattice, lattice_size, t, slice);
             print_matrix(lattice, "lattice");
+            cout << endl << "current time slice = " << t << endl;
             print_array(slice, lattice_size, "lattice");
 
             // calculate all variables
