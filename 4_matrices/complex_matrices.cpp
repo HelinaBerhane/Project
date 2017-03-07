@@ -78,6 +78,13 @@ void generate_array(COMPLEX array[], const int array_length, const int max_rand)
         array[i].i = basic_random_int(max_rand);
 	}
 }//working
+void generate_real_array(COMPLEX array[], const int array_length, const int max_rand){
+    for(int i = 0; i < array_length; i++){
+        array[i].r = basic_random_int(max_rand);	//1 to x
+        array[i].i = 0;
+	}
+}//working
+
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
     int matrix_volume = matrix_size*matrix_size;
     COMPLEX elements[matrix_volume];
@@ -1363,7 +1370,7 @@ void test_n_matrix_product(){
     LaGenMatComplex result = LaGenMatComplex::eye(matrix_size, matrix_size);
 
     /* generate matrices (skip to storage) */
-    generate_array(storage, storage_size, max_rand);
+    generate_real_array(storage, storage_size, max_rand);
 
     /* multiply everything */
     n_matrix_product(storage, matrix_size, n, result);
