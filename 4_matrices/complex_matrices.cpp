@@ -1425,9 +1425,8 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
     LaGenMatComplex B;
     LaGenMatComplex O;
     LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
-    COMPLEX product;
-    product.r = 1;
-    product.i = 0;
+    weight.r = 1;
+    weight.i = 0;
     COMPLEX detO;
     COMPLEX slice[lattice_size];
     COMPLEX storage[storage_size];
@@ -1489,7 +1488,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
         // calculate det O
         matrix_determinant(lattice_size, O, detO);
         // calculate det O up * det O down
-        scalar_product(product, detO);
+        scalar_product(weight, detO);
         print_scalar(detO, "detO");
     }
 }
