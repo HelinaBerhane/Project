@@ -1402,9 +1402,10 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
     /* initialise everything */
 
     /* initialise everything */
-    int iterations = 100, storage_size = lattice_size * lattice_size * time_size;
+    int iterations = 100;
+    int lattice_volume = lattice_size * lattice_size;
+    int storage_size = lattice_volume * time_size;
     float sigma;
-    COMPLEX storage[storage_size];
     LaGenMatComplex H;
     LaGenMatComplex V;
     LaGenMatComplex B;
@@ -1412,9 +1413,16 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
     LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
     COMPLEX product;
     COMPLEX detO;
+    COMPLEX storage[storage_size];
+    for(int i = 0; i < storage_size; i++){
+        storage[i].r = i;
+        storage[i].i = 0;
+    }
+    print_array(storage, storage_size, "storage");
 
     /* generate H */
     generate_H(lattice_size, H);
+
     // for sigma = +-1
     for(int s = 0; s < 1; s++){
         // reset all variables
@@ -1423,7 +1431,7 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
         cout << "sigma = " << sigma << endl;
         // for each time_slice
         for(int t = 0; t < time_size; t++){    // check the order of multiplication!!!
-            cout << "time slice = " << t << endl;
+            cout << "current time slice = " << t << endl;
             // reset all variables
             V = LaGenMatComplex::zeros(lattice_size, lattice_size);
             B = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -1435,7 +1443,7 @@ void general_weight(const int lattice_size, const int time_size, const COMPLEX l
             for(int r = 0; r < lattice_size; r++){
                 for(int c = 0; c < lattice_size; c++){
                     int e = r * lattice_size + c;
-                    int i = t * time_size + e;
+                    int i = t * lattice_volume + e;
                     storage[i].r = B(r, c).r;
                     storage[i].i = B(r, c).i;
                     print_scalar(storage[i]);
