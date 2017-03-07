@@ -1447,7 +1447,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
         // for each time_slice
         cout << "no of time slices = " << time_size << endl;
         for(int t = 0; t < time_size; t++){    // check the order of multiplication!!!
-            cout << "current time slice = " << t << endl;
+            // cout << "current time slice = " << t << endl;
             // reset all variables
             V = LaGenMatComplex::zeros(lattice_size, lattice_size);
             B = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -1487,7 +1487,7 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
         scalar_product(product, detO);
     }
 }
-void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const float lambda, const float delta_tau, const int iterations){
+void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const float lambda, const float delta_tau, const int time_size; const int iterations){
     /* Plan */
 
         /* Input */
@@ -1519,7 +1519,7 @@ void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float
     COMPLEX weightBefore, weightAfter, slice[lattice_size];
     float probability, prob;
     string result;
-    int time_size, count = 0;
+    int count = 0;
 
     /* set up output headings */
     cout.width(11);
@@ -1598,9 +1598,8 @@ void test_general_sweep(){
             // [ ] acceptance probabilities
 
     /* initialise everything */
-    int lattice_size = 5, iterations = 3;
+    int lattice_size = 5, iterations = 3, time_size;
     float U = 1, beta = 10, lambda, delta_tau;
-    int time_size;
     LaGenMatComplex lattice;
 
     /* calculate initial parameters */
@@ -1612,7 +1611,7 @@ void test_general_sweep(){
     generate_lattice_matrix(lattice_size, time_size, lattice);
 
     /* sweep the lattice */
-    general_sweep(lattice_size, lattice, U, beta, lambda, delta_tau, iterations);
+    general_sweep(lattice_size, lattice, U, beta, lambda, delta_tau, time_size, iterations);
 }
 
 
