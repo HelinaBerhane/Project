@@ -9,11 +9,11 @@ CXXFLAGS = -llapackpp -Wall -g
 
 all: matrix
 
-matrix: qmc.o qmc.h pull
-	$(CXX) qmc.o -I$(Inc) -L$(Lib) $(CXXFLAGS) -o qmc
+matrix: double.o double.h pull
+	$(CXX) double.o -I$(Inc) -L$(Lib) $(CXXFLAGS) -o double
 
-qmc.o: qmc.cpp qmc.h pull
-	$(CXX) -I$(Inc) -L$(Lib) $(CXXFLAGS) -c qmc.cpp
+double.o: double.cpp double.h pull
+	$(CXX) -I$(Inc) -L$(Lib) $(CXXFLAGS) -c double.cpp
 
 pull:
 	git pull origin master
