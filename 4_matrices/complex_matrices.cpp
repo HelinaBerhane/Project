@@ -545,16 +545,10 @@ void V_calculation(const COMPLEX slice[], const int lattice_size, const float U,
 
     /* V_ii = (lambda sigma s_l / delta_tau) + mu - U / 2 */
     for(int i = 0; i < lattice_size; i++){
-        // print_scalar(V_ii[i], "V_ii");
         print_scalar(slice[i], "current lattice point");
-        V_ii[i].r = lambda * sigma * slice[i].r / delta_tau;
+        V_ii[i].r = lambda * sigma * slice[i].r / delta_tau + mu - U / 2;
         V_ii[i].i = 0;
         print_scalar(V_ii[i], "V_ii[i]");
-            // V_ii[i] should be real if slice[i] is real
-        // if slice[i] is not real, implement the following
-        // float x = lambda * sigma / delta_tau;
-        // scalar_multiplication_f(slice[i], x, V_ii[i]);
-        // print_scalar(V_ii[i], "V_ii[i]");
         cout << endl;
     }
     /* given a lattice */
