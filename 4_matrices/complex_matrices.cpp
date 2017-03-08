@@ -227,7 +227,7 @@ void scalar_multiplication_f(const COMPLEX& A, const float B, COMPLEX& result){/
     result.r = A.r * B;
     result.i = A.i * B;
 }//working
-void scalar_product_f(const COMPLEX& product, const float f){//to test
+void scalar_product_f(COMPLEX& product, const float f){//to test
     product.r = product.r * f;
     product.i = product.i * f;
 }//working
