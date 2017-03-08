@@ -555,6 +555,7 @@ void V_calculation(const COMPLEX slice[], const int lattice_size, const float U,
         // float x = lambda * sigma / delta_tau;
         // scalar_multiplication_f(slice[i], x, V_ii[i]);
         // print_scalar(V_ii[i], "V_ii[i]");
+        cout << endl;
     }
     /* given a lattice */
     array_to_diag(V_ii, lattice_size, V);
@@ -1174,6 +1175,7 @@ void test_V_generation(){
     /* calculate initial parameters */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    cout << endl;
 
     /* generate the lattice */
     generate_lattice_array(lattice_size, slice);
