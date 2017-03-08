@@ -84,12 +84,15 @@ void generate_real_array(COMPLEX array[], const int array_length, const int max_
         array[i].i = 0;
 	}
 }//working
-
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
-    int matrix_volume = matrix_size*matrix_size;
+
+    int matrix_volume = matrix_size * matrix_size;
     COMPLEX elements[matrix_volume];
+
     generate_array(elements, matrix_volume, max_rand);
+
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
+
 }//working
 void generate_general_matrix(const int matrix_width, const int matrix_length, const int max_rand, LaGenMatComplex& matrix){
     int matrix_volume = matrix_width * matrix_length;
@@ -124,29 +127,6 @@ void generate_lattice(const int matrix_size, LaGenMatComplex& lattice){
         elements[i].i = 0;
     }
     lattice = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-}//working
-void generate_H(const int matrix_size, LaGenMatComplex& H){
-    int matrix_volume = matrix_size * matrix_size;
-    COMPLEX elements[matrix_volume];
-    int n;
-    /* generate the matrix */
-    for(int i = 0; i < matrix_size; i++){
-        for (int j = 0; j < matrix_size; j++) {
-            n = (matrix_size * i) + j;
-            //cout.width(3);
-            //cout << abs(i-j);
-            if(abs(i-j) == 1 || abs(i-j) == matrix_size - 1){
-                elements[n].r = -1;
-            }else{
-                elements[n].r = 0;
-            }
-            elements[n].i = 0;
-        }
-        //cout << endl;
-    }
-    //cout << endl;
-    H = LaGenMatComplex(elements, matrix_size, matrix_size, false );
-    /* print result */
 }//working
 void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
     for(int i = 0; i < matrix_size; i++){   // for each element,
@@ -538,23 +518,50 @@ void print_initial_parameters(float U, float beta, float lambda, float delta_tau
 	cout << "delta tau = " << delta_tau << endl;
 }
 
-void V_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){//should be working
+void generate_H(const int lattice_size, LaGenMatComplex& H){
+
+    /* initialise everything */
+    int matrix_volume = lattice_size * lattice_size, n;
+    COMPLEX elements[matrix_volume];
+
+    /* generate the matrix */
+    for(int i = 0; i < lattice_size; i++){
+        for (int j = 0; j < lattice_size; j++) {
+            n = (lattice_size * i) + j;
+            //cout.width(3);
+            //cout << abs(i-j);
+            if(abs(i-j) == 1 || abs(i-j) == lattice_size - 1){
+                elements[n].r = -1;
+            }else{
+                elements[n].r = 0;
+            }
+            elements[n].i = 0;
+        }
+    }
+
+    H = LaGenMatComplex(elements, lattice_size, lattice_size, false);
+
+}
+void V_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){
     /* initialise everything */
     float mu = 0, beta = 10, time_size = 17;
     COMPLEX V_ii[lattice_size];
 
     /* V_ii = (lambda sigma s_l / delta_tau) + mu - U / 2 */
     for(int i = 0; i < lattice_size; i++){
-        print_scalar(slice[i], "current lattice point");
         V_ii[i].r = lambda * sigma * slice[i].r / delta_tau + mu - U / 2;
         V_ii[i].i = 0;
-        print_scalar(V_ii[i], "V_ii[i]");
-        cout << endl;
     }
-    /* given a lattice */
+
+    /* plot to diagonal */
     array_to_diag(V_ii, lattice_size, V);
+
 }
-void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
+void B_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& B){
+
+    /* initialise everything */
+    LaGenMatComplex H, V;
+    int matrix_size, iterations;
     //B = exp(-H)exp(-V)
     /* initialise everything */
     LaGenMatComplex negH;
@@ -854,6 +861,16 @@ void test_scalar_manipulation(const int max_rand){
     cout << "sum = " << sum << endl;
 
 }//working
+void test_matrix_equals_(){
+    int matrix_size = 5, max_rand = 5;
+    LaGenMatComplex matrix;
+    generate_matrix(matrix_size, max_rand, matrix);
+    print_matrix(matrix, "initial matrix");
+    matrix = 0;
+    print_matrix(matrix, "matrix = 0");
+    matrix = 1;
+    print_matrix(matrix, "matrix = 1");
+}
 void test_eigenvalues(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrix;
@@ -1651,8 +1668,8 @@ void test_generate_lattice_matrix(){
 /* --- Main QMC Program --- */
 int main(){
 
-    cout << "---- TESTING V CALCULATION ----" << endl;
-    test_V_generation();
+        cout << "---- TESTING MATRIX MANIPULATION ----" << endl;
+    test_matrix_equals_();
     /* notes */
 
 }
