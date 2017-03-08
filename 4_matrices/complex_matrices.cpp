@@ -227,6 +227,10 @@ void scalar_multiplication_f(const COMPLEX& A, const float B, COMPLEX& result){/
     result.r = A.r * B;
     result.i = A.i * B;
 }//working
+void scalar_product_f(const COMPLEX& product, const float f){//to test
+    product.r = product.r * f;
+    product.i = product.i * f;
+}//working
 void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     la::complex<double> laA = la::complex<double>(A); //convert to la::complex<double>
     la::complex<double> laB = la::complex<double>(B);
@@ -534,19 +538,23 @@ void print_initial_parameters(float U, float beta, float lambda, float delta_tau
 	cout << "delta tau = " << delta_tau << endl;
 }
 
-
 void V_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){//should be working
     /* initialise everything */
-    float V_test = 0, mu = 0, beta = 10, time_size = 17;
+    float mu = 0, beta = 10, time_size = 17;
     COMPLEX V_ii[lattice_size];
 
-    /* V_ii = lambda sigma s_l + + mu - U / 2 */
+    /* V_ii = (lambda sigma s_l / delta_tau) + mu - U / 2 */
     for(int i = 0; i < lattice_size; i++){
-        V_test = lambda * sigma / delta_tau;
-        // cout << "V test = " << V_test << endl;
-        scalar_multiplication_f(slice[i], V_test, V_ii[i]);
-        V_ii[i].r = V_ii[i].r + mu - (U / 2);
-        // cout << "V test = " << V_ii[i].r << endl;
+        // print_scalar(V_ii[i], "V_ii");
+        print_scalar(slice[i], "current lattice point");
+        V_ii[i].r = lambda * sigma * slice[i].r / delta_tau;
+        V_ii[i].i = 0;
+        print_scalar(V_ii[i], "V_ii[i]");
+            // V_ii[i] should be real if slice[i] is real
+        // if slice[i] is not real, implement the following
+        // float x = lambda * sigma / delta_tau;
+        // scalar_multiplication_f(slice[i], x, V_ii[i]);
+        // print_scalar(V_ii[i], "V_ii[i]");
     }
     /* given a lattice */
     array_to_diag(V_ii, lattice_size, V);
@@ -1155,18 +1163,21 @@ void test_H(const int matrix_size){
     print_vector(eigenvalues, "eigenvalues");
     // eigenvalues are 2 cos(n pi / q), where q = the matrix size
 }//working
-void test_V_generation(){//should work
+void test_V_generation(){
 
     /* initialise everything */
-        // float delta tau = ?, lamba = 1, s_i(l) = \pm 1, mu = 0?
-    int matrix_size = 5;
-    LaGenMatComplex V = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    COMPLEX time_slice[matrix_size];
-    float U = 1, lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
+    int lattice_size = 5, time_size;
+    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    COMPLEX slice[lattice_size];
+    float U = 1, beta = 10, lambda, delta_tau;
+
+    /* calculate initial parameters */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
 
     /* generate the lattice */
-    generate_lattice_array(matrix_size, time_slice);
-    V_calculation(time_slice, matrix_size, U, lambda, 1, delta_tau, V);
+    generate_lattice_array(lattice_size, slice);
+    V_calculation(slice, lattice_size, U, lambda, 1, delta_tau, V);
 
     /* print result */
     print_matrix(V);
@@ -1644,8 +1655,8 @@ void test_generate_lattice_matrix(){
 /* --- Main QMC Program --- */
 int main(){
 
-    cout << "---- TESTING GENERAL SWEEP ----" << endl;
-    test_general_sweep();
+    cout << "---- TESTING V CALCULATION ----" << endl;
+    test_V_generation();
     /* notes */
 
 }
