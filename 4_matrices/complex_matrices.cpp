@@ -622,20 +622,20 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const fl
     generate_H(matrix_size, H);
 
     /* generate V matrices */
-    V_calculation(latticeUP, time_size, U, lambda, 1, delta_tau, VUP);
-    V_calculation(latticeDOWN, time_size, U, lambda, 1, delta_tau, VDOWN);
+    V_calculation(latticeUP, lattice_size, U, lambda, 1, delta_tau, VUP);
+    V_calculation(latticeDOWN, lattice_size, U, lambda, 1, delta_tau, VDOWN);
 
     /* multiply B matrices */
     for(int t = time_size - 1; t >= 0 ; t--){
         /*   for each time slice   */
 
         /* calculate B(t) matrices */
-        B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
-        B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+        B_calculation(latticeUP, lattice_size, U, lambda, 1, delta_tau, BUP);
+        B_calculation(latticeDOWN, lattice_size, U, lambda, 1, delta_tau, BDOWN);
 
         /* multiply the matrices */
         matrix_product(proBUP, BUP);
-        matrix_product(proBDOWN, BUP);
+        matrix_product(proBDOWN, BDOWN);
     }
 
     /* calculate O matrices */
@@ -650,7 +650,6 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const fl
     scalar_multiplication(detOUP, detODOWN, weight);
 
 }
-
 
 
 void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float U, const int iterations){//in progress
@@ -1195,25 +1194,25 @@ void test_V_generation(){
     /* print result */
     print_matrix(V);
 }
-void test_B_generation(){//should work
-    /* initialise everything */
-    int time_size = 5, max_rand = 9, iterations = 1000;
-    LaGenMatComplex H = LaGenMatComplex::eye(time_size, time_size);
-    LaGenMatComplex V = LaGenMatComplex::eye(time_size, time_size);
-    LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
-    /* generate matrices */
-    for(int i = 0; i < time_size; i++){
-        H(i,i).r = basic_random_int(max_rand);
-        V(i,i).r = basic_random_int(max_rand);
-    }
-    /* print matrices */
-    print_matrix(H, "H");
-    print_matrix(V, "V");
-    /* calculate B */
-    B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
-    /* print result */
-    print_matrix(B,"B = e^-H e^-V");
-}
+// void test_B_generation(){//should work
+//     /* initialise everything */
+//     int time_size = 5, max_rand = 9, iterations = 1000;
+//     LaGenMatComplex H = LaGenMatComplex::eye(time_size, time_size);
+//     LaGenMatComplex V = LaGenMatComplex::eye(time_size, time_size);
+//     LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
+//     /* generate matrices */
+//     for(int i = 0; i < time_size; i++){
+//         H(i,i).r = basic_random_int(max_rand);
+//         V(i,i).r = basic_random_int(max_rand);
+//     }
+//     /* print matrices */
+//     print_matrix(H, "H");
+//     print_matrix(V, "V");
+//     /* calculate B */
+//     B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+//     /* print result */
+//     print_matrix(B,"B = e^-H e^-V");
+// } // check this!!
 void test_O_generation(const int time_size, const int iterations){//should work
     /* initialise everything */
     COMPLEX elements[time_size];
@@ -1235,15 +1234,15 @@ void test_O_generation(const int time_size, const int iterations){//should work
         V_calculation(elements, time_size, U, lambda, 1, delta_tau, V);
         /* calculate B */
         if(i == 0){
-            B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BA);
         }else if(i == 1){
-            B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BB);
         }else if(i == 2){
-            B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BC);
         }else if(i == 3){
-            B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BD);
         }else if(i == 4){
-            B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BE);
         }
     }
     O_calculation(time_size, BA, BB, BC, BD, BE, O);

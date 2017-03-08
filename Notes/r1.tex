@@ -1,0 +1,81 @@
+\section{Models}
+
+We need to aproximate things because solving the general Hamiltonian would take an unreasonable amount of data, so we use approximations to make the calculations easier % 26
+
+\subsection{The Hartree Fock Method}
+
+In the Hartree Fock method, the wavefunction {\qs{(of what?)}} is approximated by a Slater determinant, effectively treating the effects of all of the electrons as an averaged potential.
+
+\paragraph{Slater Determinant}
+{\na{this is an expression that describes the wave function of a multi-fermionic system that satisfies anti-symmetry requirements and consequently the Pauli principle by changing sign upon exchange of two electrons (or other fermions). \cite{Slater-wiki}}}
+
+However, as each electron would be repelled from each other, there is a motion of electrons relative to each other.
+This is called the electronic correlation
+
+Because the hartree fock method ignores this correlation, it consistently gives a large overestimate of the energy.
+To combat this, we use {\qs{what exactly?}}
+
+\pagebreak
+\section{Electron Correlations}
+
+\pagebreak
+\section{Calculation of Electron Correlations}
+}}
+
+\pagebreak
+\section{Anderson Impurity Model}
+
+In the Anderson Impurity Problem, a single impurity is placed in a bath of {\qs{how many?}} atoms.
+
+
+
+
+\subsection{Monte Carlo Simulations}
+
+\pagebreak
+
+\section{Quantum Monte Carlo Simulation}
+
+{\com{
+We're going to use a quantum monte carlo simulation to solve the Anderson Impurity problem \cite{QISolvers}
+
+To do this, we will input a Self-Consistency equation
+$$\mathcal{G}=G_i(i\omega_n)+\Sigma(i\omega_n)$$
+
+and the program should output a lattice Green's function
+$$G_i(i\omega_n)=\frac{1}{N}\sum_k{\frac{1}{i\omega_n-(\epsilon(k)-\mu)-\Sigma(i\omega_n)}}$$
+
+which can be used to get another self-consistency equation with
+$$G_{i\sigma}^{-1}(i\omega_n)+\Sigma_\sigma(i\omega_n)=\mathcal{G}_\sigma(i\omega_n)$$
+}}
+
+A quantum monte carlo simulation is one that{\qs{does what?}}
+
+\paragraph{Main steps} In this program, we:
+\begin{itemize}
+    \item make a one dimensional lattice of $N$ spins, denoted by $\pm 1$
+    \item this lattice extends into imaginary time, in l time slices
+        {\qs{
+        \begin{itemize}
+            \item would each spin stretching in imaginary time be the same as the initial spin?
+            \item or would each point on each time slice also be randomly generated?
+        \end{itemize}
+        }}
+    \item sweeping across each lattice point, and then across each time slices, the spins will be flipped
+    \item whether the spin stays flipped depends on the calculated weight
+    \item this weight depends on the spins of all of the points in the lattice, according to this equation
+        \begin{equation}
+            \\
+        \end{equation}
+    \item if this weight is above 1, the change in spin is accepted automatically.
+    \item if this spin is below 1, a random number is generated.
+    \item the flip is then accepted if the weight is above this random number
+    \item during this process, different metrics are recorded about the lattice
+    \item first, we record the average spins of the lattice points
+\end{itemize}
+
+This simulation was written and run to calculate the correlations between electrons.
+
+\bib
+
+\end{document}

@@ -1,0 +1,26 @@
+\newcommand{\medthreeFans}{\ans{
+    \begin{itemize}
+        \item {\Large{$\frac{\partial L}{\partial t}$}}
+            \begin{align*}
+                \frac{\partial L}{\partial t}
+                    = \frac{1}{2}\frac{\partial a^2}{\partial t}\delta_{ij} x'^i(\lambda) x'^j
+                    = a\dot{a}\delta_{ij} x'^i(\lambda) x'^j
+            \end{align*}
+        \item {\Large{$\frac{\partial L}{\partial t'}$}}
+            \begin{align*}
+                \frac{\partial L}{\partial t'}
+                    = \frac{1}{2}\frac{\partial t'^2}{\partial t'}
+                    = t'
+            \end{align*}
+        \item {\Large{$\frac{d}{d\lambda} \left( \frac{\partial L}{\partial t'} \right)$}}
+            \begin{align*}
+                \frac{d(t')}{d\lambda}
+                    = \frac{dE}{d\lambda}
+                    = \frac{dE}{dt}\frac{dt}{d\lambda}
+                    = \dot{E}E
+            \end{align*}
+        \item {\Large{$\frac{\partial L}{\partial t}-\frac{d}{d\lambda} \left( \frac{\partial L}{\partial x'^\alpha} \right) = 0$}}
+            \begin{align*}
+                a\dot{a}\delta_{ij} x'^i(\lambda) x'^j - \dot{E}E = 0
+            \end{align*}
+    \end{itemize}}}
