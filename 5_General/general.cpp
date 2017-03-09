@@ -18,6 +18,15 @@ using namespace std;
 						/* ------ WORKING ------ */
 
 /* -- Output -- */
+void print_vector(const LaVectorComplex& vector, const string name){
+    cout << name << ":" << endl << vector << endl;
+}
+void print_matrix(const LaGenMatComplex& matrix){
+	cout << matrix << endl;
+}
+void print_matrix(const LaGenMatComplex& matrix, const string name){
+	cout << name << ":" << endl << matrix << endl;
+}
 void print_initial_parameters(double U, double beta, double lambda, double delta_tau, int time_size, int lattice_size){
 	cout << "no of lattice points = " << lattice_size << endl;
 	cout << "no of time slices = " << time_size << endl;
@@ -27,39 +36,7 @@ void print_initial_parameters(double U, double beta, double lambda, double delta
 	cout << "delta tau = " << delta_tau << endl;
 }
 
-/* -- Generation -- */
-// Random Numbers
-// Structure
-
-/* -- Calculation -- */
-// Initial Parameters
-void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
-    lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
-    time_size = ceil(beta / lambda);        // by definition
-    delta_tau = beta / time_size;           // = sqrt(0.125 / U) by convension
-}
-// Matrix Operations
-// Weights
-// Testing
-void test_initial_parameters(){
-    double U = 1, beta = 10, lambda, delta_tau;
-    int lattice_size = 5, time_size;
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
-}
-
-						/* ------ TO TEST ------ */
-//...
-
-void print_matrix(const LaGenMatComplex& matrix){
-	cout << matrix << endl;
-}
-void print_matrix(const LaGenMatComplex& matrix, const string name){
-	cout << name << ":" << endl << matrix << endl;
-}
-void print_vector(const LaVectorComplex& vector, const string name){
-    cout << name << ":" << endl << vector << endl;
-}
+/* -- Processing -- */
 int generate_spins(){
     random_device rd;
     mt19937 gen(rd());
@@ -79,12 +56,28 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
     }
     lattice = LaGenMatComplex(elements, time_size, lattice_size, false);
 }
+void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
+    lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
+    time_size = ceil(beta / lambda);        // by definition
+    delta_tau = beta / time_size;           // = sqrt(0.125 / U) by convension
+}
+
+/* -- Testing -- */
+void test_initial_parameters(){
+    double U = 1, beta = 10, lambda, delta_tau;
+    int lattice_size = 5, time_size;
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+}
 void test_generate_lattice(){
     int lattice_size = 5, time_size = 17;
     LaGenMatComplex lattice;
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
 }
+
+						/* ------ TO TEST ------ */
+//...
 void generate_H(const int lattice_size, LaGenMatComplex& H){
     /* initialise everything */
     int matrix_volume = lattice_size * lattice_size, n;
@@ -129,5 +122,5 @@ void test_H(const int matrix_size){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_generate_lattice();
+    test_H();
 }
