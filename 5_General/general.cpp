@@ -126,7 +126,7 @@ void test_H(){
 						/* ------ TO TEST ------ */
 //...
 
-void generate_slice(const int array_size, COMPLEX slice[]){
+void generate_slice(const int lattice_size, COMPLEX slice[]){
     for(int i = 0; i < lattice_size; i++){   // for each element,
         slice[i].r = generate_spins();   // generate real random spin
         slice[i].i = 0;
@@ -255,7 +255,7 @@ void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
 }
 void test_inverse(){
     int matrix_size = 3;
-    LaGenMatComplex initialMatrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9)
+    LaGenMatComplex initialMatrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     LaGenMatComplex inverseMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
     inverseMatrix = initialMatrix.copy();
     matrix_inverse(inverseMatrix, matrix_size);
@@ -298,7 +298,7 @@ void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eig
 }
 void test_recombine_diagonalised_matrices(){
     /* initialise everything */
-    int matrix_size = 5, max_rand = 9;
+    int matrix_size = 5;
     LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -330,7 +330,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, La
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 }
 void test_matrix_exponential(){
-    int matrix_size = 5, max_rand = 9;
+    int matrix_size = 5;
     /* initialise everything */
     LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -393,7 +393,8 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
 void test_B_generation(){
     /* initialise everything */
     int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau;
+    double U = 1, beta = 10, lambda, sigma = 0, delta_tau;
+    LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
