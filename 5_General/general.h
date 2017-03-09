@@ -6,10 +6,12 @@
 #include <lavc.h> //LaVectorComplex
 #include <string>
 
+// n.b. string -> std::string
+
 /* -- Output -- */
-void print_vector(const LaVectorComplex& vector, const string name);
+void print_vector(const LaVectorComplex& vector, const std::string name);
 void print_matrix(const LaGenMatComplex& matrix);
-void print_matrix(const LaGenMatComplex& matrix, const string name);
+void print_matrix(const LaGenMatComplex& matrix, const std::string name);
 void print_initial_parameters(double U, double beta, double lambda, double delta_tau, int time_size, int lattice_size);
 /* -- Processing -- */
 int generate_spins();
