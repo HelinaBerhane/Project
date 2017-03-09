@@ -100,13 +100,14 @@ void generate_H(const int lattice_size, LaGenMatComplex& H){
 
     H = LaGenMatComplex(elements, lattice_size, lattice_size, false);
 }
-void test_H(const int matrix_size){
+void test_H(){
     /* initialise everything */
+    int lattice_size = 5;
     LaGenMatComplex H;
-    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaVectorComplex eigenvalues = LaVectorComplex(lattice_size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate matrix */
-    generate_H(matrix_size, H);
+    generate_H(lattice_size, H);
     print_matrix(H);
     /* calculate eigenstuff */
     LaEigSolve(H, eigenvalues, eigenvectors);
