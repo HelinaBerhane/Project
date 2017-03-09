@@ -71,7 +71,7 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
     COMPLEX elements[matrix_volume];
     for(int row = 0; row < time_size; row++){
         for(int column = 0; column < lattice_size; column++){
-            int i = row * lattice_size + time_size;
+            int i = row * lattice_size + column;
             cout << "element = " << i << endl;
             // elements[i].r = generate_spins();
             // elements[i].i = 0;
