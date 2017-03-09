@@ -72,11 +72,12 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
     for(int row = 0; row < time_size; row++){
         for(int column = 0; column < lattice_size; column++){
             int i = row * lattice_size + time_size;
-            elements[i].r = generate_spins();
-            elements[i].i = 0;
+            cout << "element = " << i << endl;
+            // elements[i].r = generate_spins();
+            // elements[i].i = 0;
         }
     }
-    lattice = LaGenMatComplex(elements, lattice_size, time_size, false);
+    // lattice = LaGenMatComplex(elements, lattice_size, time_size, false);
 }
 void test_generate_lattice(){
     int lattice_size = 5, time_size = 17;
