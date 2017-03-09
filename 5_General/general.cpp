@@ -77,7 +77,7 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
             elements[i].i = 0;
         }
     }
-    // lattice = LaGenMatComplex(elements, lattice_size, time_size, false);
+    lattice = LaGenMatComplex(elements, lattice_size, time_size, false);
 }
 void test_generate_lattice(){
     int lattice_size = 5, time_size = 17;
