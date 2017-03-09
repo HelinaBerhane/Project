@@ -17,8 +17,10 @@ void print_initial_parameters(double U, double beta, double lambda, double delta
 int generate_spins();
 void generate_lattice(const int lattice_size, const int time_size, LaGenMatComplex& lattice);
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size);
+void generate_H(const int lattice_size, LaGenMatComplex& H);
 /* -- Testing -- */
 void test_initial_parameters();
 void test_generate_lattice();
+void test_H();
 
 #endif
