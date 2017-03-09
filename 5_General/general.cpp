@@ -88,6 +88,59 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
     lattice = LaGenMatComplex(elements, time_size, lattice_size, false);
 }
 // Calculation
+// - generic
+void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
+    result.r = A.r / B;
+    result.i = A.i / B;
+}
+void scalar_division(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
+    la::complex<double> laA = la::complex<double>(A);
+    la::complex<double> laB = la::complex<double>(B);
+    la::complex<double> laResult = la::complex<double>(result);
+    laResult = laA / laB;
+    result = laResult.toCOMPLEX();
+}
+void scalar_product(COMPLEX& product, const double f){
+    product.r = product.r * f;
+    product.i = product.i * f;
+}
+void scalar_product(COMPLEX& product, const COMPLEX& number){
+    COMPLEX part;
+    part.r = (product.r * number.r) - (product.i * number.i);
+    part.i = (product.r * number.i) + (product.i * number.r);
+    product = part;
+}
+void scalar_sum(COMPLEX& result, const COMPLEX addition){
+    result.r += addition.r;
+    result.i += addition.i;
+}
+void scalar_exponential(const COMPLEX& number, COMPLEX& result){
+    /* initialise everything */
+    int iterations = 100;
+    COMPLEX division, total_division;
+    /* reset everything */
+    result.r = 1;
+    result.i = 0;
+    /* calculate e^n */
+    for(int step = 1; step <= iterations; step++){
+        total_division.r = 1;
+        total_division.i = 0;
+        for(int i = 1; i <= step; i++){
+            scalar_division(number, i, division);
+            scalar_product(total_division, division);
+        }
+        scalar_sum(result, total_division);
+    }
+}
+void test_scalar_exponential(){
+    int max_rand = 9;
+    COMPLEX number, result;
+    generate_scalar(number, max_rand);
+    cout << endl << "scalar exponential test no.: " << number << endl << endl;
+    scalar_exponential(number, result);
+    cout << "e^" << number << " = " << result << endl;
+}
+// - qmc
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
     lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
     time_size = ceil(beta / lambda);        // by definition
@@ -182,70 +235,6 @@ void test_V(){
 						/* ------ TO TEST ------ */
 //...
 
-void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
-    result.r = A.r / B;
-    result.i = A.i / B;
-}
-void scalar_division(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
-    la::complex<double> laA = la::complex<double>(A);
-    la::complex<double> laB = la::complex<double>(B);
-    la::complex<double> laResult = la::complex<double>(result);
-    laResult = laA / laB;
-    result = laResult.toCOMPLEX();
-}
-void scalar_product(COMPLEX& product, const double f){
-    product.r = product.r * f;
-    product.i = product.i * f;
-}
-void scalar_product(COMPLEX& product, const COMPLEX& number){
-    COMPLEX part;
-    part.r = (product.r * number.r) - (product.i * number.i);
-    part.i = (product.r * number.i) + (product.i * number.r);
-    product = part;
-}
-void scalar_sum(COMPLEX& result, const COMPLEX addition){
-    result.r += addition.r;
-    result.i += addition.i;
-}
-void scalar_exponential(const COMPLEX& number, COMPLEX& result){
-    /* initialise everything */
-    int iterations = 100;
-    COMPLEX division, total_division;
-    /* reset everything */
-    result.r = 1;
-    result.i = 0;
-    /* calculate e^n */
-    for(int step = 1; step <= iterations; step++){
-        total_division.r = 1;
-        total_division.i = 0;
-        for(int i = 1; i <= step; i++){
-            scalar_division(number, i, division);
-            scalar_product(total_division, division);
-        }
-        scalar_sum(result, total_division);
-    }
-}
-void test_scalar_exponential(){
-    int max_rand = 9;
-    COMPLEX number, result;
-    generate_scalar(number, max_rand);
-    cout << endl << "scalar exponential test no.: " << number << endl << endl;
-    scalar_exponential(number, result);
-    cout << "e^" << number << " = " << result << endl;
-}
-
-/* -------- */
-
-void vec_to_array(const LaVectorComplex& vector, const int array_size, COMPLEX array[]){
-    for(int i = 0; i < array_size; i++){
-        array[i] = vector(i);
-    }
-}
-void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatComplex& diag){
-    COMPLEX array[array_size];
-    vec_to_array(vector, array_size, array);
-    array_to_diag(array, array_size, diag);
-}
 
 /* -------- */
 
@@ -285,7 +274,16 @@ void test_matrix_product(){
 }
 
 /* -------- */
-
+void vec_to_array(const LaVectorComplex& vector, const int array_size, COMPLEX array[]){
+    for(int i = 0; i < array_size; i++){
+        array[i] = vector(i);
+    }
+}
+void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatComplex& diag){
+    COMPLEX array[array_size];
+    vec_to_array(vector, array_size, array);
+    array_to_diag(array, array_size, diag);
+}
 void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){
     /* initialise  everything */
     LaGenMatComplex eigenvalueMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -427,5 +425,5 @@ void test_B_generation(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_scalar_exponential();
+    test_matrix_product();
 }
