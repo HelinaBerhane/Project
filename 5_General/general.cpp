@@ -18,6 +18,13 @@ using namespace std;
 						/* ------ WORKING ------ */
 
 /* -- Output -- */
+void print_array(const COMPLEX array[], int array_size, const string name){
+	cout << name << ":" << endl;
+    for(int i = 0; i < array_size; i++){
+        cout << array[i] << endl;
+    }
+    cout << endl;
+}
 void print_vector(const LaVectorComplex& vector, const string name){
     cout << name << ":" << endl << vector << endl;
 }
@@ -37,12 +44,21 @@ void print_initial_parameters(double U, double beta, double lambda, double delta
 }
 
 /* -- Processing -- */
+// Randomisation
 int random_int(const int max_rand){
     random_device rd;
     mt19937 gen(rd());
     std::uniform_int_distribution<> dist(0, max_rand);
     return dist(gen);
 }
+// Manipulation
+void array_to_diag(const COMPLEX array[], const int array_size, LaGenMatComplex& diag){
+    diag = 0;
+    for(int i = 0; i < array_size; i++){
+        diag(i, i) = array[i];
+    }
+}
+// Generation
 void generate_scalar(COMPLEX& scalar, const int max_rand){
     scalar.r = random_int(max_rand);
     scalar.i = random_int(max_rand);
@@ -53,19 +69,25 @@ int generate_spins(){
     uniform_int_distribution<> dist(0, 1);
     return (dist(gen) % 2)*2 - 1;
 }
+void generate_slice(const int lattice_size, COMPLEX slice[]){
+    for(int i = 0; i < lattice_size; i++){
+        slice[i].r = generate_spins();
+        slice[i].i = 0;
+    }
+}
 void generate_lattice(const int lattice_size, const int time_size, LaGenMatComplex& lattice){
     int matrix_volume = lattice_size * time_size;
     COMPLEX elements[matrix_volume];
     for(int row = 0; row < time_size; row++){
         for(int column = 0; column < lattice_size; column++){
             int i = row * lattice_size + column;
-            // cout << "element = " << i << endl;
             elements[i].r = generate_spins();
             elements[i].i = 0;
         }
     }
     lattice = LaGenMatComplex(elements, time_size, lattice_size, false);
 }
+// Calculation
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
     lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
     time_size = ceil(beta / lambda);        // by definition
@@ -92,6 +114,19 @@ void generate_H(const int lattice_size, LaGenMatComplex& H){
     }
 
     H = LaGenMatComplex(elements, lattice_size, lattice_size, false);
+}
+void V_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& V){
+    /* initialise everything */
+    COMPLEX V_ii[lattice_size];
+
+    /* V_ii = (lambda sigma s_l / delta_tau) + mu - U / 2 */
+    for(int i = 0; i < lattice_size; i++){
+        V_ii[i].r = lambda * sigma * slice[i].r / delta_tau - U / 2;
+        V_ii[i].i = 0;
+    }
+
+    /* plot to diagonal */
+    array_to_diag(V_ii, lattice_size, V);
 }
 
 /* -- Testing -- */
@@ -121,41 +156,7 @@ void test_H(){
     print_vector(eigenvalues, "eigenvalues");
     // eigenvalues are 2 cos(n pi / q), where q = the matrix size
 }
-
-
-						/* ------ TO TEST ------ */
-//...
-
-void generate_slice(const int lattice_size, COMPLEX slice[]){
-    for(int i = 0; i < lattice_size; i++){   // for each element,
-        slice[i].r = generate_spins();   // generate real random spin
-        slice[i].i = 0;
-    }
-}
-void array_to_diag(const COMPLEX array[], const int array_size, LaGenMatComplex& diag){
-    diag = 0;
-    for(int i = 0; i < array_size; i++){
-        diag(i, i) = array[i];
-    }
-}
-
-/* -------- */
-
-void V_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& V){
-    /* initialise everything */
-    COMPLEX V_ii[lattice_size];
-
-    /* V_ii = (lambda sigma s_l / delta_tau) + mu - U / 2 */
-    for(int i = 0; i < lattice_size; i++){
-        V_ii[i].r = lambda * sigma * slice[i].r / delta_tau - U / 2;
-        V_ii[i].i = 0;
-    }
-
-    /* plot to diagonal */
-    array_to_diag(V_ii, lattice_size, V);
-}
 void test_V(){
-
     /* initialise everything */
     int lattice_size = 5, time_size;
     LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -169,11 +170,17 @@ void test_V(){
 
     /* generate the lattice */
     generate_slice(lattice_size, slice);
-    V_calculation(slice, lattice_size, U, lambda, 1, delta_tau, V);
+    print_array(slice, lattice_size, "slice");
 
-    /* print result */
-    print_matrix(V);
+    /* calculate V */
+    V_calculation(slice, lattice_size, U, lambda, 1, delta_tau, V);
+    print_matrix(V, "V");
 }
+
+
+						/* ------ TO TEST ------ */
+//...
+
 
 /* -------- */
 
