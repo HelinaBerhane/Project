@@ -117,6 +117,7 @@ void generate_H(const int lattice_size, LaGenMatComplex& H){
 }
 void V_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& V){
     /* initialise everything */
+    V = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX V_ii[lattice_size];
 
     /* V_ii = (lambda sigma s_l / delta_tau) + mu - U / 2 */
@@ -181,9 +182,6 @@ void test_V(){
 						/* ------ TO TEST ------ */
 //...
 
-
-/* -------- */
-
 void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
     result.r = A.r / B;
     result.i = A.i / B;
@@ -209,9 +207,6 @@ void scalar_sum(COMPLEX& result, const COMPLEX addition){
     result.r += addition.r;
     result.i += addition.i;
 }
-
-/* -------- */
-
 void scalar_exponential(const COMPLEX& number, COMPLEX& result){
     /* initialise everything */
     int iterations = 100;
@@ -432,5 +427,5 @@ void test_B_generation(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_V();
+    test_scalar_exponential();
 }
