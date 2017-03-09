@@ -425,5 +425,5 @@ void test_B_generation(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_product();
+    test_inverse();
 }
