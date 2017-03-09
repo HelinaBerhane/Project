@@ -234,22 +234,18 @@ void test_V(){
 
 						/* ------ TO TEST ------ */
 //...
-
-
-/* -------- */
-
-void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
-    // in place
+void matrix_inverse(const LaGenMatComplex& matrix, int matrix_size, LaGenMatComplex& result){
+    result = matrix.copy();
     LaVectorLongInt PIV = LaVectorLongInt(matrix_size);
-    LUFactorizeIP(matrix, PIV);
-    LaLUInverseIP(matrix, PIV);
+    LUFactorizeIP(result, PIV);
+    LaLUInverseIP(result, PIV);
 }
 void test_inverse(){
     int matrix_size = 3;
     LaGenMatComplex initialMatrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     LaGenMatComplex inverseMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    inverseMatrix = initialMatrix.copy();
-    matrix_inverse(inverseMatrix, matrix_size);
+    matrix_inverse(initialMatrix, matrix_size, inverseMatrix);
+    print_matrix(initialMatrix, "inverse matrix");
     print_matrix(inverseMatrix, "inverse matrix");
 }
 
