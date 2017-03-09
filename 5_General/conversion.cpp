@@ -43,12 +43,6 @@ void print_array(const COMPLEX array[], int len, const string name){
 void print_vector(const LaVectorComplex& vector, const string name){
     cout << name << ":" << endl << vector << endl;
 }//working
-void print_matrix(const LaGenMatComplex& matrix){
-	cout << matrix << endl;
-}//working
-void print_matrix(const LaGenMatComplex& matrix, const string name){
-	cout << name << ":" << endl << matrix << endl;
-}//working
 
 /* Generation [5/5]*/
 void generate_scalar(COMPLEX& scalar, const int max_rand){
@@ -70,16 +64,7 @@ void generate_real_array(COMPLEX array[], const int array_length, const int max_
         array[i].i = 0;
 	}
 }//working
-void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
 
-    int matrix_volume = matrix_size * matrix_size;
-    COMPLEX elements[matrix_volume];
-
-    generate_array(elements, matrix_volume, max_rand);
-
-    matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-
-}//working
 void generate_general_matrix(const int matrix_width, const int matrix_length, const int max_rand, LaGenMatComplex& matrix){
     int matrix_volume = matrix_width * matrix_length;
     COMPLEX elements[matrix_volume];
@@ -99,35 +84,8 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
     }
 }//working
 // QMC - [4/4]
-int generate_spins(){
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> dist(0, 1);
-    return (dist(gen) % 2)*2 - 1;
-}//working
-void generate_lattice(const int matrix_size, LaGenMatComplex& lattice){
-    int matrix_volume = matrix_size * matrix_size;
-    COMPLEX elements[matrix_volume];
-    for(int i = 0; i < matrix_volume; i++){
-        elements[i].r = generate_spins();
-        elements[i].i = 0;
-    }
-    lattice = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-}//working
-void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
-    for(int i = 0; i < matrix_size; i++){   // for each element,
-        elements[i].r = generate_spins();   // generate real random spin
-        elements[i].i = 0;
-    }
-}//working
-void generate_lattice_matrix(const int lattice_size, const int time_size, LaGenMatComplex& lattice){
-    lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-    for(int l = 0; l < time_size; l++){
-        for(int t = 0; t < lattice_size; t++){
-            lattice(l, t).r = generate_spins();
-        }
-    }
-}//working
+
+
 
 /* Matrix conversion [5/5] */
 void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[]){
@@ -135,17 +93,7 @@ void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[])
         array[i] = vector(i);
     }
 }//working
-void array_to_diag(const COMPLEX array[], const int len, LaGenMatComplex& diag){
-    diag = 0;
-    for(int i = 0; i < len; i++){
-        diag(i, i) = array[i];
-    }
-}//working
-void vec_to_diag(const LaVectorComplex& vector, const int len, LaGenMatComplex& diag){
-    COMPLEX array[len];
-    vec_to_array(vector, len, array);
-    array_to_diag(array, len, diag);
-}//working
+
 void copy_array(const int len, const COMPLEX array[], COMPLEX copy[]){//in progress
     for(int i = 0; i < len; i++){
         //
@@ -158,13 +106,7 @@ void isolate_row(const LaGenMatComplex& matrix, const int matrix_width, const in
 }
 
 /* Scalar manipulation [14/14] */
-int factorial(int x){
-	if(x <= 1){
-        return 1;
-	}else{
-        return x * factorial(x - 1);
-	}
-}//working
+
 void copy_scalar(const COMPLEX& scalar, COMPLEX& copy){//should work
     copy.r = scalar.r;
     copy.i = scalar.i;
@@ -181,10 +123,7 @@ void scalar_addition(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     result.r = A.r + B.r;
     result.i = A.i + B.i;
 }//working
-void scalar_sum(COMPLEX& result, const COMPLEX addition){//probably working
-    result.r += addition.r;
-    result.i += addition.i;
-}//working
+
 void scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result){//to test
     result.r = A.r * B;
     result.i = A.i * B;
@@ -193,10 +132,7 @@ void scalar_multiplication_f(const COMPLEX& A, const float B, COMPLEX& result){/
     result.r = A.r * B;
     result.i = A.i * B;
 }//working
-void scalar_product_f(COMPLEX& product, const float f){//to test
-    product.r = product.r * f;
-    product.i = product.i * f;
-}//working
+
 void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     la::complex<double> laA = la::complex<double>(A); //convert to la::complex<double>
     la::complex<double> laB = la::complex<double>(B);
@@ -216,17 +152,8 @@ COMPLEX scalar_multiple(COMPLEX& A, const COMPLEX& B){
     part.i = (A.r * B.i) + (A.i * B.r);
     return part;
 }
-void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
-    result.r = A.r / B;
-    result.i = A.i / B;
-}//working
-void scalar_division(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
-    la::complex<double> laA = la::complex<double>(A); //convert to la::complex<double>
-    la::complex<double> laB = la::complex<double>(B);
-    la::complex<double> laResult = la::complex<double>(result);
-    laResult = laA / laB;
-    result = laResult.toCOMPLEX();
-}//working
+
+
 void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     la::complex<double> laResult = la::complex<double>(number);
     la::complex<double> laNumber = la::complex<double>(number);
@@ -235,20 +162,7 @@ void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
     }
     result = laResult.toCOMPLEX();
 }//working
-void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLEX& result){
-    COMPLEX division, total_division;
-    result.r = 1;
-    result.i = 0 ;
-    for(int step = 1; step <= iterations; step++){   //sum (from 1 to n)
-        total_division.r = 1;
-        total_division.i = 0;
-        for(int i = 1; i <= step; i++){        //    ( num^n / n!)
-            scalar_division(number, i, division);
-            scalar_product(total_division, division);
-        }
-        scalar_sum(result, total_division);
-    }
-}//probably working
+
 //void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
     //COMPLEX power;
     //COMPLEX division;
@@ -292,33 +206,10 @@ void scalar_exponential_main(const COMPLEX& number, const int iterations, COMPLE
     }
     */
 //}                       //empty
-void vector_exponential(const LaVectorComplex& vector, const int matrix_size, const int iterations, LaVectorComplex& result){
-    for(int i = 0; i < matrix_size; i++){
-        scalar_exponential_main(vector(i), iterations, result(i));
-    }
-    //print_vector(result, "vector exponential");
-}//working
+
 
 /* Matrix manipulation [15/15]*/
-void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
-    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    for(int i = 0; i < matrix_size; i++){
-        for(int j = 0; j < matrix_size; j++){
-            result(i, j).r -= matrix(i, j).r;
-            result(i, j).i -= matrix(i, j).i;
-        }
-    }
-    matrix = result.copy();
-}//working
-void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGenMatComplex& result){
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    for(int i = 0; i < matrix_size; i++){
-        for(int j = 0; j < matrix_size; j++){
-            result(i, j).r -= matrix(i, j).r;
-            result(i, j).i -= matrix(i, j).i;
-        }
-    }
-}//working
+
 void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatComplex& matrix){//to test
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
@@ -329,50 +220,7 @@ void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatCompl
 }//should be working
 
 
-void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){
-    //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
-    LaEigSolve(matrix, eigenvalues, eigenvectors);
-}//working
-void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){
-    /* initialise  everything */
-    LaGenMatComplex eigenvalueMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex transposeEigenvectors;
-    /* process matrices */
-    result = eigenvectors.copy();
-    vec_to_diag(eigenvalues, matrix_size, eigenvalueMatrix);
-    matrix_inverse(eigenvectors, matrix_size);
-    /* print matrices */
-    //print_matrix(result, "U - eigenvectors (check if column based?)");
-    //print_matrix(eigenvalueMatrix, "D - eigenvalues (vector)");
-    //print_matrix(eigenvectors, "U^-1 - inverse eigenvectors");
-    /* multiply results */
-    matrix_product(result, eigenvalueMatrix);
-    matrix_product(result, eigenvectors);
-    /* print results */
-    //print_matrix(result, "U D U^-1");
-}//working
-void matrix_inverse(LaGenMatComplex& matrix, int matrix_size){
-    // LaLUInverseIP: http://lapackpp.sourceforge.net/html/laslv_8h.html#a042c82c5b818f54e7f000d068f14189
-    LaVectorLongInt PIV = LaVectorLongInt(matrix_size);
-    LUFactorizeIP(matrix, PIV);
-    LaLUInverseIP(matrix, PIV);
-}//working
-void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){
-    /* initialise everything */
-    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex diagonalEigenExp = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaVectorComplex eigenExponential = LaVectorComplex(matrix_size);
-    /* calculate eigenstuff */
-    matrix_eigenvstuff(matrix, eigenvalues, eigenvectors);
-    //print_matrix(eigenvectors, "eigenvectors");
-    //print_vector(eigenvalues, "eigenvalues");
-    /* calculate exponentials */
-    vector_exponential(eigenvalues, matrix_size, iterations, eigenExponential);
-    //print_vector(eigenExponential, "exponential eigenvalues");
-    /* multiply them back together to get the matrix */
-    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
-}//should be working
+
 void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -389,11 +237,7 @@ void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGe
         }
     }
 }//working
-void matrix_product(LaGenMatComplex& product, const LaGenMatComplex& matrix){
-    LaGenMatComplex result = matrix.copy();
-    Blas_Mat_Mat_Mult(product, matrix, result);
-    product = result.copy();
-}//working
+
 void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, LaGenMatComplex& result){
     result = matrixA.copy();
     //print_matrix(result, "A");
@@ -489,86 +333,9 @@ float lambda_calculation(const float U){
 float delta_tau_calculation(const float U){
     return sqrt(0.125 / U);
 }//working
-void initial_parameter_calculation(const float U, const float beta, float& lambda, float& delta_tau, int& time_size){
-    // delta_tau = sqrt(0.125 / U);            // by convension
-    lambda = acoshf(exp(sqrt(0.125*U)/2));   // by definition
-    time_size = ceil(beta / lambda);      // by definition
-    delta_tau = beta / time_size;
-}
-void print_initial_parameters(float U, float beta, float lambda, float delta_tau, int time_size, int lattice_size){
-	cout << "no of lattice points = " << lattice_size << endl;
-	cout << "no of time slices = " << time_size << endl;
-	cout << "U = " << U << endl;
-	cout << "beta = " << beta << endl;
-	cout << "lambda = " << lambda << endl;
-	cout << "delta tau = " << delta_tau << endl;
-}
 
-void generate_H(const int lattice_size, LaGenMatComplex& H){
 
-    /* initialise everything */
-    int matrix_volume = lattice_size * lattice_size, n;
-    COMPLEX elements[matrix_volume];
 
-    /* generate the matrix */
-    for(int i = 0; i < lattice_size; i++){
-        for (int j = 0; j < lattice_size; j++) {
-            n = (lattice_size * i) + j;
-            //cout.width(3);
-            //cout << abs(i-j);
-            if(abs(i-j) == 1 || abs(i-j) == lattice_size - 1){
-                elements[n].r = -1;
-            }else{
-                elements[n].r = 0;
-            }
-            elements[n].i = 0;
-        }
-    }
-
-    H = LaGenMatComplex(elements, lattice_size, lattice_size, false);
-
-}
-void V_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){
-    /* initialise everything */
-    float mu = 0, beta = 10, time_size = 17;
-    COMPLEX V_ii[lattice_size];
-
-    /* V_ii = (lambda sigma s_l / delta_tau) + mu - U / 2 */
-    for(int i = 0; i < lattice_size; i++){
-        V_ii[i].r = lambda * sigma * slice[i].r / delta_tau + mu - U / 2;
-        V_ii[i].i = 0;
-    }
-
-    /* plot to diagonal */
-    array_to_diag(V_ii, lattice_size, V);
-
-}
-void B_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& B){
-
-    /* initialise everything */
-    LaGenMatComplex H, V;
-    int matrix_size, iterations = 20;
-    //B = exp(-H)exp(-V)
-    /* initialise everything */
-    LaGenMatComplex negH;
-    LaGenMatComplex negV;
-    LaGenMatComplex expH;
-    LaGenMatComplex expV;
-    /* negate matrices (not in place) */
-    matrix_negative(matrix_size, H, negH);
-    matrix_negative(matrix_size, V, negV);
-    /* calculate exponentials */
-    matrix_exponential(negH, matrix_size, iterations, expH);
-    matrix_exponential(negV, matrix_size, iterations, expV);
-    /* print exponential matrices */
-    //print_matrix(expH, "e^-H");
-    //print_matrix(expV, "e^-V");
-    /* multiply exponentials */
-    B = expH.copy();
-    matrix_product(B, expV);
-    /* print result */
-    //print_matrix(B, "B");
-}
 void O_calculation(const int matrix_size, const LaGenMatComplex& BA, const LaGenMatComplex& BB, const LaGenMatComplex& BC, const LaGenMatComplex& BD, const LaGenMatComplex&BE, LaGenMatComplex& O){//should be working
     //O = 1 + B(m) B(m-1) B(...) B(1)
     /* initialise everything */
@@ -856,50 +623,10 @@ void test_matrix_equals_(){
     matrix = 1;
     print_matrix(matrix, "matrix = 1");
 }
-void test_eigenvalues(const int matrix_size, const int max_rand){
-    /* initialise everything */
-    LaGenMatComplex matrix;
-    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex result;
-    /* generate matrix */
-    generate_matrix(matrix_size, max_rand, matrix);
-    print_matrix(matrix, "initial matrix");
-    /* calculate eigenstuff */
-    matrix_eigenvstuff(matrix, eigenvalues, eigenvectors);
-    /* multiply them back together to get the matrix */
-    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenvalues, result);
-    /* wolfram test */
-        // 2x2 real:
-        // 3x3 complex: {{1+7i, 1+3i, 5+7i},{7i, 6+i, 5+4i},{5+7i, 5+4i, 6}}
-}//working
-void test_inverse(const LaGenMatComplex& initialMatrix, const int matrix_size){
-    LaGenMatComplex inverseMatrix;
-    inverseMatrix = initialMatrix.copy();
-    matrix_inverse(inverseMatrix, matrix_size);
-    print_matrix(inverseMatrix, "inverse matrix");
-}//working
-void test_scalar_sum(const int max_rand, const int iterations){
-    COMPLEX number, step;
-    generate_scalar(number, max_rand);
-    step = number;
-    for(int i = 0; i < iterations; i++){
-        cout << step << endl;
-        scalar_sum(number, step);
-    }
-    cout << number << endl;
-}//working
-void test_scalar_exponential(const int max_rand, const int iterations){
-    COMPLEX number, result;
-    generate_scalar(number, max_rand);
-    cout << endl << "scalar exponential test no.: " << number << endl << endl;
-    scalar_exponential_main(number, iterations, result);
-    cout << "e^" << number << " = " << result << endl;
-}//working
-void test_scalar_exponential(COMPLEX& number, const int iterations, COMPLEX& result){
-    scalar_exponential_main(number, iterations, result);
-    cout << "e^" << number << " = " << result << endl;
-}//working
+
+
+
+
 void test_matrix_subtraction(const int matrix_size, const int max_rand){
     LaGenMatComplex matrix;
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -944,20 +671,7 @@ void test_matrix_multiplication(const int matrix_size, const int max_rand){
     Blas_Mat_Mat_Mult(transposeA, transposeB, result);
     print_matrix(result, "Matrix A^T * Matrix B^T");
 }//working
-void test_matrix_product(const int matrix_size, const int max_rand){
-    /* initialise everything */
-    LaGenMatComplex matrixA;
-    LaGenMatComplex matrixB;
-    /* generate everything */
-    generate_matrix(matrix_size, max_rand, matrixA);
-    generate_matrix(matrix_size, max_rand, matrixB);
-    /* print everything */
-    print_matrix(matrixA, "Matrix A");
-    print_matrix(matrixB, "Matrix B");
-    /* matrix product */
-    matrix_product(matrixA, matrixB);
-    print_matrix(matrixB, "result");
-}//working
+
 
 
 
@@ -1012,18 +726,8 @@ void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     print_matrix(result, "ABCDE");
     //{{1+7i, 5+7i},{7i, 1+3i}}*{{6+i, 5+7i},{5+4i, 5+4i}}*{{6, 8+8i},{7+i, 6+6i}}*{{8+8i, 1+i},{8+4i, 5}}*{{3, 1+7i},{5+3i, 4+7i}}
 }//working
-void test_matrix_exponential(const int matrix_size, const int max_rand, const int iterations){
-    /* initialise everything */
-    LaGenMatComplex matrix;
-    LaGenMatComplex result;
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    /* generate matrix */
-    generate_matrix(matrix_size, max_rand, matrix);
-    print_matrix(matrix, "initial matrix");
-    /* calculate exponential */
-    matrix_exponential(matrix, matrix_size, iterations, result);
-    print_matrix(result, "e^(matrix)");
-}//working
+
+
 void test_idenpotent_exponential(const int iterations){
     /* generate the matrix */
     int numbers [] = {2, -2, -4, -1, 3, 4, 1, -2, -3};
@@ -1128,77 +832,14 @@ void test_random_probability(){
         cout << random_probability() << endl;
     }
 }//working
-void test_lattice_generation(){
-
-    /* initialise everything */
-    int lattice_size = 3, time_size = 4;
-    LaGenMatComplex lattice;
-
-    /* generate the lattice */
-    generate_lattice_matrix(lattice_size, time_size, lattice);
-
-    /* print result */
-    print_matrix(lattice, "random spins");
-
-}//working
 void test_parameter_calculation(){
     float U = 1, lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
     cout << "U = " << U << endl;
     cout << "l = " << lambda << endl;
     cout << "t = " << delta_tau << endl;
 }//working
-void test_H(const int matrix_size){
-    /* initialise everything */
-    LaGenMatComplex H;
-    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    /* generate matrix */
-    generate_H(matrix_size, H);
-    print_matrix(H);
-    /* calculate eigenstuff */
-    matrix_eigenvstuff(H, eigenvalues, eigenvectors);
-    print_vector(eigenvalues, "eigenvalues");
-    // eigenvalues are 2 cos(n pi / q), where q = the matrix size
-}//working
-void test_V_generation(){
 
-    /* initialise everything */
-    int lattice_size = 5, time_size;
-    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    COMPLEX slice[lattice_size];
-    float U = 1, beta = 10, lambda, delta_tau;
 
-    /* calculate initial parameters */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
-    cout << endl;
-
-    /* generate the lattice */
-    generate_lattice_array(lattice_size, slice);
-    V_calculation(slice, lattice_size, U, lambda, 1, delta_tau, V);
-
-    /* print result */
-    print_matrix(V);
-}
-// void test_B_generation(){//should work
-//     /* initialise everything */
-//     int time_size = 5, max_rand = 9, iterations = 1000;
-//     LaGenMatComplex H = LaGenMatComplex::eye(time_size, time_size);
-//     LaGenMatComplex V = LaGenMatComplex::eye(time_size, time_size);
-//     LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
-//     /* generate matrices */
-//     for(int i = 0; i < time_size; i++){
-//         H(i,i).r = basic_random_int(max_rand);
-//         V(i,i).r = basic_random_int(max_rand);
-//     }
-//     /* print matrices */
-//     print_matrix(H, "H");
-//     print_matrix(V, "V");
-//     /* calculate B */
-//     B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
-//     /* print result */
-//     print_matrix(B,"B = e^-H e^-V");
-// } // check this!!
 void test_O_generation(const int time_size, const int iterations){//should work
     /* initialise everything */
     COMPLEX elements[time_size];
@@ -1428,8 +1069,8 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
     int iterations = 4;
     int lattice_volume = lattice_size * time_size;
     int matrix_volume = lattice_size * lattice_size;
-    int storage_size = lattice_volume * time_size;
-    float sigma, beta = 10;
+    int storage_size = matrix_volume * time_size;
+    float sigma = 0.0, beta = 10.0;
     LaGenMatComplex H;
     LaGenMatComplex V;
     LaGenMatComplex B;
@@ -1450,18 +1091,13 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
     generate_H(lattice_size, H);
 
     // for sigma = +-1
-    for(int s = 0; s < 1; s++){
+    for(int s = 0; s < 2; s++){
         // reset all variables
         O = LaGenMatComplex::eye(lattice_size, lattice_size);
-        sigma = s * 2 - 1;
+        sigma = s * 2.0 - 1.0;
         // cout << "sigma = " << sigma << endl;
         // for each time_slice
         // cout << "no of time slices = " << time_size << endl;
-
-        for(int i = 0; i < storage_size; i++){
-            storage[i].r = 8;
-            storage[i].i = 8;
-        }
 
         for(int t = 0; t < time_size; t++){    // check the order of multiplication!!!
             // cout << "current time slice = " << t << endl;
@@ -1497,9 +1133,9 @@ void general_weight(const int lattice_size, const int time_size, const LaGenMatC
             // cout << endl;
             // print_array(storage, storage_size, "storage");
             /* multiply the matrices */
-            n_matrix_product(storage, lattice_size, time_size, O);
             print_matrix(O, "B_1 B_2 B_...");
         }
+        n_matrix_product(storage, lattice_size, time_size, O);
         // print_array(storage, storage_size, "storage");
         // add 1
         matrix_sum(lattice_size, O, I);
@@ -1641,12 +1277,6 @@ void test_general_sweep(){
 
     /* sweep the lattice */
     general_sweep(lattice_size, lattice, U, beta, lambda, delta_tau, time_size, iterations);
-}
-void test_generate_lattice_matrix(){
-    int lattice_size = 5, time_size = 17;
-    LaGenMatComplex lattice;
-    generate_lattice_matrix(lattice_size, time_size, lattice);
-    print_matrix(lattice);
 }
 
 
