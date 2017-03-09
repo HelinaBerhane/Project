@@ -1,6 +1,6 @@
 #include <iostream> //cout
 #include <string>
-#include "double.h"
+#include "general.h"
 #include <gmd.h> 	//LaGenMatDouble
 #include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
 #include <blas3pp.h>

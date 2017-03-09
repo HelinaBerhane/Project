@@ -78,27 +78,11 @@ void generate_array(COMPLEX array[], const int array_length, const int max_rand)
         array[i].i = basic_random_int(max_rand);
 	}
 }//working
-void generate_real_array(COMPLEX array[], const int array_length, const int max_rand){
-    for(int i = 0; i < array_length; i++){
-        array[i].r = basic_random_int(max_rand);	//1 to x
-        array[i].i = 0;
-	}
-}//working
 void generate_matrix(const int matrix_size, const int max_rand, LaGenMatComplex& matrix){
-
-    int matrix_volume = matrix_size * matrix_size;
+    int matrix_volume = matrix_size*matrix_size;
     COMPLEX elements[matrix_volume];
-
     generate_array(elements, matrix_volume, max_rand);
-
     matrix = LaGenMatComplex(elements, matrix_size, matrix_size, false);
-
-}//working
-void generate_general_matrix(const int matrix_width, const int matrix_length, const int max_rand, LaGenMatComplex& matrix){
-    int matrix_volume = matrix_width * matrix_length;
-    COMPLEX elements[matrix_volume];
-    generate_array(elements, matrix_volume, max_rand);
-    matrix = LaGenMatComplex(elements, matrix_length, matrix_width, true);
 }//working
 void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int element, LaGenMatComplex& cofactorMatrix){
     for(int r = 1; r < matrix_size; r++){ // skip first row
@@ -128,17 +112,40 @@ void generate_lattice(const int matrix_size, LaGenMatComplex& lattice){
     }
     lattice = LaGenMatComplex(elements, matrix_size, matrix_size, false);
 }//working
+void generate_H(const int matrix_size, LaGenMatComplex& H){
+    int matrix_volume = matrix_size * matrix_size;
+    COMPLEX elements[matrix_volume];
+    int n;
+    /* generate the matrix */
+    for(int i = 0; i < matrix_size; i++){
+        for (int j = 0; j < matrix_size; j++) {
+            n = (matrix_size * i) + j;
+            //cout.width(3);
+            //cout << abs(i-j);
+            if(abs(i-j) == 1 || abs(i-j) == matrix_size - 1){
+                elements[n].r = -1;
+            }else{
+                elements[n].r = 0;
+            }
+            elements[n].i = 0;
+        }
+        //cout << endl;
+    }
+    //cout << endl;
+    H = LaGenMatComplex(elements, matrix_size, matrix_size, false );
+    /* print result */
+}//working
 void generate_lattice_array(const int matrix_size, COMPLEX elements[]){
     for(int i = 0; i < matrix_size; i++){   // for each element,
         elements[i].r = generate_spins();   // generate real random spin
         elements[i].i = 0;
     }
 }//working
-void generate_lattice_matrix(const int lattice_size, const int time_size, LaGenMatComplex& lattice){
-    lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-    for(int l = 0; l < time_size; l++){
-        for(int t = 0; t < lattice_size; t++){
-            lattice(l, t).r = generate_spins();
+void generate_lattice_matrix(const int matrix_size, LaGenMatComplex& lattice){
+    lattice = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            lattice(i, j).r = generate_spins();
         }
     }
 }//working
@@ -165,8 +172,8 @@ void copy_array(const int len, const COMPLEX array[], COMPLEX copy[]){//in progr
         //
     }
 }
-void isolate_row(const LaGenMatComplex& matrix, const int matrix_width, const int row, COMPLEX array[]){
-    for(int i = 0; i < matrix_width; i++){
+void isolate_row(const LaGenMatComplex& matrix, const int len, const int row, COMPLEX array[]){
+    for(int i = 0; i < len; i++){
         array[i] = matrix(row, i);
     }
 }
@@ -202,14 +209,6 @@ void scalar_sum(COMPLEX& result, const COMPLEX addition){//probably working
 void scalar_multiplication(const COMPLEX& A, const int B, COMPLEX& result){//to test
     result.r = A.r * B;
     result.i = A.i * B;
-}//working
-void scalar_multiplication_f(const COMPLEX& A, const float B, COMPLEX& result){//to test
-    result.r = A.r * B;
-    result.i = A.i * B;
-}//working
-void scalar_product_f(COMPLEX& product, const float f){//to test
-    product.r = product.r * f;
-    product.i = product.i * f;
 }//working
 void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     la::complex<double> laA = la::complex<double>(A); //convert to la::complex<double>
@@ -341,8 +340,6 @@ void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatCompl
         }
     }
 }//should be working
-
-
 void matrix_eigenvstuff(const LaGenMatComplex& matrix, LaVectorComplex& eigenvalues, LaGenMatComplex& eigenvectors){
     //LaEigSolve: http://lapackpp.sourceforge.net/html/laslv_8h.html#086357d17e9cdcaec69ab7db76998769
     LaEigSolve(matrix, eigenvalues, eigenvectors);
@@ -503,65 +500,19 @@ float lambda_calculation(const float U){
 float delta_tau_calculation(const float U){
     return sqrt(0.125 / U);
 }//working
-void initial_parameter_calculation(const float U, const float beta, float& lambda, float& delta_tau, int& time_size){
-    // delta_tau = sqrt(0.125 / U);            // by convension
-    lambda = acoshf(exp(sqrt(0.125*U)/2));   // by definition
-    time_size = ceil(beta / lambda);      // by definition
-    delta_tau = beta / time_size;
-}
-void print_initial_parameters(float U, float beta, float lambda, float delta_tau, int time_size, int lattice_size){
-	cout << "no of lattice points = " << lattice_size << endl;
-	cout << "no of time slices = " << time_size << endl;
-	cout << "U = " << U << endl;
-	cout << "beta = " << beta << endl;
-	cout << "lambda = " << lambda << endl;
-	cout << "delta tau = " << delta_tau << endl;
-}
-
-void generate_H(const int lattice_size, LaGenMatComplex& H){
-
+void V_calculation(const COMPLEX lattice[], const int time_size, const float U, const float lambda, const float delta_tau, LaGenMatComplex& V){//should be working
     /* initialise everything */
-    int matrix_volume = lattice_size * lattice_size, n;
-    COMPLEX elements[matrix_volume];
-
-    /* generate the matrix */
-    for(int i = 0; i < lattice_size; i++){
-        for (int j = 0; j < lattice_size; j++) {
-            n = (lattice_size * i) + j;
-            //cout.width(3);
-            //cout << abs(i-j);
-            if(abs(i-j) == 1 || abs(i-j) == lattice_size - 1){
-                elements[n].r = -1;
-            }else{
-                elements[n].r = 0;
-            }
-            elements[n].i = 0;
-        }
+    COMPLEX elements[time_size];
+    float mu = 0;
+    /* lambda sigma s_l */
+    for(int i = 0; i < time_size; i++){
+        scalar_multiplication(lattice[i], lambda / delta_tau, elements[i]);
+        elements[i].r = elements[i].r + mu - U / 2;
     }
-
-    H = LaGenMatComplex(elements, lattice_size, lattice_size, false);
-
+    /* given a lattice */
+    array_to_diag(elements, time_size, V);
 }
-void V_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& V){
-    /* initialise everything */
-    float mu = 0, beta = 10, time_size = 17;
-    COMPLEX V_ii[lattice_size];
-
-    /* V_ii = (lambda sigma s_l / delta_tau) + mu - U / 2 */
-    for(int i = 0; i < lattice_size; i++){
-        V_ii[i].r = lambda * sigma * slice[i].r / delta_tau + mu - U / 2;
-        V_ii[i].i = 0;
-    }
-
-    /* plot to diagonal */
-    array_to_diag(V_ii, lattice_size, V);
-
-}
-void B_calculation(const COMPLEX slice[], const int lattice_size, const float U, const float lambda, const float sigma, const float delta_tau, LaGenMatComplex& B){
-
-    /* initialise everything */
-    LaGenMatComplex H, V;
-    int matrix_size, iterations = 20;
+void B_calculation(LaGenMatComplex& H, LaGenMatComplex& V, LaGenMatComplex& B, const int matrix_size, const int iterations){//should be working
     //B = exp(-H)exp(-V)
     /* initialise everything */
     LaGenMatComplex negH;
@@ -599,6 +550,7 @@ void detO_calculation(const int matrix_size, const LaGenMatComplex& O, COMPLEX& 
 }
 void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const float U, const float lambda, const float delta_tau, COMPLEX& weight){//to test
 
+    /* initialise everything */
     int lattice_size = matrix_size, time_size = matrix_size, iterations = 1000;
     COMPLEX latticeDOWN[matrix_size];
     LaGenMatComplex H;
@@ -606,7 +558,6 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const fl
     LaGenMatComplex VDOWN = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaGenMatComplex proBUP = LaGenMatComplex::eye(matrix_size, matrix_size);
     LaGenMatComplex proBDOWN = LaGenMatComplex::eye(matrix_size, matrix_size);
-    LaGenMatComplex I = LaGenMatComplex::eye(matrix_size, matrix_size);
     LaGenMatComplex BUP = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaGenMatComplex BDOWN = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaGenMatComplex OUP = LaGenMatComplex::eye(matrix_size, matrix_size);
@@ -622,25 +573,25 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const fl
     generate_H(matrix_size, H);
 
     /* generate V matrices */
-    V_calculation(latticeUP, lattice_size, U, lambda, 1, delta_tau, VUP);
-    V_calculation(latticeDOWN, lattice_size, U, lambda, 1, delta_tau, VDOWN);
+    V_calculation(latticeUP, time_size, U, lambda, delta_tau, VUP);
+    V_calculation(latticeDOWN, time_size, U, lambda, delta_tau, VDOWN);
 
     /* multiply B matrices */
     for(int t = time_size - 1; t >= 0 ; t--){
         /*   for each time slice   */
 
         /* calculate B(t) matrices */
-        B_calculation(latticeUP, lattice_size, U, lambda, 1, delta_tau, BUP);
-        B_calculation(latticeDOWN, lattice_size, U, lambda, 1, delta_tau, BDOWN);
+        B_calculation(H, VUP, BUP, lattice_size, iterations);
+        B_calculation(H, VDOWN, BDOWN, lattice_size, iterations);
 
         /* multiply the matrices */
         matrix_product(proBUP, BUP);
-        matrix_product(proBDOWN, BDOWN);
+        matrix_product(proBDOWN, BUP);
     }
 
     /* calculate O matrices */
-    matrix_sum(matrix_size, OUP, I);
-    matrix_sum(matrix_size, ODOWN, I);
+    matrix_sum(matrix_size, OUP, proBUP);
+    matrix_sum(matrix_size, ODOWN, proBDOWN);
 
     /* calculate det(O)s */
     matrix_determinant(matrix_size, OUP, detOUP);
@@ -650,8 +601,6 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const fl
     scalar_multiplication(detOUP, detODOWN, weight);
 
 }
-
-
 void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float U, const int iterations){//in progress
     /* Plan */
 
@@ -685,7 +634,6 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
     COMPLEX weightBefore, weightAfter, slice[matrix_size];
     float probability, prob;
     float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
-
     string result;
     int count = 0;
 
@@ -753,7 +701,6 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
     //results
         // with most parameters = 1, it stabilised at all -1 spins
 }
-
 
 /* Testing [20/21] */
 void test_random_int(){
@@ -860,16 +807,6 @@ void test_scalar_manipulation(const int max_rand){
     cout << "sum = " << sum << endl;
 
 }//working
-void test_matrix_equals_(){
-    int matrix_size = 5, max_rand = 5;
-    LaGenMatComplex matrix;
-    generate_matrix(matrix_size, max_rand, matrix);
-    print_matrix(matrix, "initial matrix");
-    matrix = 0;
-    print_matrix(matrix, "matrix = 0");
-    matrix = 1;
-    print_matrix(matrix, "matrix = 1");
-}
 void test_eigenvalues(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrix;
@@ -972,41 +909,6 @@ void test_matrix_product(const int matrix_size, const int max_rand){
     matrix_product(matrixA, matrixB);
     print_matrix(matrixB, "result");
 }//working
-
-
-
-// void test_matrix_arrays(){
-//
-//     /* initialise everything */
-//     int n = 3, matrix_size = 5, max_rand = 9;
-//     LaGenMatComplex* matrices[1];
-//     *matrices[0] = LaGenMatComplex::eye(2, 2);
-//
-//     LaGenMatComplex mgds;
-//
-//     /* generate everything */
-//     // generate_matrix(matrix_size, max_rand, matrices[0]);
-//     // *matrices[0] = LaGenMatComplex::eye(matrix_size, matrix_size);
-//
-//     mgds = *matrices[0];
-//     cout << matrices[0] << endl;
-//     cout << mgds(1,1) << endl;
-//         // this is an array of pointers to matrices
-//     // LaGenMatComplex product = LaGenMatComplex::eye(2, 2);
-//     //
-//     // for(int i = 0; i < n; i++){
-//     //
-//     //     /* generate everything */
-//     //     generate_matrix(matrix_size, max_rand, *matrices[n]);
-//     //
-//     //     /* print everything */
-//     //     cout << "(" << n << ")" << endl;
-//     //     print_matrix(*matrices[n]);
-//     // }
-// }
-
-
-
 void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
     /* initialise everything */
     LaGenMatComplex matrixA;
@@ -1118,20 +1020,19 @@ void test_matrix_determinant(){//in progress
 void test_isolate_row(){
 
     /* initialise everything  */
-    int matrix_width = 3, matrix_length = 5, max_rand = 9;
-
+    int matrix_size = 4, max_rand = 9;
     LaGenMatComplex matrix;
-    COMPLEX array[matrix_width];
+    COMPLEX array[matrix_size];
 
     /* generate matrix */
-    generate_general_matrix(matrix_width, matrix_length, max_rand, matrix);
+    generate_matrix(matrix_size, max_rand, matrix);
     print_matrix(matrix, "matrix");
 
     /* isolate and print rows */
-    for(int row = 0; row < matrix_length; row++){
-        isolate_row(matrix, matrix_width, row, array);
+    for(int row = 0; row < matrix_size; row++){
+        isolate_row(matrix, matrix_size, row, array);
         cout << " Row (" << row << "):";
-        print_array(array, matrix_width);
+        print_array(array, matrix_size);
     }
 }//working
 
@@ -1145,11 +1046,11 @@ void test_random_probability(){
 void test_lattice_generation(){
 
     /* initialise everything */
-    int lattice_size = 3, time_size = 4;
+    int matrix_size = 5;
     LaGenMatComplex lattice;
 
     /* generate the lattice */
-    generate_lattice_matrix(lattice_size, time_size, lattice);
+    generate_lattice_matrix(matrix_size, lattice);
 
     /* print result */
     print_matrix(lattice, "random spins");
@@ -1174,45 +1075,41 @@ void test_H(const int matrix_size){
     print_vector(eigenvalues, "eigenvalues");
     // eigenvalues are 2 cos(n pi / q), where q = the matrix size
 }//working
-void test_V_generation(){
+void test_V_generation(){//should work
 
     /* initialise everything */
-    int lattice_size = 5, time_size;
-    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    COMPLEX slice[lattice_size];
-    float U = 1, beta = 10, lambda, delta_tau;
-
-    /* calculate initial parameters */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
-    cout << endl;
+        // float delta tau = ?, lamba = 1, s_i(l) = \pm 1, mu = 0?
+    int matrix_size = 5;
+    LaGenMatComplex V = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    COMPLEX time_slice[matrix_size];
+    float U = 1, lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
 
     /* generate the lattice */
-    generate_lattice_array(lattice_size, slice);
-    V_calculation(slice, lattice_size, U, lambda, 1, delta_tau, V);
+    generate_lattice_array(matrix_size, time_slice);
+    V_calculation(time_slice, matrix_size, U, lambda, delta_tau, V);
 
     /* print result */
     print_matrix(V);
 }
-// void test_B_generation(){//should work
-//     /* initialise everything */
-//     int time_size = 5, max_rand = 9, iterations = 1000;
-//     LaGenMatComplex H = LaGenMatComplex::eye(time_size, time_size);
-//     LaGenMatComplex V = LaGenMatComplex::eye(time_size, time_size);
-//     LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
-//     /* generate matrices */
-//     for(int i = 0; i < time_size; i++){
-//         H(i,i).r = basic_random_int(max_rand);
-//         V(i,i).r = basic_random_int(max_rand);
-//     }
-//     /* print matrices */
-//     print_matrix(H, "H");
-//     print_matrix(V, "V");
-//     /* calculate B */
-//     B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
-//     /* print result */
-//     print_matrix(B,"B = e^-H e^-V");
-// } // check this!!
+void test_B_generation(){//should work
+    /* initialise everything */
+    int time_size = 5, max_rand = 9, iterations = 1000;
+    LaGenMatComplex H = LaGenMatComplex::eye(time_size, time_size);
+    LaGenMatComplex V = LaGenMatComplex::eye(time_size, time_size);
+    LaGenMatComplex B = LaGenMatComplex::zeros(time_size, time_size);
+    /* generate matrices */
+    for(int i = 0; i < time_size; i++){
+        H(i,i).r = basic_random_int(max_rand);
+        V(i,i).r = basic_random_int(max_rand);
+    }
+    /* print matrices */
+    print_matrix(H, "H");
+    print_matrix(V, "V");
+    /* calculate B */
+    B_calculation(H, V, B, time_size, iterations);
+    /* print result */
+    print_matrix(B,"B = e^-H e^-V");
+}
 void test_O_generation(const int time_size, const int iterations){//should work
     /* initialise everything */
     COMPLEX elements[time_size];
@@ -1231,18 +1128,18 @@ void test_O_generation(const int time_size, const int iterations){//should work
     for(int i = 0; i < time_size; i++){
         /* generate matrices */
         generate_lattice_array(time_size, elements);
-        V_calculation(elements, time_size, U, lambda, 1, delta_tau, V);
+        V_calculation(elements, time_size, U, lambda, delta_tau, V);
         /* calculate B */
         if(i == 0){
-            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BA);
+            B_calculation(H, V, BA, time_size, iterations);
         }else if(i == 1){
-            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BB);
+            B_calculation(H, V, BB, time_size, iterations);
         }else if(i == 2){
-            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BC);
+            B_calculation(H, V, BC, time_size, iterations);
         }else if(i == 3){
-            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BD);
+            B_calculation(H, V, BD, time_size, iterations);
         }else if(i == 4){
-            B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BE);
+            B_calculation(H, V, BE, time_size, iterations);
         }
     }
     O_calculation(time_size, BA, BB, BC, BD, BE, O);
@@ -1321,7 +1218,7 @@ void test_sweep(){
     cout << "delta tau = " << delta_tau<< endl;
 
     /* generate a lattice of spins */
-    generate_lattice_matrix(matrix_size, matrix_size, lattice);
+    generate_lattice_matrix(matrix_size, lattice);
 
     /* sweep the lattice */
     sweep_lattice(matrix_size, lattice, U, iterations);
@@ -1366,309 +1263,18 @@ void test_increasing_U(){//in progress
         cout << "delta tau = " << delta_tau<< endl;
 
         /* generate a lattice of spins */
-        generate_lattice_matrix(matrix_size, matrix_size, lattice);
+        generate_lattice_matrix(matrix_size, lattice);
 
         /* sweep the lattice */
         sweep_lattice(matrix_size, lattice, U, iterations);
     }
 }
 
-/* Generalisation */
-/* - Working - */
-void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int n, LaGenMatComplex& result){
-    /* initialise everything */
-    LaGenMatComplex matrix;
-    int matrix_volume = matrix_size * matrix_size;
-    /* reset variables */
-    result = LaGenMatComplex::eye(matrix_size, matrix_size);
-    //for each matrix
-    for(int m = 0; m < n; m++){
-        // reset variables
-        matrix = LaGenMatComplex::eye(matrix_size, matrix_size);
-        // convert the storage to a matrix
-        for(int r = 0; r < matrix_size; r++){
-            for(int c = 0; c < matrix_size; c++){
-                int e = r * matrix_size + c;
-                int i = m * matrix_volume + e;
-                matrix(r, c).r = storage[i].r;
-                matrix(r, c).i = storage[i].i;
-            }
-        }
-        // multiply with the result
-        matrix_product(result, matrix);
-        // test
-        // print_matrix(matrix, "current matrix");
-        // print_matrix(result, "current product");
-    }
-}
-void test_n_matrix_product(){
-
-    /* initialise everything */
-    int n = 4, matrix_size = 3, max_rand = 5;
-    int storage_size = matrix_size * matrix_size * n;
-    COMPLEX storage[storage_size];
-    LaGenMatComplex result = LaGenMatComplex::eye(matrix_size, matrix_size);
-
-    /* generate matrices (skip to storage) */
-    generate_real_array(storage, storage_size, max_rand);
-    print_array(storage, storage_size, "storage");
-
-    /* multiply everything */
-    n_matrix_product(storage, matrix_size, n, result);
-
-    print_matrix(result, "result");
-}
-
-/* - Testing - */
-void general_weight(const int lattice_size, const int time_size, const LaGenMatComplex& lattice, const float U, const float lambda, const float delta_tau, COMPLEX& weight){
-    /* Plan */
-        /* Input */
-            // a lattice        - LaGenMatComplex
-            // matrix_size      - int
-            // no of matrices   - int
-        /* Processing */
-            // for sigma = +-1
-                // for each time_slice
-                    // calculate the V matrix
-                    // calculate the B matrix
-                    // add the elements of the B matrix to an array
-                    // multiply all B matrices together
-                // add 1
-                // calculate det O
-            // calculate det O up * det O down
-    /* initialise everything */
-
-    /* initialise everything */
-    int iterations = 4;
-    int lattice_volume = lattice_size * time_size;
-    int matrix_volume = lattice_size * lattice_size;
-    int storage_size = lattice_volume * time_size;
-    float sigma, beta = 10;
-    LaGenMatComplex H;
-    LaGenMatComplex V;
-    LaGenMatComplex B;
-    LaGenMatComplex O;
-    LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
-    weight.r = 1;
-    weight.i = 0;
-    COMPLEX detO;
-    COMPLEX slice[lattice_size];
-    COMPLEX storage[storage_size];
-    for(int i = 0; i < storage_size; i++){
-        storage[i].r = 0;
-        storage[i].i = 0;
-    }
-    // print_array(storage, storage_size, "storage");
-
-    /* generate H */
-    generate_H(lattice_size, H);
-
-    // for sigma = +-1
-    for(int s = 0; s < 1; s++){
-        // reset all variables
-        O = LaGenMatComplex::eye(lattice_size, lattice_size);
-        sigma = s * 2 - 1;
-        // cout << "sigma = " << sigma << endl;
-        // for each time_slice
-        // cout << "no of time slices = " << time_size << endl;
-
-        for(int i = 0; i < storage_size; i++){
-            storage[i].r = 8;
-            storage[i].i = 8;
-        }
-
-        for(int t = 0; t < time_size; t++){    // check the order of multiplication!!!
-            // cout << "current time slice = " << t << endl;
-            // reset all variables
-            V = LaGenMatComplex::zeros(lattice_size, lattice_size);
-            B = LaGenMatComplex::zeros(lattice_size, lattice_size);
-
-            // isolate the time slice
-            isolate_row(lattice, lattice_size, t, slice);
-            // print_matrix(lattice, "lattice");
-            // cout << endl << "current time slice = " << t << endl;
-            // print_array(slice, lattice_size, "lattice");
-
-            // calculate all variables
-            // print_array(slice, lattice_size, "slice");
-            V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
-            // print_matrix(V, "V");
-            B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
-
-            // print_matrix(B, "B");
-
-            // store the elements of the B matrix in an array
-            for(int r = 0; r < lattice_size; r++){
-                for(int c = 0; c < lattice_size; c++){
-                    int i = (t * matrix_volume) + (r * lattice_size) + c;
-                    // cout << "i = " << i << endl;
-                    storage[i].r = B(r, c).r;
-                    storage[i].i = B(r, c).i;
-                    // print_scalar(storage[i]);
-                }
-            }
-            print_array(storage, storage_size, "storage");
-            // cout << endl;
-            // print_array(storage, storage_size, "storage");
-            /* multiply the matrices */
-            n_matrix_product(storage, lattice_size, time_size, O);
-            print_matrix(O, "B_1 B_2 B_...");
-        }
-        // print_array(storage, storage_size, "storage");
-        // add 1
-        matrix_sum(lattice_size, O, I);
-        print_matrix(O, "O");
-        // calculate det O
-        matrix_determinant(lattice_size, O, detO);
-        print_scalar(detO, "detO");
-        // calculate det O up * det O down
-        scalar_product(weight, detO);
-        print_scalar(weight, "weight");
-    }
-}
-void general_sweep(const int lattice_size, LaGenMatComplex& lattice, const float U, const float beta, const float lambda, const float delta_tau, const int time_size, const int iterations){
-    /* Plan */
-
-        /* Input */
-            // lattice_size      - int
-            // lattice          - LaGenMatComplex&
-            // U                - float
-            // iterations       - int
-
-        /* Processing */
-            // Calculate initial parameters
-                // Calculate lambda
-                // Calculate delta_tau
-            // for each iteration
-                // for each time slice
-                    // isolate the spins in an array
-                    // for each lattice point
-                        // calculate the probability of the spin flipping
-                        // decide whether it flips or not
-                        // record the flip in the original matrix
-                        // record the measurements
-
-        /* Output */
-            // a pritout of the lattice over time?
-            // probabiliy of flipping at each stage
-            // average spin
-            // ... ?
-
-    /* initialise everything */
-    COMPLEX weightBefore, weightAfter, slice[lattice_size];
-    float probability, prob;
-    string result;
-    int count = 0;
-
-    /* set up output headings */
-    cout.width(11);
-    cout << "weight";
-    cout << " lattice" << endl;
-
-    /* sweep through the lattice */
-    for(int i = 0; i < iterations; i++){
-        for(int t = 0; t < time_size; t++){
-
-            for(int l = 0; l < lattice_size; l++){
-
-                /* calculate the weight before the flip */
-                general_weight(lattice_size, time_size, lattice, U, lambda, delta_tau, weightBefore);
-                /* propose the flip */
-                // print_scalar(lattice(t,l), "before");
-
-                flip_scalar(lattice(t,l));
-                // print_scalar(lattice(t,l), "after");
-
-                /* calculate the weight after the flip */
-                general_weight(lattice_size, time_size, lattice, U, lambda, delta_tau, weightAfter);
-
-                /* calculate the ratio of weights */
-                probability = weightAfter.r / weightBefore.r;
-
-                /* accept or reject the flip */
-                if(abs(probability) >= 1){
-                    result = "accepted";
-                }else{
-                    prob = random_probability();
-                    if(probability > prob){
-                        result = "accepted";
-                    }else{
-                        // cout << " rejected" << endl;
-                        flip_scalar(lattice(t, l));
-                        result = "rejected";
-                    }
-                }
-
-                // print_scalar(lattice(t,l), "after");
-                /* comments */
-                    //for negative values, we do some integration
-                    //P\to\tilde{P} = |P| and  F\to \tilde
-                    //you have to multiply each quan you measure bu the sign
-                count++;
-                cout << " (" << count <<") " << result << " - " << probability;
-                cout.width(15);
-                cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
-                // if(result == "accepted"){
-                //     print_matrix(lattice);
-                // }else{
-                //     cout << endl;
-                // }
-            }
-            /* Comments */
-                //when you take measurements, there is noise
-                //we're doing marcov chain
-                //the simplest quan we measure is double occupancy \bra n_up n_down \ket
-        }
-    }
-    //results
-        // with most parameters = 1, it stabilised at all -1 spins
-}
-void test_general_sweep(){
-    /* Plan */
-        /* [x] Input */
-            // [x] lattice_size  - int
-            // [x] iterations   - int
-            // [x] lattice      - LaGenMatComplex
-            // [x] U            - float
-            // [x] beta         - float
-
-        /* [x] Processing */
-            // [x] generate a lattice of spins
-            // [x] sweep the lattice
-
-        /* [ ] Output */
-            // [ ] average spins
-            // [ ] acceptance probabilities
-
-    /* initialise everything */
-    int lattice_size = 5, iterations = 3, time_size;
-    float U = 5, beta = 10, lambda, delta_tau;
-    LaGenMatComplex lattice;
-
-    /* calculate initial parameters */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
-    int lattice_volume = lattice_size * time_size;
-
-    /* generate the lattice */
-    generate_lattice_matrix(lattice_size, time_size, lattice);
-
-    /* sweep the lattice */
-    general_sweep(lattice_size, lattice, U, beta, lambda, delta_tau, time_size, iterations);
-}
-void test_generate_lattice_matrix(){
-    int lattice_size = 5, time_size = 17;
-    LaGenMatComplex lattice;
-    generate_lattice_matrix(lattice_size, time_size, lattice);
-    print_matrix(lattice);
-}
-
-
 /* --- Main QMC Program --- */
 int main(){
 
-        cout << "---- TESTING MATRIX MANIPULATION ----" << endl;
-    test_matrix_equals_();
+    cout << "---- TESTING INCREASING U ----" << endl;
+    test_increasing_U();
     /* notes */
 
 }
