@@ -18,6 +18,14 @@ using namespace std;
 						/* ------ WORKING ------ */
 
 /* -- Output -- */
+void print_initial_parameters(double U, double beta, double lambda, double delta_tau, int time_size, int lattice_size){
+	cout << "no of lattice points = " << lattice_size << endl;
+	cout << "no of time slices = " << time_size << endl;
+	cout << "U = " << U << endl;
+	cout << "beta = " << beta << endl;
+	cout << "lambda = " << lambda << endl;
+	cout << "delta tau = " << delta_tau << endl;
+}
 
 /* -- Generation -- */
 // Random Numbers
@@ -25,9 +33,20 @@ using namespace std;
 
 /* -- Calculation -- */
 // Initial Parameters
+void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
+    lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
+    time_size = ceil(beta / lambda);        // by definition
+    delta_tau = beta / time_size;           // = sqrt(0.125 / U) by convension
+}
 // Matrix Operations
 // Weights
 // Testing
+void test_initial_parameters(){
+    double U = 1, beta = 10, lambda, delta_tau;
+    int lattice_size = 5, time_size;
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+}
 
 						/* ------ TO TEST ------ */
 //...
@@ -40,25 +59,6 @@ void print_matrix(const LaGenMatComplex& matrix, const string name){
 }
 void print_vector(const LaVectorComplex& vector, const string name){
     cout << name << ":" << endl << vector << endl;
-}
-void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
-    lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
-    time_size = ceil(beta / lambda);        // by definition
-    delta_tau = beta / time_size;           // = sqrt(0.125 / U) by convension
-}
-void print_initial_parameters(double U, double beta, double lambda, double delta_tau, int time_size, int lattice_size){
-	cout << "no of lattice points = " << lattice_size << endl;
-	cout << "no of time slices = " << time_size << endl;
-	cout << "U = " << U << endl;
-	cout << "beta = " << beta << endl;
-	cout << "lambda = " << lambda << endl;
-	cout << "delta tau = " << delta_tau << endl;
-}
-void test_initial_parameters(){
-    double U = 1, beta = 10, lambda, delta_tau;
-    int time_size, lattice_size;
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
 }
 int generate_spins(){
     random_device rd;
@@ -128,5 +128,5 @@ void test_H(const int matrix_size){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_initial_parameters();
+    test_generate_lattice();
 }
