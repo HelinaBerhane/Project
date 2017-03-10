@@ -20,12 +20,7 @@ float random_probability(){
 }
 
 /* Printing [7/7] */
-void print_scalar(const COMPLEX scalar){
-    cout << scalar << endl;
-}//working
-void print_scalar(const COMPLEX scalar, const string name){
-    cout << name << ": " << scalar << endl;
-}//working
+
 void print_array(const COMPLEX array[], int len){
     for(int i = 0; i < len; i++){
         cout.width(7);
