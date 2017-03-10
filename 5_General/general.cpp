@@ -205,12 +205,14 @@ void matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, 
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 }
 void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
+    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
             matrix(i, j).r -= matrix(i, j).r;
             matrix(i, j).i -= matrix(i, j).i;
         }
     }
+    matrix = result.copy();
 }
 void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -372,8 +374,6 @@ void test_V(){
 
 						/* ------ TO TEST ------ */
 //...
-
-
 void test_matrix_equals_(){
     int matrix_size = 5;
     LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 5);
