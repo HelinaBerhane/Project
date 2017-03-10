@@ -23,4 +23,7 @@ void test_initial_parameters();
 void test_generate_lattice();
 void test_H();
 
+print_scalar(const COMPLEX scalar);
+print_scalar(const COMPLEX scalar, const std::string name);
+
 #endif
