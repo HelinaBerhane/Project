@@ -201,9 +201,27 @@ void matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, 
     for(int i = 0; i < matrix_size; i++){
         scalar_exponential(eigenvalues(i), result(i,i));
     }
-    /*
     /* multiply them back together */
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
+}
+void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
+    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            result(i, j).r -= matrix(i, j).r;
+            result(i, j).i -= matrix(i, j).i;
+        }
+    }
+    matrix = result.copy();
+}
+void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGenMatComplex& result){
+    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            result(i, j).r -= matrix(i, j).r;
+            result(i, j).i -= matrix(i, j).i;
+        }
+    }
 }
 // - qmc
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
@@ -295,24 +313,15 @@ void test_matrix_exponential(){
     matrix_exponential(matrix, matrix_size, result);
     print_matrix(result, "e^(matrix)");
 }
-void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
+void test_matrix_negative(){
+    int matrix_size = 3;
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    for(int i = 0; i < matrix_size; i++){
-        for(int j = 0; j < matrix_size; j++){
-            result(i, j).r -= matrix(i, j).r;
-            result(i, j).i -= matrix(i, j).i;
-        }
-    }
-    matrix = result.copy();
-}
-void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGenMatComplex& result){
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    for(int i = 0; i < matrix_size; i++){
-        for(int j = 0; j < matrix_size; j++){
-            result(i, j).r -= matrix(i, j).r;
-            result(i, j).i -= matrix(i, j).i;
-        }
-    }
+    print_matrix(matrix, "Matrix");
+    matrix_negative(matrix_size, matrix, result);
+    print_matrix(result, "- Matrix");
+    matrix_negative(matrix_size, matrix);
+    print_matrix(matrix, "- Matrix (in place)");
 }
 // - qmc
 void test_initial_parameters(){
@@ -366,16 +375,7 @@ void test_V(){
 						/* ------ TO TEST ------ */
 //...
 
-void test_matrix_negative(){
-    int matrix_size = 3;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
-    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    print_matrix(matrix, "Matrix");
-    matrix_negative(matrix_size, matrix, result);
-    print_matrix(result, "- Matrix");
-    matrix_negative(matrix_size, matrix);
-    print_matrix(matrix, "- Matrix (in place)");
-}
+
 void test_matrix_equals_(){
     int matrix_size = 5;
     LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 5);
@@ -586,5 +586,5 @@ void test_store_matrix(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_negative();
+    test_matrix_equals_();
 }
