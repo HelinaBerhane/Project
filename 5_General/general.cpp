@@ -390,9 +390,15 @@ void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix
     }
 }
 void test_diagonal_exponential(){
-    LaGenMatComplex test = LaGenMatComplex::rand(3, 3, 0, 9);
-    LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
-    diagonal_matrix_exponential(test, 3, result);
+    /* initialise everything */
+    int matrix_size = 3;
+    LaGenMatComplex test = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    for(int i = 0; i < matrix_size; i++){
+        test(i,i).r = i;
+    }
+    /* calculate exponential */
+    diagonal_matrix_exponential(test, matrix_size, result);
     print_matrix(test, "test");
     print_matrix(result);
 }
