@@ -205,14 +205,12 @@ void matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, 
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 }
 void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
-    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
-            result(i, j).r -= matrix(i, j).r;
-            result(i, j).i -= matrix(i, j).i;
+            matrix(i, j).r -= matrix(i, j).r;
+            matrix(i, j).i -= matrix(i, j).i;
         }
     }
-    matrix = result.copy();
 }
 void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -586,5 +584,5 @@ void test_store_matrix(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_equals_();
+    test_matrix_negative();
 }
