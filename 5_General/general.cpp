@@ -415,7 +415,6 @@ void matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, 
     }
     cout << endl;
     print_matrix(eigenExponential, "exponential eigenvalues");
-    print_matrix(result, "exponential eigenvalues - r");
     /* multiply them back together */
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 }
@@ -433,6 +432,7 @@ void test_negH_exponential(){
     print_matrix(negH, "-H");
     /* calculate exponentials */
     matrix_exponential_v(H, lattice_size, expH);
+    print_matrix(expH, "e^(-H)");
 }
 void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
     /* initialise everything */
