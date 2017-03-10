@@ -434,6 +434,23 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
     // B = expH.copy();
     // matrix_product(B, expV);
 }
+void matrix_multiple(const LaGenMatComplex& matrix, const int matrix_size, const double number, LaGenMatComplex& result){
+    for(int r = 0; r < matrix_size; r++){
+        for(int c = 0; c < matrix_size; c++){
+            result(r,c).r = matrix(r,c) * number;
+            result(r,c).r = matrix(r,c) * number;
+        }
+    }
+}
+void test_matrix_multiple(){
+    int matrix_size = 4;
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
+    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    matrix_multiple(matrix, matrix_size, 2.0, result);
+    print_matrix(matrix, "initial matrix");
+    print_matrix(result, "initial matrix * 2");
+
+}
 void B_calculation_v(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
     /* initialise everything */
     B = 0;
@@ -779,5 +796,5 @@ void test_weight(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_B_calculation();
+    test_matrix_multiple();
 }
