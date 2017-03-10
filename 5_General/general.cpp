@@ -459,16 +459,12 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
     for(int x = 0; x < time_size; x++){
         clear_storage(slice, lattice_size);
         int t = time_size - x - 1;
-        cout << "t = " << t << ": ";
         isolate_row(lattice, lattice_size, t, slice);
-        print_array(slice, lattice_size, "slice");
-        // B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
-        // matrix_product(O, B);
-        // print_matrix(O, "product");
+        B_calculation_v(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+        matrix_product(O, B);
     }
     /* add I */
     matrix_sum(lattice_size, O, I);
-    print_matrix(O, "O");
 }
 void O_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& O){
     /* initialise everything */
