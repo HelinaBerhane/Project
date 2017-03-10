@@ -672,6 +672,7 @@ void test_B_calculation(){
     /* calculate B */
     cout << "sigma = 1" << endl;
     B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, B);
+    B = 0;
     cout << "sigma = -1" << endl;
     B_calculation(slice, lattice_size, U, lambda, -1, delta_tau, B);
     /* print result */
