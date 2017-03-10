@@ -33,25 +33,13 @@ void print_array(const COMPLEX array[], int len){
     }
     cout << endl;
 }//working
-void print_array(const COMPLEX array[], int len, const string name){
-	cout << name << ":" << endl;
-    for(int i = 0; i < len; i++){
-        cout << array[i] << endl;
-    }
-    cout << endl;
-}//working
+
 void print_vector(const LaVectorComplex& vector, const string name){
     cout << name << ":" << endl << vector << endl;
 }//working
 
 /* Generation [5/5]*/
-void generate_scalar(COMPLEX& scalar, const int max_rand){
-    scalar.r = basic_random_int(max_rand);	//1 to x
-    scalar.i = basic_random_int(max_rand);
-}//working
-void generate_scalar(int scalar, const int max_rand){
-    scalar = basic_random_int(max_rand);	//1 to x
-}//working
+
 void generate_array(COMPLEX array[], const int array_length, const int max_rand){
     for(int i = 0; i < array_length; i++){
         array[i].r = basic_random_int(max_rand);	//1 to x
@@ -84,15 +72,6 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
     }
 }//working
 // QMC - [4/4]
-
-
-
-/* Matrix conversion [5/5] */
-void vec_to_array(const LaVectorComplex& vector, const int len, COMPLEX array[]){
-    for(int i = 0; i < len; i++){
-        array[i] = vector(i);
-    }
-}//working
 
 void copy_array(const int len, const COMPLEX array[], COMPLEX copy[]){//in progress
     for(int i = 0; i < len; i++){
@@ -140,75 +119,13 @@ void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     laResult = laA * laB;
     result = laResult.toCOMPLEX();
 }//working
-void scalar_product(COMPLEX& product, const COMPLEX& number){
-    COMPLEX part;
-    part.r = (product.r * number.r) - (product.i * number.i);
-    part.i = (product.r * number.i) + (product.i * number.r);
-    product = part;
-}//working
+
 COMPLEX scalar_multiple(COMPLEX& A, const COMPLEX& B){
     COMPLEX part;
     part.r = (A.r * B.r) - (A.i * B.i);
     part.i = (A.r * B.i) + (A.i * B.r);
     return part;
 }
-
-
-void scalar_powers(const COMPLEX& number, const int power, COMPLEX& result){
-    la::complex<double> laResult = la::complex<double>(number);
-    la::complex<double> laNumber = la::complex<double>(number);
-    for(int i = 1; i < power; i++){
-        laResult *= laNumber;
-    }
-    result = laResult.toCOMPLEX();
-}//working
-
-//void scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
-    //COMPLEX power;
-    //COMPLEX division;
-    //result.r = 0;
-    //result.i = 0;
-    //for(int i = 0; i < iter; i++){
-    //    scalar_powers(number, i, power);
-    //    scalar_division(power, factorial(i), division);
-    //    scalar_addition(result, division, result);
-    //}
-//}
-//COMPLEX rec_scalar_exp_step(const COMPLEX& number, const int step){
-//    COMPLEX result, division, multiplication;
-//	if(step <= 1){
-//        result.r = 1;
-//        return result;
-//	}else{
-//        scalar_division(number,step,division);
-//        scalar_multiplication(division, rec_scalar_exp_step(step-1), multiplication);
-//        return multiplication;
-//	}
-//}
-//void recursive_scalar_exponential(const COMPLEX& number, const int iter, COMPLEX& result){
-    //COMPLEX power;
-    //COMPLEX division;
-    //result.r = 0;
-    //result.i = 0;
-    //for(int i = 0; i < iter; i++){
-    //    scalar_powers(number, i, power);
-    //    scalar_division(power, factorial(i), division);
-    //    scalar_addition(result, division, result);
-    //}
-//}
-// QMC - [/1]
-
-/* array manipulation [1/1] */
-//void array_powers(COMPLEX array[], const int len, const int power){/**/
-    /*
-    for(int i = 0; i < len; i++){
-        array[i] = complex_power(array[i], power, result);
-    }
-    */
-//}                       //empty
-
-
-/* Matrix manipulation [15/15]*/
 
 void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatComplex& matrix){//to test
     for(int i = 0; i < matrix_size; i++){
@@ -219,8 +136,6 @@ void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatCompl
     }
 }//should be working
 
-
-
 void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, const int iterations, LaGenMatComplex& result){
     result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -229,35 +144,7 @@ void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix
         //cout << "e^matrix_ii "<< result(i,i) << endl;
     }
 }//working
-void matrix_transpose(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    for(int i = 0; i < matrix_size; i++){
-        for(int j = 0; j < matrix_size; j++){
-            result(i, j) = matrix(j, i);
-        }
-    }
-}//working
 
-void five_matrix_multiplication(const LaGenMatComplex& matrixA, const LaGenMatComplex& matrixB, const LaGenMatComplex& matrixC, const LaGenMatComplex& matrixD, const LaGenMatComplex& matrixE, LaGenMatComplex& result){
-    result = matrixA.copy();
-    //print_matrix(result, "A");
-    /* AB */
-    //print_matrix(matrixB, "B");
-    matrix_product(result, matrixB);
-    //print_matrix(result, "AB");
-    /* ABC */
-    //print_matrix(matrixC, "C");
-    matrix_product(result, matrixC);
-    //print_matrix(result, "ABC");
-    /* ABCD */
-    //print_matrix(matrixD, "D");
-    matrix_product(result, matrixD);
-    //print_matrix(result, "ABCD");
-    /* ABCDE */
-    //print_matrix(matrixE, "E");
-    matrix_product(result, matrixE);
-    //print_matrix(result, "ABCDE");
-}//working
 COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
     /* initialise everything */
     COMPLEX A;
@@ -327,15 +214,6 @@ void matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, CO
 }//working
 
 // QMC [7/8]
-float lambda_calculation(const float U){
-    return acoshf(exp(sqrt(0.125*U)/2));
-}//working
-float delta_tau_calculation(const float U){
-    return sqrt(0.125 / U);
-}//working
-
-
-
 void O_calculation(const int matrix_size, const LaGenMatComplex& BA, const LaGenMatComplex& BB, const LaGenMatComplex& BC, const LaGenMatComplex& BD, const LaGenMatComplex&BE, LaGenMatComplex& O){//should be working
     //O = 1 + B(m) B(m-1) B(...) B(1)
     /* initialise everything */
@@ -403,7 +281,6 @@ void calculate_weight(const int matrix_size, const COMPLEX latticeUP[], const fl
     scalar_multiplication(detOUP, detODOWN, weight);
 
 }
-
 
 void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float U, const int iterations){//in progress
     /* Plan */
@@ -507,7 +384,6 @@ void sweep_lattice(const int matrix_size, LaGenMatComplex& lattice, const float 
         // with most parameters = 1, it stabilised at all -1 spins
 }
 
-
 /* Testing [20/21] */
 void test_random_int(){
     int max_rand = 9, iterations = 1000000000, test;
@@ -563,56 +439,8 @@ void test_negative_scalar(){
         copy_negative_scalar(scalar, negativeScalar);
         print_scalar(negativeScalar, "negative scalar");
     }
-}//working
-void test_scalar_manipulation(const int max_rand){
-    COMPLEX compA;
-    generate_scalar(compA, max_rand);
-    COMPLEX compB;
-    generate_scalar(compB, max_rand);
-    int realB = 0;
-    generate_scalar(realB, max_rand);
-    COMPLEX result;
+}
 
-    cout << "compA = " << compA << endl;
-    cout << "compB = " << compB << endl;
-    cout << "realB = " << realB << endl;
-    cout << endl;
-
-    for(int i = 1; i < 5; i++){                                                 //factorials
-        cout << "factorial(" << i << "): " << factorial(i) << endl;
-    }
-
-    scalar_addition(compA, compB, result);                                      //addition/subtraction
-    cout << "scalar addition: " << result << endl << endl;
-
-    scalar_multiplication(compA, realB, result);                                //multiplication
-    cout << "scalar multiplication by scalar: " << result << endl << endl;
-
-    scalar_multiplication(compA, compB, result);
-    cout << "scalar multiplication by complex: " << result << endl << endl;
-
-    scalar_division(compA, realB, result);         //division
-    cout << "scalar division by scalar: " << result << endl << endl;
-
-    scalar_division(compA, compB, result);
-    cout << "scalar division by complex: " << result << endl << endl;
-
-    for(int i = 1; i < 5; i++){
-        scalar_powers(compA, i, result);
-        cout << "scalar powers - A^" << i << " = " << result << endl;
-    }
-    cout << endl;
-
-    COMPLEX sum;
-    sum.r = 0;
-    sum.i = 0;
-    for(int i = 0; i < 5; i++){
-        cout << "sum(" << i << ") = " << sum << endl;
-        scalar_sum(sum, compA);
-    }
-    cout << "sum = " << sum << endl;
-
-}//working
 void test_matrix_equals_(){
     int matrix_size = 5, max_rand = 5;
     LaGenMatComplex matrix;
@@ -623,10 +451,6 @@ void test_matrix_equals_(){
     matrix = 1;
     print_matrix(matrix, "matrix = 1");
 }
-
-
-
-
 void test_matrix_subtraction(const int matrix_size, const int max_rand){
     LaGenMatComplex matrix;
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -637,96 +461,6 @@ void test_matrix_subtraction(const int matrix_size, const int max_rand){
     matrix_negative(matrix_size, matrix);
     print_matrix(matrix, "- Matrix (in place)");
 }
-void test_matrix_multiplication(const int matrix_size, const int max_rand){
-    int matrix_volume = matrix_size * matrix_size;
-    /* generate matrix A */
-    COMPLEX elements[matrix_volume];
-    generate_array(elements, matrix_volume, max_rand);
-	LaGenMatComplex matrixA = LaGenMatComplex(elements, matrix_size, matrix_size, false );
-    print_matrix(matrixA, "Matrix A");
-    /* generate matrix B */
-    generate_array(elements, matrix_volume, max_rand);
-	LaGenMatComplex matrixB = LaGenMatComplex(elements, matrix_size, matrix_size, false );
-    print_matrix(matrixB, "Matrix B");
-    /* generate matrix A^T */
-    LaGenMatComplex transposeA;
-    matrix_transpose(matrixA, matrix_size, transposeA);
-    print_matrix(transposeA, "transpose A");
-    /* generate matrix B^T */
-    LaGenMatComplex transposeB;
-    matrix_transpose(matrixB, matrix_size, transposeB);
-    print_matrix(transposeB, "transpose B");
-    /* initialise result */
-    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    /* A * B */
-    Blas_Mat_Mat_Mult(matrixA, matrixB, result);
-    print_matrix(result, "Matrix A * Matrix B");
-    /* A^T * B */
-    Blas_Mat_Mat_Mult(transposeA, matrixB, result);
-    print_matrix(result, "Matrix A^T * Matrix B");
-    /* A * B^T */
-    Blas_Mat_Mat_Mult(matrixA, transposeB, result);
-    print_matrix(result, "Matrix A * Matrix B^T");
-    /* A^T * B^T */
-    Blas_Mat_Mat_Mult(transposeA, transposeB, result);
-    print_matrix(result, "Matrix A^T * Matrix B^T");
-}//working
-
-
-
-
-// void test_matrix_arrays(){
-//
-//     /* initialise everything */
-//     int n = 3, matrix_size = 5, max_rand = 9;
-//     LaGenMatComplex* matrices[1];
-//     *matrices[0] = LaGenMatComplex::eye(2, 2);
-//
-//     LaGenMatComplex mgds;
-//
-//     /* generate everything */
-//     // generate_matrix(matrix_size, max_rand, matrices[0]);
-//     // *matrices[0] = LaGenMatComplex::eye(matrix_size, matrix_size);
-//
-//     mgds = *matrices[0];
-//     cout << matrices[0] << endl;
-//     cout << mgds(1,1) << endl;
-//         // this is an array of pointers to matrices
-//     // LaGenMatComplex product = LaGenMatComplex::eye(2, 2);
-//     //
-//     // for(int i = 0; i < n; i++){
-//     //
-//     //     /* generate everything */
-//     //     generate_matrix(matrix_size, max_rand, *matrices[n]);
-//     //
-//     //     /* print everything */
-//     //     cout << "(" << n << ")" << endl;
-//     //     print_matrix(*matrices[n]);
-//     // }
-// }
-
-
-
-void test_five_matrix_multiplication(const int matrix_size, const int max_rand){
-    /* initialise everything */
-    LaGenMatComplex matrixA;
-    LaGenMatComplex matrixB;
-    LaGenMatComplex matrixC;
-    LaGenMatComplex matrixD;
-    LaGenMatComplex matrixE;
-    LaGenMatComplex result;
-    /* generate everything */
-    generate_matrix(matrix_size, max_rand, matrixA);
-    generate_matrix(matrix_size, max_rand, matrixB);
-    generate_matrix(matrix_size, max_rand, matrixC);
-    generate_matrix(matrix_size, max_rand, matrixD);
-    generate_matrix(matrix_size, max_rand, matrixE);
-    /* ABCDE */
-    five_matrix_multiplication(matrixA, matrixB, matrixC, matrixD, matrixE, result);
-    print_matrix(result, "ABCDE");
-    //{{1+7i, 5+7i},{7i, 1+3i}}*{{6+i, 5+7i},{5+4i, 5+4i}}*{{6, 8+8i},{7+i, 6+6i}}*{{8+8i, 1+i},{8+4i, 5}}*{{3, 1+7i},{5+3i, 4+7i}}
-}//working
-
 
 void test_idenpotent_exponential(const int iterations){
     /* generate the matrix */
@@ -838,8 +572,6 @@ void test_parameter_calculation(){
     cout << "l = " << lambda << endl;
     cout << "t = " << delta_tau << endl;
 }//working
-
-
 void test_O_generation(const int time_size, const int iterations){//should work
     /* initialise everything */
     COMPLEX elements[time_size];

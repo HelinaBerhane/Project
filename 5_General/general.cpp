@@ -58,6 +58,16 @@ void array_to_diag(const COMPLEX array[], const int array_size, LaGenMatComplex&
         diag(i, i) = array[i];
     }
 }
+void vec_to_array(const LaVectorComplex& vector, const int array_size, COMPLEX array[]){
+    for(int i = 0; i < array_size; i++){
+        array[i] = vector(i);
+    }
+}
+void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatComplex& diag){
+    COMPLEX array[array_size];
+    vec_to_array(vector, array_size, array);
+    array_to_diag(array, array_size, diag);
+}
 // Generation
 void generate_scalar(COMPLEX& scalar, const int max_rand){
     scalar.r = random_int(max_rand);
@@ -151,6 +161,19 @@ void matrix_product(LaGenMatComplex& product, const LaGenMatComplex& matrix){
     Blas_Mat_Mat_Mult(product, matrix, result);
     product = result.copy();
 }
+void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){
+    /* initialise  everything */
+    LaGenMatComplex eigenvalueMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex inverseEigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    result = LaGenMatComplex::eye(matrix_size, matrix_size);
+    /* process matrices */
+    vec_to_diag(eigenvalues, matrix_size, eigenvalueMatrix);
+    matrix_inverse(eigenvectors, matrix_size, inverseEigenvectors);
+    /* multiply results */
+    matrix_product(result, eigenvectors);
+    matrix_product(result, eigenvalueMatrix);
+    matrix_product(result, inverseEigenvectors);
+}
 // - qmc
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
     lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
@@ -216,6 +239,21 @@ void test_matrix_product(){
     matrix_product(matrixA, matrixB);
     print_matrix(matrixB, "result");
 }
+void test_recombine_diagonalised_matrices(){
+    /* initialise everything */
+    int matrix_size = 5;
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
+    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    /* generate matrix */
+    print_matrix(matrix, "initial matrix");
+    /* calculate eigenstuff */
+    LaEigSolve(matrix, eigenvalues, eigenvectors);
+    /* multiply them back together */
+    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenvalues, result);
+    print_matrix(result, "final matrix");
+}
 // - qmc
 void test_initial_parameters(){
     double U = 1, beta = 10, lambda, delta_tau;
@@ -267,47 +305,6 @@ void test_V(){
 
 						/* ------ TO TEST ------ */
 //...
-
-void vec_to_array(const LaVectorComplex& vector, const int array_size, COMPLEX array[]){
-    for(int i = 0; i < array_size; i++){
-        array[i] = vector(i);
-    }
-}
-void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatComplex& diag){
-    COMPLEX array[array_size];
-    vec_to_array(vector, array_size, array);
-    array_to_diag(array, array_size, diag);
-}
-void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result){
-    /* initialise  everything */
-    LaGenMatComplex eigenvalueMatrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex inverseEigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    result = LaGenMatComplex::eye(matrix_size, matrix_size);
-    /* process matrices */
-    vec_to_diag(eigenvalues, matrix_size, eigenvalueMatrix);
-    matrix_inverse(eigenvectors, matrix_size, inverseEigenvectors);
-    /* multiply results */
-    matrix_product(result, eigenvectors);
-    matrix_product(result, eigenvalueMatrix);
-    matrix_product(result, inverseEigenvectors);
-}
-void test_recombine_diagonalised_matrices(){
-    /* initialise everything */
-    int matrix_size = 5;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
-    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    /* generate matrix */
-    print_matrix(matrix, "initial matrix");
-    /* calculate eigenstuff */
-    LaEigSolve(matrix, eigenvalues, eigenvectors);
-    /* multiply them back together */
-    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenvalues, result);
-    print_matrix(result, "final matrix");
-}
-
-/* -------- */
 
 void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
     /* initialise everything */
@@ -402,7 +399,6 @@ void test_B_generation(){
     print_matrix(B,"B = e^-H e^-V");
 }
 
-
 						/* ------ TO CONVERT ------ */
 // matrix_size                      -> lattice_size or time_size
 // len                              -> array_size
@@ -420,5 +416,5 @@ void test_B_generation(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_recombine_diagonalised_matrices();
+    test_matrix_exponential();
 }
