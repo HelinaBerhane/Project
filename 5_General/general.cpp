@@ -283,6 +283,37 @@ void V_calculation(const COMPLEX slice[], const int lattice_size, const double U
     /* plot to diagonal */
     array_to_diag(V_ii, lattice_size, V);
 }
+void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
+    /* initialise everything */
+    LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex negH = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex negV = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex expH = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex expV = LaGenMatComplex::zeros(lattice_size, lattice_size);
+
+    /* calculate H and V */
+    generate_H(lattice_size, H);
+    V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
+    print_matrix(H, "H");
+    print_matrix(V, "V");
+
+    /* calculate -H and -V */
+    matrix_negative(lattice_size, H, negH);
+    matrix_negative(lattice_size, V, negV);
+    print_matrix(negH, "-H");
+    print_matrix(negV, "-V");
+
+    /* calculate exponentials */
+    matrix_exponential(negH, lattice_size, expH);
+    diagonal_matrix_exponential(negV, lattice_size, expV);
+    print_matrix(expH, "e^(-H)");
+    print_matrix(expV, "e^(-V)");
+
+    /* multiply exponentials */
+    B = expH.copy();
+    matrix_product(B, expV);
+}
 
 /* -- Testing -- */
 // - generic
@@ -426,41 +457,6 @@ void test_negH_exponential(){
     matrix_exponential_v(H, lattice_size, expH);
     print_matrix(expH, "e^(-H)");
 }
-
-						/* ------ TO TEST ------ */
-//...
-
-void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
-    /* initialise everything */
-    LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex negH = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex negV = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex expH = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex expV = LaGenMatComplex::zeros(lattice_size, lattice_size);
-
-    /* calculate H and V */
-    generate_H(lattice_size, H);
-    V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
-    print_matrix(H, "H");
-    print_matrix(V, "V");
-
-    /* calculate -H and -V */
-    matrix_negative(lattice_size, H, negH);
-    matrix_negative(lattice_size, V, negV);
-    print_matrix(negH, "-H");
-    print_matrix(negV, "-V");
-
-    /* calculate exponentials */
-    matrix_exponential(negH, lattice_size, expH);
-    diagonal_matrix_exponential(negV, lattice_size, expV);
-    print_matrix(expH, "e^(-H)");
-    print_matrix(expV, "e^(-V)");
-
-    /* multiply exponentials */
-    B = expH.copy();
-    matrix_product(B, expV);
-}
 void test_B_generation(){
     /* initialise everything */
     int lattice_size = 5, time_size;
@@ -477,6 +473,11 @@ void test_B_generation(){
     /* print result */
     print_matrix(B,"B = e^-H e^-V");
 }
+
+						/* ------ TO TEST ------ */
+//...
+
+
 
 						/* ------ TO CONVERT ------ */
 // matrix_size                      -> lattice_size or time_size
@@ -616,5 +617,5 @@ void test_store_matrix(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_B_generation();
+    test_store_matrix();
 }
