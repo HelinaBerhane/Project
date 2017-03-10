@@ -452,7 +452,7 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
     print_matrix(negV, "-V");
 
     /* calculate exponentials */
-    matrix_exponential_v(negH, lattice_size, expH);
+    matrix_exponential(negH, lattice_size, expH);
     diagonal_matrix_exponential(negV, lattice_size, expV);
     print_matrix(expH, "e^(-H)");
     print_matrix(expV, "e^(-V)");
