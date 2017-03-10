@@ -407,6 +407,7 @@ void O_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, con
         isolate_row(lattice, lattice_size, t, slice);
         print_array(slice, lattice_size, "slice");
         B_calculation_v(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+        print_matrix(B, "B");
         matrix_product(O, B);
         print_matrix(O, "product");
     }
