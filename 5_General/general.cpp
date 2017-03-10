@@ -494,6 +494,12 @@ void test_B_generation(){
 // void test_...(...)               -> void test_...( );
 // five_matrix_multiplication       -> n_matrix_product
 
+void clear_storage(COMPLEX storage[], const int storage_size){
+    for(int i = 0; i < storage_size; i++){
+        storage[i].r = 0;
+        storage[i].i = 0;
+    }
+}
 void store_matrix(const LaGenMatComplex& matrix, const int matrix_number, const int matrix_size, COMPLEX storage[], const int storage_size){
     /* initialise everything */
     int matrix_volume = matrix_size * matrix_size;
@@ -509,7 +515,8 @@ void store_matrix(const LaGenMatComplex& matrix, const int matrix_number, const 
 void test_store_matrix(){
     /* initialise everything */
     int matrix_size = 5, storage_size = matrix_size * matrix_size * 3;
-    COMPLEX storage[storage_size] = 0;
+    COMPLEX storage[storage_size];
+    clear_storage(storage, storage_size);
     LaGenMatComplex A = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     LaGenMatComplex B = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     LaGenMatComplex C = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
