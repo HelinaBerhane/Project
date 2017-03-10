@@ -620,5 +620,5 @@ void test_store_matrix(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_B_generation();
+    test_negH_exponential();
 }
