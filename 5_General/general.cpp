@@ -509,7 +509,7 @@ void store_matrix(const LaGenMatComplex& matrix, const int matrix_number, const 
 void test_store_matrix(){
     /* initialise everything */
     int matrix_size = 5, storage_size = matrix_size * matrix_size * 3;
-    COMPLEX storage[storage_size];
+    COMPLEX storage[storage_size] = 0;
     LaGenMatComplex A = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     LaGenMatComplex B = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     LaGenMatComplex C = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
