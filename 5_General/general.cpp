@@ -473,7 +473,7 @@ void test_V(){
     print_array(slice, lattice_size, "slice");
 
     /* calculate V */
-    V_calculation(slice, lattice_size, U, lambda, 0, delta_tau, V);
+    V_calculation(slice, lattice_size, U, lambda, 1, delta_tau, V);
     print_matrix(V, "V");
 }
 void test_negH_exponential(){
