@@ -208,8 +208,8 @@ void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
-            matrix(i, j).r -= matrix(i, j).r;
-            matrix(i, j).i -= matrix(i, j).i;
+            result(i, j).r -= matrix(i, j).r;
+            result(i, j).i -= matrix(i, j).i;
         }
     }
     matrix = result.copy();
