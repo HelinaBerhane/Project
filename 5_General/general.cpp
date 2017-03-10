@@ -74,6 +74,10 @@ void vec_to_diag(const LaVectorComplex& vector, const int array_size, LaGenMatCo
     vec_to_array(vector, array_size, array);
     array_to_diag(array, array_size, diag);
 }
+void clear_scalar(COMPLEX& scalar){
+    scalar.r = 0;
+    scalar.i = 0;
+}
 void clear_storage(COMPLEX storage[], const int storage_size){
     for(int i = 0; i < storage_size; i++){
         storage[i].r = 0;
@@ -337,6 +341,9 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     COMPLEX determinant;
     LaGenMatComplex cofactorMatrix;
     COMPLEX coefficient;
+    clear_scalar(determinant);
+    clear_scalar(cofactorMatrix);
+    clear_scalar(coefficient);
     /* do stuff */
     if(matrix_size == 2){
         return simple_matrix_determinant(matrix);
@@ -364,7 +371,7 @@ void initial_parameter_calculation(const double U, const double beta, double& la
     time_size = ceil(beta / lambda);        // by definition
     delta_tau = beta / time_size;           // = sqrt(0.125 / U) by convension
 }
-void generate_H(const int lattice_size, LaGenMatComplex& H){
+void H_generation(const int lattice_size, LaGenMatComplex& H){
     /* initialise everything */
     int matrix_volume = lattice_size * lattice_size, n;
     COMPLEX elements[matrix_volume];
@@ -411,7 +418,7 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
     LaGenMatComplex exponential = LaGenMatComplex::zeros(lattice_size, lattice_size);
 
     /* calculate H and V */
-    generate_H(lattice_size, H);
+    H_generation(lattice_size, H);
     V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
     sum = H.copy();
 
@@ -438,7 +445,7 @@ void B_calculation_v(const COMPLEX slice[], const int lattice_size, const double
     LaGenMatComplex exponential = LaGenMatComplex::zeros(lattice_size, lattice_size);
 
     /* calculate H and V */
-    generate_H(lattice_size, H);
+    H_generation(lattice_size, H);
     V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
     sum = H.copy();
     print_matrix(sum, "H");
@@ -635,7 +642,7 @@ void test_H(){
     LaVectorComplex eigenvalues = LaVectorComplex(lattice_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate matrix */
-    generate_H(lattice_size, H);
+    H_generation(lattice_size, H);
     print_matrix(H);
     /* calculate eigenstuff */
     LaEigSolve(H, eigenvalues, eigenvectors);
@@ -669,7 +676,7 @@ void test_negH_exponential(){
     LaGenMatComplex negH = LaGenMatComplex::zeros(lattice_size, lattice_size);
     LaGenMatComplex expH = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* calculate H */
-    generate_H(lattice_size, H);
+    H_generation(lattice_size, H);
     print_matrix(H, "H");
     /* calculate -H */
     matrix_negative(lattice_size, H, negH);
@@ -735,10 +742,8 @@ void test_O(){
 // five_matrix_multiplication       -> n_matrix_product
 // my_matrix_determinant(,)         -> matrix_determinant(,,d)
 // calculate_weight                 -> weight_calculation
-void clear_scalar(COMPLEX& scalar){
-    scalar.r = 0;
-    scalar.i = 0;
-}
+// generate_H                       -> H_generation
+
 void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
     /* initialise everything */
     LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
@@ -785,5 +790,5 @@ void test_weight(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_weight();
+    test_matrix_determinant();
 }
