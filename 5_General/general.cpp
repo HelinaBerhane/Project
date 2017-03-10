@@ -714,9 +714,10 @@ void test_O(){
 // void test_...(...)               -> void test_...( );
 // five_matrix_multiplication       -> n_matrix_product
 // my_matrix_determinant(,)         -> matrix_determinant(,,d)
+// calculate_weight                 -> weight_calculation
 
 
-void calculate_weight_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
+void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
     /* initialise everything */
     weight.r = 0;
     weight.i = 0;
@@ -750,14 +751,13 @@ void test_weight(){
     /* initialise everything */
     int lattice_size = 5;
     double U = 1, beta = 10, lambda, delta_tau;
+    set_up_v(U, beta, lambda, delta_tau, time_size, lattice_size);
     COMPLEX weight;
     weight.r = 0;
     weight.i = 0;
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    set_up_v(U, beta, lambda, delta_tau, time_size, lattice_size);
-
     /* calculate the weight */
-    calculate_weight_v(lattice, lattice_size, time_size, U, lambda, delta_tau, weight);
+    weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, weight);
     print_scalar(weight, "weight");
 }
 
