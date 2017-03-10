@@ -406,6 +406,12 @@ void test_V(){
 
 						/* ------ TO TEST ------ */
 //...
+void print_scalar(const COMPLEX scalar){
+    cout << scalar << endl;
+}
+void print_scalar(const COMPLEX scalar, const string name){
+    cout << name << ": " << scalar << endl;
+}
 void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
     /* initialise everything */
     LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
