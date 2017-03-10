@@ -297,73 +297,18 @@ void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix
         scalar_exponential(matrix(i,i), result(i,i));
     }
 }
-COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
+void matrix_determinant_e(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& result){
     /* initialise everything */
-    COMPLEX A;
-    COMPLEX B;
-    /* multiply opposite corners */
-    scalar_multiplication(matrix(0,0), matrix(1,1), A);
-    scalar_multiplication(matrix(0,1), matrix(1,0), B);
-    /* - B */
-    B.r = -B.r;
-    B.i = -B.i;
+    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    result.r = 1;
+    result.i = 0;
+    /* calculate eigenvectors */
+    LaEigSolve(matrix, eigenvalues, eigenvectors);
     /* calculate determinant */
-    scalar_sum(A, B);
-    return A;
-}
-COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int element){
-    COMPLEX coefficient;
-    if(element % 2 == 1){
-        // if odd
-        coefficient.r = - matrix(0, element).r;
-        coefficient.i = - matrix(0, element).i;
-    }else{
-        // if even
-        coefficient.r = matrix(0, element).r;
-        coefficient.i = matrix(0, element).i;
+    for(int i = 0; i < matrix_size; i++){
+        scalar_product(result, eigenvalues(i));
     }
-    return coefficient;
-}
-void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int element, LaGenMatComplex& cofactorMatrix){
-    for(int r = 1; r < matrix_size; r++){ // skip first row
-        int newC = 0;
-        for(int c = 0; c < matrix_size; c++){
-            if(c != element){ // slip column
-                cofactorMatrix(r - 1, newC).r = matrix(r, c).r;
-                cofactorMatrix(r - 1, newC).i = matrix(r, c).i;
-                newC++;
-            }
-        }
-    }
-}
-COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
-    /* initialise everything */
-    COMPLEX determinant;
-    LaGenMatComplex cofactorMatrix;
-    COMPLEX coefficient;
-    cofactorMatrix = 0;
-    /* do stuff */
-    if(matrix_size == 2){
-        return simple_matrix_determinant(matrix);
-    }else{
-        //for each element in the first row
-        for(int element = 0; element < matrix_size; element++){
-            /* initialise everything */
-            int cofactor_size = matrix_size - 1;
-            clear_scalar(determinant);
-            clear_scalar(coefficient);
-            cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
-            /* determine the coefficient */
-            coefficient = determinant_coefficient(matrix, element);
-                // = +- the element
-            /* calculate the cofactor */
-            generate_cofactor_matrix(matrix_size, matrix, element, cofactorMatrix);
-            //print_matrix(cofactorMatrix, "cofactorMatrix");
-            /* finish calculation */
-            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
-        }
-    }
-    return determinant;
 }
 // - qmc
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
@@ -610,7 +555,20 @@ void test_store_matrix(){
     store_matrix(C, 2, matrix_size, storage, storage_size);
     print_array(storage, storage_size, "storage");
 }
-
+void test_matrix_determinant(){
+    /* initialise everything */
+    int matrix_size = 4;
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
+    print_matrix(matrix, "initial matrix");
+    COMPLEX result;
+    // clear_scalar(result);
+    /* calculate determinant */
+    // result = matrix_determinant(matrix_size, matrix);
+    // print_scalar(result, "determinant");
+    clear_scalar(result);
+    matrix_determinant_e(matrix_size, matrix, result);
+    print_scalar(result, "determinant (from eigenstuff)");
+}
 // - qmc
 void test_initial_parameters(){
     double U = 1, beta = 10, lambda, delta_tau;
@@ -713,7 +671,75 @@ void test_O(){
 
 						/* ------ TO TEST ------ */
 //...
-
+// - unused
+// COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
+//     /* initialise everything */
+//     COMPLEX A;
+//     COMPLEX B;
+//     /* multiply opposite corners */
+//     scalar_multiplication(matrix(0,0), matrix(1,1), A);
+//     scalar_multiplication(matrix(0,1), matrix(1,0), B);
+//     /* - B */
+//     B.r = -B.r;
+//     B.i = -B.i;
+//     /* calculate determinant */
+//     scalar_sum(A, B);
+//     return A;
+// }
+// COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int element){
+//     COMPLEX coefficient;
+//     if(element % 2 == 1){
+//         // if odd
+//         coefficient.r = - matrix(0, element).r;
+//         coefficient.i = - matrix(0, element).i;
+//     }else{
+//         // if even
+//         coefficient.r = matrix(0, element).r;
+//         coefficient.i = matrix(0, element).i;
+//     }
+//     return coefficient;
+// }
+// void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int element, LaGenMatComplex& cofactorMatrix){
+//     for(int r = 1; r < matrix_size; r++){ // skip first row
+//         int newC = 0;
+//         for(int c = 0; c < matrix_size; c++){
+//             if(c != element){ // slip column
+//                 cofactorMatrix(r - 1, newC).r = matrix(r, c).r;
+//                 cofactorMatrix(r - 1, newC).i = matrix(r, c).i;
+//                 newC++;
+//             }
+//         }
+//     }
+// }
+// COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
+//     /* initialise everything */
+//     COMPLEX determinant;
+//     LaGenMatComplex cofactorMatrix;
+//     COMPLEX coefficient;
+//     cofactorMatrix = 0;
+//     /* do stuff */
+//     if(matrix_size == 2){
+//         return simple_matrix_determinant(matrix);
+//     }else{
+//         //for each element in the first row
+//         for(int element = 0; element < matrix_size; element++){
+//             /* initialise everything */
+//             int cofactor_size = matrix_size - 1;
+//             clear_scalar(determinant);
+//             clear_scalar(coefficient);
+//             cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
+//             /* determine the coefficient */
+//             coefficient = determinant_coefficient(matrix, element);
+//                 // = +- the element
+//             /* calculate the cofactor */
+//             generate_cofactor_matrix(matrix_size, matrix, element, cofactorMatrix);
+//             //print_matrix(cofactorMatrix, "cofactorMatrix");
+//             /* finish calculation */
+//             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
+//         }
+//     }
+//     return determinant;
+// }
 
 						/* ------ TO CONVERT ------ */
 // matrix_size                      -> lattice_size or time_size
@@ -733,33 +759,7 @@ void test_O(){
 // calculate_weight                 -> weight_calculation
 // generate_H                       -> H_generation
 
-void matrix_determinant_e(const int matrix_size, const LaGenMatComplex& matrix, COMPLEX& result){
-    /* initialise everything */
-    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    result.r = 1;
-    result.i = 0;
-    /* calculate eigenvectors */
-    LaEigSolve(matrix, eigenvalues, eigenvectors);
-    /* calculate determinant */
-    for(int i = 0; i < matrix_size; i++){
-        scalar_product(result, eigenvalues(i));
-    }
-}
-void test_matrix_determinant(){
-    /* initialise everything */
-    int matrix_size = 4;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
-    print_matrix(matrix, "initial matrix");
-    COMPLEX result;
-    clear_scalar(result);
-    /* calculate determinant */
-    result = matrix_determinant(matrix_size, matrix);
-    print_scalar(result, "determinant");
-    clear_scalar(result);
-    matrix_determinant_e(matrix_size, matrix, result);
-    print_scalar(result, "determinant (from eigenstuff)");
-}
+
 void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
     /* initialise everything */
     LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
@@ -777,8 +777,6 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     print_matrix(OUP, "O UP");
     print_matrix(ODN, "O DN");
     /* calculate det(O) */
-    // detOUP = matrix_determinant(lattice_size, OUP);
-    // detODN = matrix_determinant(lattice_size, ODN);
     matrix_determinant_e(lattice_size, OUP, detOUP);
     matrix_determinant_e(lattice_size, ODN, detODN);
     print_scalar(detOUP, "det(O UP)");
@@ -808,5 +806,5 @@ void test_weight(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_determinant();
+    test_weight();
 }
