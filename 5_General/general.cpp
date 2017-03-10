@@ -473,7 +473,7 @@ void B_calculation_v(const COMPLEX slice[], const int lattice_size, const double
     print_matrix(sum, "H + V");
 
     /* calculate delta_tau * (H + V) */
-    matrix_multiple(sum, matrix_size, delta_tau, product);
+    matrix_multiple(sum, lattice_size, delta_tau, product);
     print_matrix(product, "delta_tau * (H + V)");
 
     /* calculate - delta_tau * (H + V) */
