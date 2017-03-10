@@ -673,18 +673,16 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
 }
 COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
     /* initialise everything */
-    determinant.r = 0;
-    determinant.i = 0;
+    COMPLEX determinant;
+    LaGenMatComplex cofactorMatrix;
+    COMPLEX coefficient;
     /* do stuff */
     if(matrix_size == 2){
-        /* calculate the determinant */
         return simple_matrix_determinant(matrix);
     }else{
         //for each element in the first row
         for(int element = 0; element < matrix_size; element++){
             /* initialise everything */
-            LaGenMatComplex cofactorMatrix;
-            COMPLEX coefficient;
             int cofactor_size = matrix_size - 1;
             /* determine the coefficient */
             coefficient = determinant_coefficient(matrix, element);
