@@ -421,9 +421,10 @@ void matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, 
 }
 void test_negH_exponential(){
     /* initialise everything */
-    lattice_size = 5;
+    int lattice_size = 5;
     LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
     LaGenMatComplex negH = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex expH = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* calculate H */
     generate_H(lattice_size, H);
     print_matrix(H, "H");
@@ -431,7 +432,7 @@ void test_negH_exponential(){
     matrix_negative(lattice_size, H, negH);
     print_matrix(negH, "-H");
     /* calculate exponentials */
-    matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result);
+    matrix_exponential_v(H, lattice_size, expH);
 
 }
 void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
