@@ -197,9 +197,13 @@ void matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, 
     LaVectorComplex eigenExponential = LaVectorComplex(matrix_size);
     /* calculate eigenstuff */
     LaEigSolve(matrix, eigenvalues, eigenvectors);
+        // matrix       = Input LaGenMatComplex
+        // eigenvalues  = LaVectorComplex
+        // eigenvectors = LaGenMatComplex
     /* calculate exponentials */
     for(int i = 0; i < matrix_size; i++){
         scalar_exponential(eigenvalues(i), result(i,i));
+        print_scalar(result(i,i), "r_ii");
     }
     /* multiply them back together */
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
@@ -221,6 +225,12 @@ void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGen
             result(i, j).r -= matrix(i, j).r;
             result(i, j).i -= matrix(i, j).i;
         }
+    }
+}
+void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
+    result = 0;
+    for(int i = 0; i < matrix_size; i++){
+        scalar_exponential(matrix(i,i), result(i,i));
     }
 }
 // - qmc
@@ -332,6 +342,19 @@ void test_matrix_equals_(){
     matrix = 1;
     print_matrix(matrix, "matrix = 1");
 }
+void test_diagonal_exponential(){
+    /* initialise everything */
+    int matrix_size = 3;
+    LaGenMatComplex test = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    for(int i = 0; i < matrix_size; i++){
+        test(i,i).r = i;
+    }
+    /* calculate exponential */
+    diagonal_matrix_exponential(test, matrix_size, result);
+    print_matrix(test, "test");
+    print_matrix(result);
+}
 // - qmc
 void test_initial_parameters(){
     double U = 1, beta = 10, lambda, delta_tau;
@@ -383,25 +406,6 @@ void test_V(){
 
 						/* ------ TO TEST ------ */
 //...
-void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
-    result = 0;
-    for(int i = 0; i < matrix_size; i++){
-        scalar_exponential(matrix(i,i), result(i,i));
-    }
-}
-void test_diagonal_exponential(){
-    /* initialise everything */
-    int matrix_size = 3;
-    LaGenMatComplex test = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    for(int i = 0; i < matrix_size; i++){
-        test(i,i).r = i;
-    }
-    /* calculate exponential */
-    diagonal_matrix_exponential(test, matrix_size, result);
-    print_matrix(test, "test");
-    print_matrix(result);
-}
 void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
     /* initialise everything */
     LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -424,8 +428,8 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
     print_matrix(negV, "-V");
 
     /* calculate exponentials */
-    matrix_exponential(negH, lattice_size, expH);
-    matrix_exponential(negV, lattice_size, expV);
+    matrix_exponential_v(negH, lattice_size, expH);
+    diagonal_matrix_exponential(negV, lattice_size, expV);
     print_matrix(expH, "e^(-H)");
     print_matrix(expV, "e^(-V)");
 
@@ -588,5 +592,5 @@ void test_store_matrix(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_diagonal_exponential();
+    test_B_generation();
 }
