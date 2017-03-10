@@ -671,6 +671,12 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
         }
     }
 }
+COMPLEX scalar_multiple(COMPLEX& A, const COMPLEX& B){
+    COMPLEX result;
+    result.r = (A.r * B.r) - (A.i * B.i);
+    result.i = (A.r * B.i) + (A.i * B.r);
+    return result;
+}
 COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
     /* initialise everything */
     COMPLEX determinant;
@@ -700,9 +706,9 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
 void test_matrix_determinant(){
     /* initialise everything */
     int matrix_size = 4;
-    LaGenMatComplex matrix = LaGenMatComplex(matrix_size, matrix_size, 0, 9);
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
     print_matrix(matrix, "initial matrix");
-    COMPLEX result.r;
+    COMPLEX result;
     result.r = 0;
     result.i = 0;
     /* calculate determinant */
