@@ -189,25 +189,7 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, La
     /* multiply them back together */
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 }
-void matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
-    /* initialise everything */
-    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
-    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex diagonalEigenExp = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaVectorComplex eigenExponential = LaVectorComplex(matrix_size);
-    /* calculate eigenstuff */
-    LaEigSolve(matrix, eigenvalues, eigenvectors);
-        // matrix       = Input LaGenMatComplex
-        // eigenvalues  = LaVectorComplex
-        // eigenvectors = LaGenMatComplex
-    /* calculate exponentials */
-    for(int i = 0; i < matrix_size; i++){
-        scalar_exponential(eigenvalues(i), result(i,i));
-        print_scalar(result(i,i), "r_ii");
-    }
-    /* multiply them back together */
-    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
-}
+
 void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
     LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
     for(int i = 0; i < matrix_size; i++){
@@ -411,6 +393,46 @@ void print_scalar(const COMPLEX scalar){
 }
 void print_scalar(const COMPLEX scalar, const string name){
     cout << name << ": " << scalar << endl;
+}
+void matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
+    /* initialise everything */
+    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex diagonalEigenExp = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaVectorComplex eigenExponential = LaVectorComplex(matrix_size);
+    /* calculate eigenstuff */
+    LaEigSolve(matrix, eigenvalues, eigenvectors);
+    print_matrix(matrix, "initial matrix");
+    print_vector(eigenvalues, "eigenvalues");
+    print_matrix(eigenvectors, "eigenvectors");
+        // matrix       = Input LaGenMatComplex
+        // eigenvalues  = LaVectorComplex
+        // eigenvectors = LaGenMatComplex
+    /* calculate exponentials */
+    for(int i = 0; i < matrix_size; i++){
+        scalar_exponential(eigenvalues(i), result(i,i));
+        print_scalar(result(i,i), "exp_ii");
+    }
+    cout << endl;
+    print_matrix(eigenExponential, "exponential eigenvalues");
+    print_matrix(result, "exponential eigenvalues - r");
+    /* multiply them back together */
+    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
+}
+void test_negH_exponential(){
+    /* initialise everything */
+    lattice_size = 5;
+    LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex negH = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    /* calculate H */
+    generate_H(lattice_size, H);
+    print_matrix(H, "H");
+    /* calculate -H */
+    matrix_negative(lattice_size, H, negH);
+    print_matrix(negH, "-H");
+    /* calculate exponentials */
+    matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result);
+
 }
 void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
     /* initialise everything */
