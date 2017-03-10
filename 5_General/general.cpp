@@ -604,6 +604,28 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
     matrix_sum(lattice_size, O, I);
     print_matrix(O, "O");
 }
+void O_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& O){
+    /* initialise everything */
+    LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
+    COMPLEX slice[lattice_size];
+    O = LaGenMatComplex::eye(lattice_size, lattice_size);
+    print_matrix(O, "product");
+    /* calculate B matrices */
+    for(int x = 0; x < time_size; x++){
+        clear_storage(slice, lattice_size);
+        int t = time_size - x - 1;
+        cout << "t = " << t << ": ";
+        isolate_row(lattice, lattice_size, t, slice);
+        print_array(slice, lattice_size, "slice");
+        B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+        matrix_product(O, B);
+        print_matrix(O, "product");
+    }
+    /* add I */
+    matrix_sum(lattice_size, O, I);
+    print_matrix(O, "O");
+}
 void test_O(){
     /* initialise everything */
     int lattice_size = 5, time_size = 0;
@@ -617,7 +639,7 @@ void test_O(){
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
     /* calculate O */
-    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, O);
+    O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, O);
     print_matrix(O, "O");
 }
 
