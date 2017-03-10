@@ -610,18 +610,7 @@ void test_store_matrix(){
     store_matrix(C, 2, matrix_size, storage, storage_size);
     print_array(storage, storage_size, "storage");
 }
-void test_matrix_determinant(){
-    /* initialise everything */
-    int matrix_size = 4;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
-    print_matrix(matrix, "initial matrix");
-    COMPLEX result;
-    result.r = 0;
-    result.i = 0;
-    /* calculate determinant */
-    result = matrix_determinant(matrix_size, matrix);
-    print_scalar(result, "determinant");
-}
+
 // - qmc
 void test_initial_parameters(){
     double U = 1, beta = 10, lambda, delta_tau;
@@ -757,7 +746,20 @@ void matrix_determinant_e(const int matrix_size, const LaGenMatComplex& matrix, 
         scalar_product(result, eigenvalues(i));
     }
 }
-
+void test_matrix_determinant(){
+    /* initialise everything */
+    int matrix_size = 4;
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
+    print_matrix(matrix, "initial matrix");
+    COMPLEX result;
+    clear_scalar(result);
+    /* calculate determinant */
+    result = matrix_determinant(matrix_size, matrix);
+    print_scalar(result, "determinant");
+    clear_scalar(result);
+    matrix_determinant_e(matrix_size, matrix, result);
+    print_scalar(result, "determinant (from eigenstuff)");
+}
 void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
     /* initialise everything */
     LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
