@@ -460,7 +460,7 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
         clear_storage(slice, lattice_size);
         int t = time_size - x - 1;
         isolate_row(lattice, lattice_size, t, slice);
-        B_calculation_v(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+        B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
         matrix_product(O, B);
     }
     /* add I */
