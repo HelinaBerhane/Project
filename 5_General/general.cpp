@@ -606,7 +606,7 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
 void test_O(){
     /* initialise everything */
     int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau, time_size;
+    double U = 1, beta = 10, lambda, delta_tau;
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate initial conditions */
