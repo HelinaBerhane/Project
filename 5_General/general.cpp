@@ -363,14 +363,20 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
     /* calculate H and V */
     generate_H(lattice_size, H);
     V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
+    print_matrix(H, "H");
+    print_matrix(V, "V");
 
     /* calculate -H and -V */
     matrix_negative(lattice_size, H, negH);
     matrix_negative(lattice_size, V, negV);
+    print_matrix(negH, "-H");
+    print_matrix(negV, "-V");
 
     /* calculate exponentials */
     matrix_exponential(negH, lattice_size, expH);
     matrix_exponential(negV, lattice_size, expV);
+    print_matrix(expH, "e^(-H)");
+    print_matrix(expV, "e^(-V)");
 
     /* multiply exponentials */
     B = expH.copy();
