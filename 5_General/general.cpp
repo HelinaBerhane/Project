@@ -593,6 +593,7 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
     for(int x = 0; x < time_size; x++){
         clear_storage(slice, lattice_size);
         int t = time_size - x - 1;
+        cout << "t = " << t << ": ";
         isolate_row(lattice, lattice_size, t, slice);
         print_array(slice, lattice_size, "slice");
         // B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
