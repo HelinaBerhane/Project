@@ -578,15 +578,23 @@ void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatCompl
         }
     }
 }
-void O_calculation(const COMPLEX slice[], const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& O){
+void isolate_row(const LaGenMatComplex& matrix, const int matrix_width, const int row, COMPLEX array[]){
+    for(int i = 0; i < matrix_width; i++){
+        array[i] = matrix(row, i);
+    }
+}
+void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& O){
     /* initialise everything */
     LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
     LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
+    COMPLEX slice[lattice_size];
     O = LaGenMatComplex::eye(lattice_size, lattice_size);
     /* calculate B matrices */
     for(int x = 0; x < time_size; x++){
+        clear_storage(slice, lattice_size);
         int t = time_size - x - 1;
-        cout << "time slice = " << t << endl;
+        isolate_row(lattice, lattice_size, t, slice);
+        print_array(slice, "slice");
         // B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
         // matrix_product(O, B);
         // print_matrix(O, "product");
@@ -599,15 +607,15 @@ void test_O(){
     /* initialise everything */
     int lattice_size = 5, time_size;
     double U = 1, beta = 10, lambda, delta_tau;
-    COMPLEX slice[lattice_size];
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
-    /* generate time slice */
-    generate_slice(lattice_size, slice);
+    /* generate lattice */
+    generate_lattice(lattice_size, time_size, lattice);
     /* calculate O */
-    O_calculation(slice, lattice_size, time_size, U, lambda, 1, delta_tau, O);
+    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, O);
     print_matrix(O, "O");
 }
 
