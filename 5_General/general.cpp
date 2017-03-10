@@ -612,5 +612,5 @@ void test_O(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_B_generation();
+    test_O();
 }
