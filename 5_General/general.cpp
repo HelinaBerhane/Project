@@ -189,6 +189,22 @@ void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, La
     /* multiply them back together */
     recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
 }
+void matrix_exponential_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
+    /* initialise everything */
+    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex diagonalEigenExp = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaVectorComplex eigenExponential = LaVectorComplex(matrix_size);
+    /* calculate eigenstuff */
+    LaEigSolve(matrix, eigenvalues, eigenvectors);
+    /* calculate exponentials */
+    for(int i = 0; i < matrix_size; i++){
+        scalar_exponential(eigenvalues(i), result(i,i));
+    }
+    /*
+    /* multiply them back together */
+    recombine_diagonalised_matrices(matrix_size, eigenvectors, eigenExponential, result);
+}
 // - qmc
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
     lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
@@ -350,7 +366,40 @@ void test_V(){
 						/* ------ TO TEST ------ */
 //...
 
-
+void test_matrix_negative(){
+    int matrix_size = 3;
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
+    LaGenMatComplex result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    print_matrix(matrix, "Matrix");
+    matrix_negative(matrix_size, matrix, result);
+    print_matrix(result, "- Matrix");
+    matrix_negative(matrix_size, matrix);
+    print_matrix(matrix, "- Matrix (in place)");
+}
+void test_matrix_equals_(){
+    int matrix_size = 5;
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 5);
+    print_matrix(matrix, "initial matrix");
+    matrix = 0;
+    print_matrix(matrix, "matrix = 0");
+    matrix = 1;
+    print_matrix(matrix, "matrix = 1");
+}
+void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
+    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    for(int i = 0; i < matrix_size; i++){
+        //cout << "matrix_ii "<< matrix(i,i) << endl;
+        scalar_exponential(matrix(i,i), result(i,i));
+        //cout << "e^matrix_ii "<< result(i,i) << endl;
+    }
+}
+void test_diagonal_exponential(){
+    LaGenMatComplex I = LaGenMatComplex::eye(3, 3);
+    LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
+    diagonal_matrix_exponential(I, 3, result);
+    print_matrix(I, "I");
+    print_matrix(result);
+}
 void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
     /* initialise everything */
     LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -382,7 +431,6 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
     B = expH.copy();
     matrix_product(B, expV);
 }
-
 void test_B_generation(){
     /* initialise everything */
     int lattice_size = 5, time_size;
@@ -413,9 +461,130 @@ void test_B_generation(){
 // generate_lattice_array           -> generate_slice
 // iterations                       -> ...
 // void test_...(...)               -> void test_...( );
+// five_matrix_multiplication       -> n_matrix_product
 
+void store_matrix(const LaGenMatComplex& matrix, const int matrix_number, const int matrix_size, COMPLEX storage[], const int storage_size){
+    /* initialise everything */
+    int matrix_volume = matrix_size * matrix_size;
+    /* store the matrix in storage */
+    for(int r = 0; r < matrix_size; r++){
+        for(int c = 0; c < matrix_size; c++){
+            int i = (matrix_number * matrix_volume) + (r * matrix_size) + c;
+            storage[i].r = matrix(r,c).r;
+            storage[i].i = matrix(r,c).i;
+        }
+    }
+}
+void test_store_matrix(){
+    /* initialise everything */
+    int matrix_size = 5, storage_size = matrix_size * matrix_size * 3;
+    COMPLEX storage[storage_size];
+    LaGenMatComplex A = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
+    LaGenMatComplex B = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
+    LaGenMatComplex C = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
+    /* store the matrices in storage */
+    store_matrix(A, 0, matrix_size, storage, storage_size);
+    print_array(storage, storage_size, "storage");
+    store_matrix(B, 1, matrix_size, storage, storage_size);
+    print_array(storage, storage_size, "storage");
+    store_matrix(C, 2, matrix_size, storage, storage_size);
+    print_array(storage, storage_size, "storage");
+}
+// void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int n, LaGenMatComplex& result){
+//     /* initialise everything */
+//     LaGenMatComplex matrix;
+//     int matrix_volume = matrix_size * matrix_size;
+//     /* reset variables */
+//     result = LaGenMatComplex::eye(matrix_size, matrix_size);
+//     //for each matrix
+//     for(int m = 0; m < n; m++){
+//         // reset variables
+//         matrix = LaGenMatComplex::eye(matrix_size, matrix_size);
+//         // convert the storage to a matrix
+//         for(int r = 0; r < matrix_size; r++){
+//             for(int c = 0; c < matrix_size; c++){
+//                 int e = r * matrix_size + c;
+//                 int i = m * matrix_volume + e;
+//                 matrix(r, c).r = storage[i].r;
+//                 matrix(r, c).i = storage[i].i;
+//             }
+//         }
+//         // multiply with the result
+//         matrix_product(result, matrix);
+//     }
+// }
+// void test_n_matrix_product(){
+//
+//     /* initialise everything */
+//     int n = 4, matrix_size = 3, max_rand = 5;
+//     int storage_size = matrix_size * matrix_size * n;
+//     COMPLEX storage[storage_size];
+//     LaGenMatComplex result = LaGenMatComplex::eye(matrix_size, matrix_size);
+//
+//
+//     /* generate matrices (skip to storage) */
+//     generate_real_array(storage, storage_size, max_rand);
+//     print_array(storage, storage_size, "storage");
+//
+//     /* multiply everything */
+//     n_matrix_product(storage, matrix_size, n, result);
+//
+//     print_matrix(result, "result");
+// }
+// void O_calculation(const int matrix_size, const LaGenMatComplex& BA, const LaGenMatComplex& BB, const LaGenMatComplex& BC, const LaGenMatComplex& BD, const LaGenMatComplex&BE, LaGenMatComplex& O){
+//     //O = 1 + B(m) B(m-1) B(...) B(1)
+//     /* initialise everything */
+//     LaGenMatComplex I = LaGenMatComplex::eye(matrix_size, matrix_size);
+//     //LaGenMatComplex multiplication;
+//     /* multiply exponentials */
+//     n_matrix_product(BA, BB, BC, BD, BE, O);
+//     /* add I */
+//     matrix_sum(matrix_size, O, I);
+// }
+// void test_O(){
+//     /* initialise everything */
+//     int time_size = 17;
+//     COMPLEX elements[time_size];
+//     LaGenMatComplex H;
+//     LaGenMatComplex V = LaGenMatComplex::zeros(time_size, time_size);
+//     LaGenMatComplex BA = LaGenMatComplex::zeros(time_size, time_size);
+//     LaGenMatComplex BB = LaGenMatComplex::zeros(time_size, time_size);
+//     LaGenMatComplex BC = LaGenMatComplex::zeros(time_size, time_size);
+//     LaGenMatComplex BD = LaGenMatComplex::zeros(time_size, time_size);
+//     LaGenMatComplex BE = LaGenMatComplex::zeros(time_size, time_size);
+//     LaGenMatComplex O = LaGenMatComplex::zeros(time_size, time_size);
+//     float U = 1, lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
+//
+//     /* generate matrices */
+//     generate_H(time_size, H);
+//     for(int i = 0; i < time_size; i++){
+//         /* generate matrices */
+//         generate_slice(time_size, elements);
+//         V_calculation(elements, time_size, U, lambda, 1, delta_tau, V);
+//         /* calculate B */
+//         if(i == 0){
+//             B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BA);
+//         }else if(i == 1){
+//             B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BB);
+//         }else if(i == 2){
+//             B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BC);
+//         }else if(i == 3){
+//             B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BD);
+//         }else if(i == 4){
+//             B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, BE);
+//         }
+//     }
+//     O_calculation(time_size, BA, BB, BC, BD, BE, O);
+//     /* print result */
+//     print_matrix(BA, "BA");
+//     print_matrix(BB, "BB");
+//     print_matrix(BC, "BC");
+//     print_matrix(BD, "BD");
+//     print_matrix(BE, "BE");
+//     print_matrix(O, "O");
+// }
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_B_generation();
+    test_matrix_negative();
 }
