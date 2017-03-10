@@ -716,7 +716,6 @@ void test_O(){
 // my_matrix_determinant(,)         -> matrix_determinant(,,d)
 // calculate_weight                 -> weight_calculation
 
-
 void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
     /* initialise everything */
     weight.r = 0;
@@ -728,18 +727,18 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     /* calculate O */
     O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, OUP);
     O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, OUP);
-    print_scalar(OUP, "O UP");
-    print_scalar(ODN, "O DN");
+    print_matrix(OUP, "O UP");
+    print_matrix(ODN, "O DN");
     /* calculate det(O) */
     detOUP = matrix_determinant(lattice_size, OUP);
     detODN = matrix_determinant(lattice_size, ODN);
     print_scalar(detOUP, "det(O UP)");
     print_scalar(detODN, "det(O DN)");
     /* calculate weight */
-    weight = scalar_multiple(OUP, ODN);
+    weight = scalar_multiple(detOUP, detODN);
     print_scalar(weight, "weight");
 }
-void set_up_v(const double U, const double beta, double& lambda, double& delta_tau, int& time_size, int& lattice_size){
+void set_up_v(LaGenMatComplex& lattice, const double U, const double beta, double& lambda, double& delta_tau, int& time_size, int& lattice_size){
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
@@ -751,11 +750,11 @@ void test_weight(){
     /* initialise everything */
     int lattice_size = 5;
     double U = 1, beta = 10, lambda, delta_tau;
-    set_up_v(U, beta, lambda, delta_tau, time_size, lattice_size);
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    set_up_v(lattice, U, beta, lambda, delta_tau, time_size, lattice_size);
     COMPLEX weight;
     weight.r = 0;
     weight.i = 0;
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     /* calculate the weight */
     weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, weight);
     print_scalar(weight, "weight");
