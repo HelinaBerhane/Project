@@ -721,7 +721,9 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     COMPLEX detOUP;
     COMPLEX detODN;
     /* calculate O */
+    cout << "sigma = 1" << endl;
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, OUP);
+    cout << "sigma = -1" << endl;
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, ODN);
     print_matrix(OUP, "O UP");
     print_matrix(ODN, "O DN");
