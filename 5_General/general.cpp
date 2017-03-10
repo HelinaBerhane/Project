@@ -738,23 +738,20 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     weight = scalar_multiple(detOUP, detODN);
     print_scalar(weight, "weight");
 }
-void set_up_v(LaGenMatComplex& lattice, const double U, const double beta, double& lambda, double& delta_tau, int& time_size, int& lattice_size){
+void test_weight(){
+    /* initialise stuff */
+    int lattice_size = 5, time_size;
+    double U = 1, beta = 10, lambda, delta_tau;
+    COMPLEX weight;
+    weight.r = 0;
+    weight.i = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
     /* generate lattice */
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
-}
-void test_weight(){
-    /* initialise everything */
-    int lattice_size = 5;
-    double U = 1, beta = 10, lambda, delta_tau;
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    set_up_v(lattice, U, beta, lambda, delta_tau, time_size, lattice_size);
-    COMPLEX weight;
-    weight.r = 0;
-    weight.i = 0;
     /* calculate the weight */
     weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, weight);
     print_scalar(weight, "weight");
