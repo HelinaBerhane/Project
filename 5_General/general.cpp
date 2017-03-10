@@ -585,7 +585,7 @@ void O_calculation(const COMPLEX slice[], const int lattice_size, const int time
     O = LaGenMatComplex::eye(lattice_size, lattice_size);
     /* calculate B matrices */
     for(int x = 0; x < time_size; x++){
-        int t = time_size - x;
+        int t = time_size - x - 1;
         cout << "time slice = " << t << endl;
         // B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
         // matrix_product(O, B);
