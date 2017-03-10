@@ -735,15 +735,19 @@ void test_O(){
 // five_matrix_multiplication       -> n_matrix_product
 // my_matrix_determinant(,)         -> matrix_determinant(,,d)
 // calculate_weight                 -> weight_calculation
-
+void clear_scalar(COMPLEX& scalar){
+    scalar.r = 0;
+    scalar.i = 0;
+}
 void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
     /* initialise everything */
-    weight.r = 0;
-    weight.i = 0;
     LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
     LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
     COMPLEX detOUP;
     COMPLEX detODN;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
     /* calculate O */
     cout << "sigma = 1" << endl;
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, OUP);
