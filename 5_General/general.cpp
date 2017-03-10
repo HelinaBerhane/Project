@@ -605,7 +605,7 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
 }
 void test_O(){
     /* initialise everything */
-    int lattice_size = 5, time_size;
+    int lattice_size = 5, time_size = 0;
     double U = 1, beta = 10, lambda, delta_tau;
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -614,6 +614,7 @@ void test_O(){
     print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
     /* generate lattice */
     generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice");
     /* calculate O */
     O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, O);
     print_matrix(O, "O");
