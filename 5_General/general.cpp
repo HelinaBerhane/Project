@@ -355,10 +355,10 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
     /* initialise everything */
     LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
     LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex negH;
-    LaGenMatComplex negV;
-    LaGenMatComplex expH;
-    LaGenMatComplex expV;
+    LaGenMatComplex negH = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex negV = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex expH = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex expV = LaGenMatComplex::zeros(lattice_size, lattice_size);
 
     /* calculate H and V */
     generate_H(lattice_size, H);
