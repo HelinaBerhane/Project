@@ -314,6 +314,31 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
     /* calculate H and V */
     generate_H(lattice_size, H);
     V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
+    /* calculate -H and -V */
+    matrix_negative(lattice_size, H, negH);
+    matrix_negative(lattice_size, V, negV);
+
+    /* calculate exponentials */
+    matrix_exponential(negH, lattice_size, expH);
+    diagonal_matrix_exponential(negV, lattice_size, expV);
+
+    /* multiply exponentials */
+    B = expH.copy();
+    matrix_product(B, expV);
+}
+void B_calculation_v(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
+    /* initialise everything */
+    B = 0;
+    LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex negH = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex negV = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex expH = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex expV = LaGenMatComplex::zeros(lattice_size, lattice_size);
+
+    /* calculate H and V */
+    generate_H(lattice_size, H);
+    V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, V);
     print_matrix(H, "H");
     print_matrix(V, "V");
 
