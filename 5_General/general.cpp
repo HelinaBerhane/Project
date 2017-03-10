@@ -586,9 +586,9 @@ void O_calculation(const COMPLEX slice[], const int lattice_size, const int time
     /* calculate B matrices */
     for(int t = time_size - 1; t >= 0; t++){
         cout << "time slice = " << t << endl;
-        B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
-        matrix_product(O, B);
-        print_matrix(O, "product");
+        // B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+        // matrix_product(O, B);
+        // print_matrix(O, "product");
     }
     /* add I */
     matrix_sum(lattice_size, O, I);
