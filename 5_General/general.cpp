@@ -437,8 +437,8 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
 void matrix_multiple(const LaGenMatComplex& matrix, const int matrix_size, const double number, LaGenMatComplex& result){
     for(int r = 0; r < matrix_size; r++){
         for(int c = 0; c < matrix_size; c++){
-            result(r,c).r = matrix(r,c) * number;
-            result(r,c).r = matrix(r,c) * number;
+            result(r,c).r = matrix(r,c).r * number;
+            result(r,c).i = matrix(r,c).i * number;
         }
     }
 }
