@@ -796,5 +796,5 @@ void test_weight(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_multiple();
+    test_B_calculation();
 }
