@@ -323,6 +323,15 @@ void test_matrix_negative(){
     matrix_negative(matrix_size, matrix);
     print_matrix(matrix, "- Matrix (in place)");
 }
+void test_matrix_equals_(){
+    int matrix_size = 5;
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 5);
+    print_matrix(matrix, "initial matrix");
+    matrix = 0;
+    print_matrix(matrix, "matrix = 0");
+    matrix = 1;
+    print_matrix(matrix, "matrix = 1");
+}
 // - qmc
 void test_initial_parameters(){
     double U = 1, beta = 10, lambda, delta_tau;
@@ -374,28 +383,17 @@ void test_V(){
 
 						/* ------ TO TEST ------ */
 //...
-void test_matrix_equals_(){
-    int matrix_size = 5;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 5);
-    print_matrix(matrix, "initial matrix");
-    matrix = 0;
-    print_matrix(matrix, "matrix = 0");
-    matrix = 1;
-    print_matrix(matrix, "matrix = 1");
-}
 void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    result = 0;
     for(int i = 0; i < matrix_size; i++){
-        //cout << "matrix_ii "<< matrix(i,i) << endl;
         scalar_exponential(matrix(i,i), result(i,i));
-        //cout << "e^matrix_ii "<< result(i,i) << endl;
     }
 }
 void test_diagonal_exponential(){
-    LaGenMatComplex I = LaGenMatComplex::eye(3, 3);
+    LaGenMatComplex test = LaGenMatComplex::rand(3, 3, 0, 9);
     LaGenMatComplex result = LaGenMatComplex::zeros(3, 3);
-    diagonal_matrix_exponential(I, 3, result);
-    print_matrix(I, "I");
+    diagonal_matrix_exponential(test, 3, result);
+    print_matrix(test, "test");
     print_matrix(result);
 }
 void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& B){
@@ -584,5 +582,5 @@ void test_store_matrix(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_negative();
+    test_diagonal_exponential();
 }
