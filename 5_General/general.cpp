@@ -480,7 +480,7 @@ void O_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, con
         cout << "t = " << t << ": ";
         isolate_row(lattice, lattice_size, t, slice);
         // print_array(slice, lattice_size, "slice");
-        B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+        B_calculation_v(slice, lattice_size, U, lambda, sigma, delta_tau, B);
         // print_matrix(B, "B");
         matrix_product(O, B);
         print_matrix(O, "product");
@@ -661,7 +661,7 @@ void test_negH_exponential(){
 void test_B_calculation(){
     /* initialise everything */
     int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, sigma = 1, delta_tau;
+    double U = 1, beta = 10, lambda, delta_tau;
     LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
     /* generate initial conditions */
@@ -670,7 +670,10 @@ void test_B_calculation(){
     /* generate time slice */
     generate_slice(lattice_size, slice);
     /* calculate B */
-    B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+    cout << "sigma = 1" << endl;
+    B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, B);
+    cout << "sigma = -1" << endl;
+    B_calculation(slice, lattice_size, U, lambda, -1, delta_tau, B);
     /* print result */
     print_matrix(B,"B = e^-H e^-V");
 }
@@ -757,5 +760,5 @@ void test_weight(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_weight();
+    test_B_calculation();
 }
