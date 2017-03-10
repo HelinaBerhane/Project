@@ -528,55 +528,63 @@ void test_B_generation(){
 // void test_...(...)               -> void test_...( );
 // five_matrix_multiplication       -> n_matrix_product
 
-void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int n, LaGenMatComplex& result){
-    /* initialise everything */
-    int matrix_volume = matrix_size * matrix_size, n = 3;
-    int storage_size = matrix_volume * n;
-    LaGenMatComplex matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    result = LaGenMatComplex::eye(matrix_size, matrix_size);
-    //for each matrix
-    for(int m = 0; m < n; m++){
-        // reset variables
-        matrix = LaGenMatComplex::eye(matrix_size, matrix_size);
-        // convert the storage to a matrix
-        for(int r = 0; r < matrix_size; r++){
-            for(int c = 0; c < matrix_size; c++){
-                int e = r * matrix_size + c;
-                int i = m * matrix_volume + e;
-                matrix(r, c).r = storage[i].r;
-                matrix(r, c).i = storage[i].i;
-            }
+// void n_matrix_product(const COMPLEX storage[], const int matrix_size, const int n, LaGenMatComplex& result){
+//     /* initialise everything */
+//     int matrix_volume = matrix_size * matrix_size;
+//     int storage_size = matrix_volume * n;
+//     LaGenMatComplex matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+//     result = LaGenMatComplex::eye(matrix_size, matrix_size);
+//     //for each matrix
+//     for(int m = 0; m < n; m++){
+//         // reset variables
+//         matrix = LaGenMatComplex::eye(matrix_size, matrix_size);
+//         // convert the storage to a matrix
+//         for(int r = 0; r < matrix_size; r++){
+//             for(int c = 0; c < matrix_size; c++){
+//                 int e = r * matrix_size + c;
+//                 int i = m * matrix_volume + e;
+//                 matrix(r, c).r = storage[i].r;
+//                 matrix(r, c).i = storage[i].i;
+//             }
+//         }
+//         // multiply with the result
+//         matrix_product(result, matrix);
+//     }
+// }
+// void test_n_matrix_product(){
+//
+//     /* initialise everything */
+//     int n = 4, matrix_size = 3, max_rand = 5;
+//     int storage_size = matrix_size * matrix_size * n;
+//     COMPLEX storage[storage_size];
+//     LaGenMatComplex result = LaGenMatComplex::eye(matrix_size, matrix_size);
+//
+//
+//     /* generate matrices (skip to storage) */
+//     generate_real_array(storage, storage_size, max_rand);
+//     print_array(storage, storage_size, "storage");
+//
+//     /* multiply everything */
+//     n_matrix_product(storage, matrix_size, n, result);
+//
+//     print_matrix(result, "result");
+// }
+
+void matrix_sum(const int matrix_size, LaGenMatComplex& sum, const LaGenMatComplex& matrix){
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            sum(i, j).r += matrix(i, j).r;
+            sum(i, j).i += matrix(i, j).i;
         }
-        // multiply with the result
-        matrix_product(result, matrix);
     }
 }
-void test_n_matrix_product(){
-
-    /* initialise everything */
-    int n = 4, matrix_size = 3, max_rand = 5;
-    int storage_size = matrix_size * matrix_size * n;
-    COMPLEX storage[storage_size];
-    LaGenMatComplex result = LaGenMatComplex::eye(matrix_size, matrix_size);
-
-
-    /* generate matrices (skip to storage) */
-    generate_real_array(storage, storage_size, max_rand);
-    print_array(storage, storage_size, "storage");
-
-    /* multiply everything */
-    n_matrix_product(storage, matrix_size, n, result);
-
-    print_matrix(result, "result");
-}
-
 void O_calculation(const COMPLEX slice[], const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, LaGenMatComplex& O){
     /* initialise everything */
     LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex O = LaGenMatComplex::eye(lattice_size, lattice_size);
-    LaGenMatComplex eye = LaGenMatComplex::eye(lattice_size, lattice_size);
+    LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
+    O = LaGenMatComplex::eye(lattice_size, lattice_size);
     /* calculate B matrices */
-    for(t = time_size - 1; t >= 0; t++){
+    for(int t = time_size - 1; t >= 0; t++){
         cout << "time slice = " << t << endl;
         B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
         matrix_product(O, B);
@@ -591,6 +599,7 @@ void test_O(){
     int lattice_size = 5, time_size;
     double U = 1, beta = 10, lambda, delta_tau;
     COMPLEX slice[lattice_size];
+    LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
