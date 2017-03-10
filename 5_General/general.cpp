@@ -27,7 +27,7 @@ void print_scalar(const COMPLEX scalar, const string name){
 void print_array(const COMPLEX array[], int array_size, const string name){
 	cout << name << ":" << endl;
     for(int i = 0; i < array_size; i++){
-        cout << array[i] << endl;
+        cout << array[i] << " ";
     }
     cout << endl;
 }
