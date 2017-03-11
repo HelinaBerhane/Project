@@ -845,7 +845,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
                 count++;
-                cout << " (" << count <<") " << "[" << acceptance << "/" << rejection << "]" << result << " - probability: " << probability;
+                cout << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
                 cout.width(15);
                 cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
                 // if(result == "accepted"){
@@ -899,8 +899,27 @@ void test_sweep(){
 // generate_H                       -> H_generation
 // random_probability               -> random_double
 
+void test_increasing_U(){
+    /* initialise everything */
+    int lattice_size = 5, time_size, iterations = 3;
+    double U, beta = 10, lambda, delta_tau;
+    /* test U = 0 to 10 */
+    for(int i = 0; i <= 10; i++){
+        /* generate initial conditions */
+        U = i;
+        initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+        print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+        /* generate a lattice of spins */
+        LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
+        print_matrix(lattice, "intialised lattice");
+        generate_lattice(lattice_size, time_size, lattice);
+        print_matrix(lattice, "lattice");
+        /* sweep the lattice */
+        sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations);
+    }
+}
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep();
+    test_increasing_U();
 }
