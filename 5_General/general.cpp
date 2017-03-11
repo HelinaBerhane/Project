@@ -827,10 +827,10 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                 print_scalar(probability, "probability");
 
                 /* accept or reject the flip */
+                double prob = random_double();
                 if(abs(probability) >= 1){
                     result = "accepted";
                 }else{
-                    double prob = random_double();
                     if(probability > prob){
                         result = "accepted";
                     }else{
@@ -843,7 +843,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
                 count++;
-                cout << " (" << count <<") " << result << " - " << probability;
+                cout << " (" << count <<") " << result << " - probability: " << probability;
                 cout.width(15);
                 cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
                 // if(result == "accepted"){
