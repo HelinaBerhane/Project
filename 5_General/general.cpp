@@ -904,9 +904,9 @@ void test_increasing_U(){
     int lattice_size = 5, time_size, iterations = 3;
     double U, beta = 10, lambda, delta_tau;
     /* test U = 0 to 10 */
-    for(int i = 0; i <= 10; i++){
+    for(int U = 0; U <= 10; U++){
         /* generate initial conditions */
-        U = i;
+        // U = i;
         initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
         print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
         /* generate a lattice of spins */
