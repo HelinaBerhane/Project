@@ -872,7 +872,7 @@ void test_sweep(){
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
     /* generate lattice */
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
     print_matrix(lattice, "intialised lattice");
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
