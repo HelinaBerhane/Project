@@ -802,7 +802,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     clear_scalar(weightAfter);
     double probability = 0;
     string result;
-    int count = 0;
+    int count = 0, acceptance = 0, rejection = 0;
 
     /* output headings */
     cout.width(11);
@@ -827,7 +827,6 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
 
                 /* accept or reject the flip */
                 double prob = random_double();
-                int acceptance = 0, rejection = 0;
                 if(abs(probability) >= 1){
                     result = "accepted";
                     acceptance++;
