@@ -767,26 +767,6 @@ void test_flip_spins(){
     /* flip spins */
     flip_spin_v(lattice, l, t);
 }
-
-						/* ------ TO CONVERT ------ */
-// matrix_size                      -> lattice_size or time_size
-// len                              -> array_size
-// matrix_eigenvstuff               -> LaEigSolve
-// float                            -> double
-// scalar_exponential_main(n,i,r)   -> scalar_exponential(n,r)
-// matrix_exponential(m,ms,i,r)     -> matrix_exponential(m,ms,r)
-// generate_matrix                  -> LaGenMatComplex::rand
-// scalar_product_f                 -> scalar_product
-// basic_random_int                 -> random_int
-// generate_lattice_array           -> generate_slice
-// iterations                       -> ...
-// void test_...(...)               -> void test_...( );
-// five_matrix_multiplication       -> n_matrix_product
-// my_matrix_determinant(,)         -> matrix_determinant(,,d)
-// calculate_weight                 -> weight_calculation
-// generate_H                       -> H_generation
-// random_probability               -> random_double
-
 void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations){
     /* Plan */
 
@@ -834,13 +814,15 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
         for(int t = 0; t < time_size; t++){
             for(int l = 0; l < lattice_size; l++){
                 /* calculate the weight before the flip */
-                weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
+                print_scalar(weightBefore, "weight before");
 
                 /* propose the flip */
                 flip_spin_v(lattice, l, t);
 
                 /* calculate the weight after the flip */
-                weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
+                print_scalar(weightAfter, "weight after");
 
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
@@ -884,6 +866,55 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
 }
 
 
+						/* ------ TO CONVERT ------ */
+// matrix_size                      -> lattice_size or time_size
+// len                              -> array_size
+// matrix_eigenvstuff               -> LaEigSolve
+// float                            -> double
+// scalar_exponential_main(n,i,r)   -> scalar_exponential(n,r)
+// matrix_exponential(m,ms,i,r)     -> matrix_exponential(m,ms,r)
+// generate_matrix                  -> LaGenMatComplex::rand
+// scalar_product_f                 -> scalar_product
+// basic_random_int                 -> random_int
+// generate_lattice_array           -> generate_slice
+// iterations                       -> ...
+// void test_...(...)               -> void test_...( );
+// five_matrix_multiplication       -> n_matrix_product
+// my_matrix_determinant(,)         -> matrix_determinant(,,d)
+// calculate_weight                 -> weight_calculation
+// generate_H                       -> H_generation
+// random_probability               -> random_double
+
+void test_sweep(){
+    /* Plan */
+        /* [x] Input */
+            // [x] matrix_size  - int
+            // [x] iterations   - int
+            // [x] lattice      - LaGenMatComplex
+            // [x] U            - float
+
+        /* [x] Processing */
+            // [x] generate a lattice of spins
+            // [x] sweep the lattice
+
+        /* [ ] Output */
+            // [ ] average spins
+            // [ ] acceptance probabilities
+
+    /* initialise everything */
+    int lattice_size = 5, time_size, iterations = 3;
+    double U = 1, beta = 10, lambda, delta_tau;
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    /* generate lattice */
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    print_matrix(lattice, "intialised lattice");
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice");
+    /* sweep the lattice */
+    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations);
+}
 
 /* ------ Main QMC Program ------ */
 int main(){
