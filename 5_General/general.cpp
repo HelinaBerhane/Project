@@ -817,14 +817,13 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
 
                 /* propose the flip */
-                flip_spin_v(lattice, t, l);
+                flip_spin(lattice, t, l);
 
                 /* calculate the weight after the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
 
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
-                print_scalar(probability, "probability");
 
                 /* accept or reject the flip */
                 double prob = random_double();
