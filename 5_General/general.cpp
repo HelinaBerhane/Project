@@ -904,7 +904,7 @@ void test_increasing_U(){
     int lattice_size = 5, time_size = 5, iterations = 3;
     double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0;
     /* test U = 0 to 10 */
-    for(int i = 0; i <= 10; i++){
+    for(int i = 1; i <= 10; i++){
         /* generate initial conditions */
         U = i;
         initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
