@@ -834,7 +834,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                     if(probability > prob){
                         result = "accepted";
                     }else{
-                        flip_spin_v(lattice, t, l);
+                        flip_spin(lattice, t, l);
                         result = "rejected";
                     }
                 }
