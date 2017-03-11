@@ -668,17 +668,6 @@ void test_O(){
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, O);
     print_matrix(O, "O");
 }
-void test_flip_spins(){
-    /* initialise stuff */
-    int lattice_size = 5, time_size = 8;
-    int l = random_int(lattice_size-1), t = random_int(time_size-1);
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    /* generate lattice */
-    generate_lattice(lattice_size, time_size, lattice);
-    print_matrix(lattice, "lattice");
-    /* flip spins */
-    flip_spin_v(lattice, l, t);
-}
 
 						/* ------ TO TEST ------ */
 //...
@@ -763,6 +752,17 @@ void flip_spin_v(LaGenMatComplex& lattice, const int l, const int t){
     lattice(t,l).r = -lattice(t,l).r;
     lattice(t,l).i = -lattice(t,l).i;
     cout << " -> " << lattice(t,l) << endl;
+}
+void test_flip_spins(){
+    /* initialise stuff */
+    int lattice_size = 5, time_size = 8;
+    int l = random_int(lattice_size-1), t = random_int(time_size-1);
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    /* generate lattice */
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice");
+    /* flip spins */
+    flip_spin_v(lattice, l, t);
 }
 
 						/* ------ TO CONVERT ------ */
