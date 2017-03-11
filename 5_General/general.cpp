@@ -668,6 +668,17 @@ void test_O(){
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, O);
     print_matrix(O, "O");
 }
+void test_flip_spins(){
+    /* initialise stuff */
+    int lattice_size = 5, time_size = 8;
+    int l = random_int(lattice_size-1), t = random_int(time_size-1);
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    /* generate lattice */
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice");
+    /* flip spins */
+    flip_spin_v(lattice, l, t);
+}
 
 						/* ------ TO TEST ------ */
 //...
@@ -733,6 +744,26 @@ void test_weight(){
     weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, weight);
     print_scalar(weight, "weight");
 }
+double random_double(){
+    random_device rd;
+    mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0, 1);
+    return dis(gen);
+}
+void flip_scalar(COMPLEX& spin){
+    spin.r = -spin.r;
+    spin.i = -spin.i;
+}
+void flip_spin(LaGenMatComplex& lattice, const int l, const int t){
+    lattice(t,l).r = -lattice(t,l).r;
+    lattice(t,l).i = -lattice(t,l).i;
+}
+void flip_spin_v(LaGenMatComplex& lattice, const int l, const int t){
+    cout << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
+    lattice(t,l).r = -lattice(t,l).r;
+    lattice(t,l).i = -lattice(t,l).i;
+    cout << " -> " << lattice(t,l) << endl;
+}
 
 						/* ------ TO CONVERT ------ */
 // matrix_size                      -> lattice_size or time_size
@@ -751,29 +782,10 @@ void test_weight(){
 // my_matrix_determinant(,)         -> matrix_determinant(,,d)
 // calculate_weight                 -> weight_calculation
 // generate_H                       -> H_generation
+// random_probability               -> random_double
 
-void flip_scalar(COMPLEX& spin){
-    spin.r = -spin.r;
-    spin.i = -spin.i;
-}
-void flip_spin_v(LaGenMatComplex& lattice, const int l, const int t){
-    cout << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
-    lattice(t,l).r = -lattice(t,l).r;
-    lattice(t,l).i = -lattice(t,l).i;
-    cout << " -> " << lattice(t,l) << endl;
-}
-void test_flip_spins(){
-    /* initialise stuff */
-    int lattice_size = 5, time_size = 8;
-    l = random_int(lattice_size-1), t = random_int(time_size-1);
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    /* generate lattice */
-    generate_lattice(lattice_size, time_size, lattice);
-    print_matrix(lattice, "lattice");
-    /* flip spins */
-    flip_spin_v(lattice, l, t);
-}
-void sweep_lattice(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau){
+
+void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations){
     /* Plan */
 
         /* Input */
@@ -806,26 +818,25 @@ void sweep_lattice(const LaGenMatComplex& lattice, const int lattice_size, const
     COMPLEX weightAfter;
     clear_scalar(weightBefore);
     clear_scalar(weightAfter);
+    double probability = 0;
     string result;
     int count = 0;
 
-    /* set up output headings */
+    /* output headings */
     cout.width(11);
     cout << "weight";
     cout << " lattice" << endl;
 
     /* sweep through the lattice */
     for(int i = 0; i < iterations; i++){
-        for(int t = 0; t < matrix_size; t++){
-            for(int l = 0; l < matrix_size; l++){
+        for(int t = 0; t < time_size; t++){
+            for(int l = 0; l < lattice_size; l++){
                 /* calculate the weight before the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
                 print_scalar(weightBefore, "weight before");
 
                 /* propose the flip */
-                cout << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
-                flip_scalar(lattice(t,l));
-                cout << " -> " << lattice(t,l) << endl;
+                flip_spin_v(lattice, l, t);
 
                 /* calculate the weight after the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
@@ -840,7 +851,7 @@ void sweep_lattice(const LaGenMatComplex& lattice, const int lattice_size, const
                     flip_scalar(lattice(t, l));
                     result = "accepted";
                 }else{
-                    prob = random_probability();
+                    double prob = random_double();
                     if(probability > prob){
                         flip_scalar(lattice(t, l)); //accept
                         result = "accepted";
