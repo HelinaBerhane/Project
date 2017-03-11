@@ -787,8 +787,7 @@ void test_flip_spins(){
 // generate_H                       -> H_generation
 // random_probability               -> random_double
 
-
-void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations){
+void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations){
     /* Plan */
 
         /* Input */
@@ -835,15 +834,13 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
         for(int t = 0; t < time_size; t++){
             for(int l = 0; l < lattice_size; l++){
                 /* calculate the weight before the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
-                print_scalar(weightBefore, "weight before");
+                weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
 
                 /* propose the flip */
                 flip_spin_v(lattice, l, t);
 
                 /* calculate the weight after the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
-                print_scalar(weightBefore, "weight after");
+                weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
 
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
@@ -851,15 +848,14 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
 
                 /* accept or reject the flip */
                 if(abs(probability) >= 1){
-                    flip_scalar(lattice(t, l));
                     result = "accepted";
                 }else{
                     double prob = random_double();
                     if(probability > prob){
-                        flip_scalar(lattice(t, l)); //accept
+                        flip_spin_v(lattice, t, l);
                         result = "accepted";
                     }else{
-                        // cout << " rejected" << endl;
+                        flip_spin_v(lattice, t, l);
                         result = "rejected";
                     }
                 }
@@ -887,7 +883,9 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
         // with most parameters = 1, it stabilised at all -1 spins
 }
 
+
+
 /* ------ Main QMC Program ------ */
 int main(){
-    test_flip_spins();
+    test_weight();
 }
