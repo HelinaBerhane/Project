@@ -746,11 +746,11 @@ void flip_scalar(COMPLEX& spin){
     spin.r = -spin.r;
     spin.i = -spin.i;
 }
-void flip_spin(LaGenMatComplex& lattice, const int l, const int t){
+void flip_spin(LaGenMatComplex& lattice, const int t, const int l){
     lattice(t,l).r = -lattice(t,l).r;
     lattice(t,l).i = -lattice(t,l).i;
 }
-void flip_spin_v(LaGenMatComplex& lattice, const int l, const int t){
+void flip_spin_v(LaGenMatComplex& lattice, const int t, const int l){
     cout << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
     lattice(t,l).r = -lattice(t,l).r;
     lattice(t,l).i = -lattice(t,l).i;
@@ -765,7 +765,7 @@ void test_flip_spins(){
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
     /* flip spins */
-    flip_spin_v(lattice, l, t);
+    flip_spin_v(lattice, t, l);
 }
 void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations){
     /* Plan */
@@ -817,7 +817,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
 
                 /* propose the flip */
-                flip_spin_v(lattice, l, t);
+                flip_spin_v(lattice, t, l);
 
                 /* calculate the weight after the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
