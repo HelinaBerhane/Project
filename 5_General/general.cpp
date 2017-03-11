@@ -751,7 +751,7 @@ void flip_spin(LaGenMatComplex& lattice, const int l, const int t){
     lattice(t,l).i = -lattice(t,l).i;
 }
 void flip_spin_v(LaGenMatComplex& lattice, const int l, const int t){
-    cout << "flipped ("<<t-1<<", "<<l-1<<"): " << lattice(t,l);
+    cout << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
     lattice(t,l).r = -lattice(t,l).r;
     lattice(t,l).i = -lattice(t,l).i;
     cout << " -> " << lattice(t,l) << endl;
