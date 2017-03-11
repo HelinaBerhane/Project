@@ -864,6 +864,21 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     //results
         // with most parameters = 1, it stabilised at all -1 spins
 }
+void test_sweep(){
+    /* initialise everything */
+    int lattice_size = 5, time_size, iterations = 3;
+    double U = 1, beta = 10, lambda, delta_tau;
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    /* generate lattice */
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    print_matrix(lattice, "intialised lattice");
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice");
+    /* sweep the lattice */
+    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations);
+}
 
 
 						/* ------ TO CONVERT ------ */
@@ -885,38 +900,8 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
 // generate_H                       -> H_generation
 // random_probability               -> random_double
 
-void test_sweep(){
-    /* Plan */
-        /* [x] Input */
-            // [x] matrix_size  - int
-            // [x] iterations   - int
-            // [x] lattice      - LaGenMatComplex
-            // [x] U            - float
-
-        /* [x] Processing */
-            // [x] generate a lattice of spins
-            // [x] sweep the lattice
-
-        /* [ ] Output */
-            // [ ] average spins
-            // [ ] acceptance probabilities
-
-    /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 3;
-    double U = 1, beta = 10, lambda, delta_tau;
-    /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
-    /* generate lattice */
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    print_matrix(lattice, "intialised lattice");
-    generate_lattice(lattice_size, time_size, lattice);
-    print_matrix(lattice, "lattice");
-    /* sweep the lattice */
-    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations);
-}
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_weight();
+    test_sweep();
 }
