@@ -11,7 +11,7 @@ float random_float(float min, float max){
     std::uniform_real_distribution<> dis(min, max);
     return dis(gen);
 }
-float random_probability(){
+float random_double(){
     random_device rd;
     mt19937 gen(rd());
     std::uniform_real_distribution<> dis(0, 1);
@@ -46,10 +46,6 @@ void copy_scalar(const COMPLEX& scalar, COMPLEX& copy){//should work
 void copy_negative_scalar(const COMPLEX& scalar, COMPLEX& copy){//should work
     copy.r = -scalar.r;
     copy.i = -scalar.i;
-}
-void flip_scalar(COMPLEX& spin){//should work
-    spin.r = -spin.r;
-    spin.i = -spin.i;
 }
 void scalar_addition(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     result.r = A.r + B.r;
@@ -177,88 +173,8 @@ void test_weight(){//working
     /* output the weight */
     print_scalar(weight, "weight");
 }
-void test_sweep(){
-    /* Plan */
-        /* [x] Input */
-            // [x] matrix_size  - int
-            // [x] iterations   - int
-            // [x] lattice      - LaGenMatComplex
-            // [x] U            - float
 
-        /* [x] Processing */
-            // [x] generate a lattice of spins
-            // [x] sweep the lattice
 
-        /* [ ] Output */
-            // [ ] average spins
-            // [ ] acceptance probabilities
-
-    /* initialise everything */
-    int matrix_size = 5, iterations = 3;
-    LaGenMatComplex lattice;
-    float U = 1;
-    float lambda = lambda_calculation(U), delta_tau = delta_tau_calculation(U);
-
-    /* print initial parameters */
-    cout.width(11);
-    cout << "U = " << U << endl;
-    cout.width(11);
-    cout << "lambda = " << lambda << endl;
-    cout.width(11);
-    cout << "delta tau = " << delta_tau<< endl;
-
-    /* generate a lattice of spins */
-    generate_lattice_matrix(matrix_size, matrix_size, lattice);
-
-    /* sweep the lattice */
-    sweep_lattice(matrix_size, lattice, U, iterations);
-}
-void test_increasing_U(){//in progress
-
-    /* Plan */
-
-        /* [x] Input */
-            // [x] matrix_size  - int
-            // [x] iterations   - int
-            // [x] lattice      - LaGenMatComplex
-            // [x] U            - float
-
-        /* [x] Processing */
-            // [x] for n increasing values of U
-                // [x] generate a lattice of spins
-                // [x] sweep the lattice
-
-        /* [ ] Output */
-            // [ ] acceptance probabilities
-
-    /* initialise everything */
-    int matrix_size = 5, iterations = 1;
-    LaGenMatComplex lattice;
-    float U, lambda, delta_tau;
-
-    /* test U = 0 to 1 */
-    for(int i = 0; i <= 10; i++){
-
-        /* calculate initial parameters */
-        U = 2 + 0.8*i;
-        lambda = lambda_calculation(U);
-        delta_tau = delta_tau_calculation(U);
-
-        /* print initial parameters */
-        cout.width(11);
-        cout << "U = " << U << endl;
-        cout.width(11);
-        cout << "lambda = " << lambda << endl;
-        cout.width(11);
-        cout << "delta tau = " << delta_tau<< endl;
-
-        /* generate a lattice of spins */
-        generate_lattice_matrix(matrix_size, matrix_size, lattice);
-
-        /* sweep the lattice */
-        sweep_lattice(matrix_size, lattice, U, iterations);
-    }
-}
 
 /* - Testing - */
 void general_weight(const int lattice_size, const int time_size, const LaGenMatComplex& lattice, const float U, const float lambda, const float delta_tau, COMPLEX& weight){

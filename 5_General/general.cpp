@@ -767,7 +767,51 @@ void test_flip_spins(){
     /* flip spins */
     flip_spin_v(lattice, t, l);
 }
-void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations){
+void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, int* acceptance, int& rejection){
+
+    /* initialise everything */
+    COMPLEX weightBefore;
+    COMPLEX weightAfter;
+    clear_scalar(weightBefore);
+    clear_scalar(weightAfter);
+    double probability = 0;
+    string result;
+    acceptance = 0;
+    rejection = 0;
+
+    /* sweep through the lattice */
+    for(int i = 0; i < iterations; i++){
+        for(int t = 0; t < time_size; t++){
+            for(int l = 0; l < lattice_size; l++){
+                /* calculate the weight before the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
+
+                /* propose the flip */
+                flip_spin(lattice, t, l);
+
+                /* calculate the weight after the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
+
+                /* calculate the ratio of weights */
+                probability = weightAfter.r / weightBefore.r;
+
+                /* accept or reject the flip */
+                double prob = random_double();
+                if(abs(probability) >= 1){
+                    acceptance++;
+                }else{
+                    if(probability > prob){
+                        acceptance++;
+                    }else{
+                        flip_spin(lattice, t, l);
+                        rejection++;
+                    }
+                }
+            }
+        }
+    }
+}
+void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, int* acceptance, int& rejection){
     /* Plan */
 
         /* Input */
@@ -802,7 +846,9 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     clear_scalar(weightAfter);
     double probability = 0;
     string result;
-    int count = 0, acceptance = 0, rejection = 0;
+    int count = 0;
+    acceptance = 0;
+    rejection = 0;
 
     /* output headings */
     cout.width(11);
@@ -901,7 +947,7 @@ void test_sweep(){
 
 void test_increasing_U(){
     /* initialise everything */
-    int lattice_size = 5, time_size = 5, iterations = 3;
+    int lattice_size = 5, time_size = 5, iterations = 3, acceptance = 0, rejection = 0;
     double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0;
     /* test U = 0 to 10 */
     for(int i = 1; i <= 10; i++){
@@ -915,7 +961,8 @@ void test_increasing_U(){
         generate_lattice(lattice_size, time_size, lattice);
         print_matrix(lattice, "lattice");
         /* sweep the lattice */
-        sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations);
+        sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
+        cout << "["<< acceptance << "/" << rejection << "]" << endl;
     }
 }
 
