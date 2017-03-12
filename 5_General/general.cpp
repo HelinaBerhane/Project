@@ -927,7 +927,7 @@ void test_sweep(){
 }
 void test_increasing_U(){
     /* initialise everything */
-    int lattice_size = 5, time_size = 5, iterations = 3;
+    int lattice_size = 5, time_size = 0, iterations = 4;
     double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0;
     double acceptance = 0.0, rejection = 0.0, percentage_acceptance = 0.0;
     /* test U = 0 to 10 */
@@ -943,7 +943,7 @@ void test_increasing_U(){
         sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
         cout << "["<< acceptance << "/" << rejection << "]" << endl;
         percentage_acceptance = acceptance / rejection;
-        cout << "percentage acceptance = " << percentage_acceptance << endl;
+        cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
     }
 }
 
