@@ -811,7 +811,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
         }
     }
 }
-void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, int& acceptance, int& rejection){
+void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, double& acceptance, double& rejection){
     /* Plan */
 
         /* Input */
@@ -926,8 +926,9 @@ void test_sweep(){
 }
 void test_increasing_U(){
     /* initialise everything */
-    int lattice_size = 5, time_size = 5, iterations = 3, acceptance = 0, rejection = 0;
-    double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0, percentage_acceptance = 0;
+    int lattice_size = 5, time_size = 5, iterations = 3;
+    double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0
+    double acceptance = 0.0, rejection = 0.0, percentage_acceptance = 0.0;
     /* test U = 0 to 10 */
     for(int i = 1; i <= 10; i++){
         /* generate initial conditions */
@@ -937,7 +938,6 @@ void test_increasing_U(){
         /* generate a lattice of spins */
         LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);
-        print_matrix(lattice, "lattice");
         /* sweep the lattice */
         sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
         cout << "["<< acceptance << "/" << rejection << "]" << endl;
