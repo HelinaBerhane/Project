@@ -767,7 +767,7 @@ void test_flip_spins(){
     /* flip spins */
     flip_spin_v(lattice, t, l);
 }
-void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, int* acceptance, int& rejection){
+void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, int& acceptance, int& rejection){
 
     /* initialise everything */
     COMPLEX weightBefore;
@@ -911,7 +911,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
 }
 void test_sweep(){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 3;
+    int lattice_size = 5, time_size, iterations = 3, acceptance = 0, rejection = 0;
     double U = 1, beta = 10, lambda, delta_tau;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
@@ -922,7 +922,7 @@ void test_sweep(){
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
     /* sweep the lattice */
-    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations);
+    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
 }
 
 
