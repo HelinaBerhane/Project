@@ -811,7 +811,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
         }
     }
 }
-void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, int* acceptance, int& rejection){
+void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, int& acceptance, int& rejection){
     /* Plan */
 
         /* Input */
