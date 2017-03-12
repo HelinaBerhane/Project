@@ -671,6 +671,27 @@ void test_O(){
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, O);
     print_matrix(O, "O");
 }
+void test_increasing_U(){
+    /* initialise everything */
+    int lattice_size = 5, time_size = 5, iterations = 3, acceptance = 0, rejection = 0;
+    double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0, percentage_acceptance = 0;
+    /* test U = 0 to 10 */
+    for(int i = 1; i <= 10; i++){
+        /* generate initial conditions */
+        U = i;
+        initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+        print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+        /* generate a lattice of spins */
+        LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
+        generate_lattice(lattice_size, time_size, lattice);
+        print_matrix(lattice, "lattice");
+        /* sweep the lattice */
+        sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
+        cout << "["<< acceptance << "/" << rejection << "]" << endl;
+        percentage_acceptance = acceptance / rejection;
+        cout << "percentage acceptance = " << percentage_acceptance << endl;
+    }
+}
 
 						/* ------ TO TEST ------ */
 //...
@@ -945,26 +966,7 @@ void test_sweep(){
 // generate_H                       -> H_generation
 // random_probability               -> random_double
 
-void test_increasing_U(){
-    /* initialise everything */
-    int lattice_size = 5, time_size = 5, iterations = 3, acceptance = 0, rejection = 0;
-    double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0;
-    /* test U = 0 to 10 */
-    for(int i = 1; i <= 10; i++){
-        /* generate initial conditions */
-        U = i;
-        initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-        print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
-        /* generate a lattice of spins */
-        LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-        print_matrix(lattice, "intialised lattice");
-        generate_lattice(lattice_size, time_size, lattice);
-        print_matrix(lattice, "lattice");
-        /* sweep the lattice */
-        sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
-        cout << "["<< acceptance << "/" << rejection << "]" << endl;
-    }
-}
+
 
 /* ------ Main QMC Program ------ */
 int main(){
