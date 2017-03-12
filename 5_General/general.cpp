@@ -927,7 +927,7 @@ void test_sweep(){
 void test_increasing_U(){
     /* initialise everything */
     int lattice_size = 5, time_size = 5, iterations = 3;
-    double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0
+    double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0;
     double acceptance = 0.0, rejection = 0.0, percentage_acceptance = 0.0;
     /* test U = 0 to 10 */
     for(int i = 1; i <= 10; i++){
