@@ -10,14 +10,14 @@
 #include <math.h>
 
 using namespace std;
-						/* ------ NOTES ------ */
+
+/* ------ NOTES ------ */
 // be careful with row ordering
 	// true = row ordered + DOES NOT link to the array it was made with
 	// false = column ordered + LINKS to the array it was made with
 // check that everything is reset to 0 or I where needed
 
-						/* ------ WORKING ------ */
-//
+/* ------ WORKING ------ */
 /* -- Output -- */
 void print_scalar(const COMPLEX scalar){
     cout << scalar << endl;
@@ -68,7 +68,6 @@ double random_double(){
     std::uniform_real_distribution<> dis(0, 1);
     return dis(gen);
 }
-
 // Manipulation
 void array_to_diag(const COMPLEX array[], const int array_size, LaGenMatComplex& diag){
     diag = 0;
@@ -127,7 +126,6 @@ void flip_spin_v(LaGenMatComplex& lattice, const int t, const int l){
     lattice(t,l).i = -lattice(t,l).i;
     cout << " -> " << lattice(t,l) << endl;
 }
-
 // Generation
 void generate_scalar(COMPLEX& scalar, const int max_rand){
     scalar.r = random_int(max_rand);
@@ -645,6 +643,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     double percentage_acceptance = acceptance / rejection;
     cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
 }
+
 /* -- Testing -- */
 // - generic
 void test_flip_spins(){
@@ -926,16 +925,61 @@ void test_increasing_U(){
     }
 }
 
-                        /* ------ TO TEST ------ */
-//
+/* ------ TO TEST ------ */
 void test_output_to_file(){
+    string file = test;
+    /* open the file */
     ofstream myfile;
-    myfile.open ("test.txt");
+    myfile.open(file);
+    /* print stuff */
     myfile << "Here, have a test :) .\n";
+    /* close the file */
+    myfile.close();
+}
+void print_scalar_f(const COMPLEX scalar, const string name, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file);
+    /* print the scalar */
+    cout << name << ": " << scalar << endl;
+    /* close the file */
+    myfile.close();
+}
+void print_scalar_f(const double scalar, const string name, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file);
+    /* print the scalar */
+    cout << name << ": " << scalar << endl;
+    /* close the file */
+    myfile.close();
+}
+void print_matrix_f(const LaGenMatComplex& matrix, const string name, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file);
+    /* print the matrix */
+	cout << name << ":" << endl << matrix << endl;
+    /* close the file */
+    myfile.close();
+}
+void print_initial_parameters_f(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file);
+    /* print the initial parameters */
+	myfile << "no of lattice points = " << lattice_size << endl;
+	myfile << "no of time slices = " << time_size << endl;
+	myfile << "U = " << U << endl;
+	myfile << "beta = " << beta << endl;
+	myfile << "lambda = " << lambda << endl;
+	myfile << "delta tau = " << delta_tau << endl;
+    myfile << "mu = " << mu << endl;
+    /* close the file */
     myfile.close();
 }
 
-                      /* ------ TO CONVERT ------ */
+
                     /* ------ Main QMC Program ------ */
 int main(){
     test_output_to_file();
