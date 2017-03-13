@@ -776,7 +776,6 @@ void test_output_to_file(){
     myfile.open ("test.txt");
     myfile << "Here, have a test :) .\n";
     myfile.close();
-    return 0;
 }
 void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
 
@@ -897,7 +896,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
         // with most parameters = 1, it stabilised at all -1 spins
     cout << "["<< acceptance << "/" << rejection << "]" << endl;
     double acceptance_ratio = acceptance / (rejection + acceptance);
-    cout << "acceptance ratio = " << percentage_acceptance << endl;
+    cout << "acceptance ratio = " << acceptance_ratio << endl;
     double percentage_acceptance = acceptance / rejection;
     cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
 }
