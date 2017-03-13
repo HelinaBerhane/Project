@@ -960,6 +960,6 @@ void test_increasing_U(){
 
 
 /* ------ Main QMC Program ------ */
-int test_B_calculation(){
-    test_V();
+int main(){
+    test_B_calculation();
 }
