@@ -1013,8 +1013,11 @@ void test_output_functions(const string file){
 
     /* print everything */
     print_scalar(scalar, "scalar", file);
+    myfile << endl;
     print_array(array, array_size, "array", file);
+    myfile << endl;
     print_matrix(matrix, "matrix", file);
+    myfile << endl;
 
     // [ ] figure out how to append to already existing files
 }
