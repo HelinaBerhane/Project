@@ -962,7 +962,7 @@ void print_scalar(const COMPLEX scalar, const string name, const string file){
     ofstream myfile;
     myfile.open(file);
     /* print the scalar */
-    cout << name << ": " << scalar << endl;
+    myfile << name << ": " << scalar << endl;
     /* close the file */
     myfile.close();
 }
@@ -971,7 +971,7 @@ void print_scalar(const double scalar, const string name, const string file){
     ofstream myfile;
     myfile.open(file);
     /* print the scalar */
-    cout << name << ": " << scalar << endl;
+    myfile << name << ": " << scalar << endl;
     /* close the file */
     myfile.close();
 }
@@ -993,7 +993,7 @@ void print_matrix(const LaGenMatComplex& matrix, const string name, const string
     ofstream myfile;
     myfile.open(file);
     /* print the matrix */
-	cout << name << ":" << endl << matrix << endl;
+	myfile << name << ":" << endl << matrix << endl;
     /* close the file */
     myfile.close();
 }
