@@ -4,9 +4,15 @@
 // [x] void ...(...)        -> void ...(..., const string file)
 
 // [x] print_scalar         -> print_scalar_f
-// [x] print_scalar_f(...)  -> print_scalar_f(...,"")
+// [x] print_scalar_f(...)  -> print_scalar_f(..., " ", file)
+// [x] print_array          -> print_array_f
+// [x] print_array_f(...)   -> print_array_f(..., " ", file)
 // [x] print_matrix         -> print_matrix_f
-// [x] print_matrix_f(...)  -> print_matrix_f(...,"")
+// [x] print_matrix_f(...)  -> print_matrix_f(..., " ", file)
+
+// [x] print_initial_parameters        -> print_initial_parameters_f
+// [x] print_initial_parameters_f(...) -> print_initial_parameters_f(...,file)
+
 
 // [ ] cout << ...          -> myfile << ...
 // [ ] storage              -> array
@@ -23,47 +29,6 @@ void test_output_to_file(const string file){
     myfile.open(file);
     /* print stuff */
     myfile << "Here, have a test :) .\n";
-    /* close the file */
-    myfile.close();
-}
-
-/* -- Output -- */
-
-void print_array_f(const COMPLEX array[], int array_size, const string name, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file);
-    /* print stuff */
-	myfile << name << ": ";
-    for(int i = 0; i < array_size; i++){
-        myfile << array[i] << " ";
-    }
-    myfile << endl;
-    /* close the file */
-    myfile.close();
-}
-void print_vector_f(const LaVectorComplex& vector, const string name, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file);
-    /* print stuff */
-    myfile << name << ":" << endl << vector << endl;
-    /* close the file */
-    myfile.close();
-}
-
-void print_initial_parameters_f(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file);
-    /* print stuff */
-	myfile << "no of lattice points = " << lattice_size << endl;
-	myfile << "no of time slices = " << time_size << endl;
-	myfile << "U = " << U << endl;
-	myfile << "beta = " << beta << endl;
-	myfile << "lambda = " << lambda << endl;
-	myfile << "delta tau = " << delta_tau << endl;
-    myfile << "mu = " << mu << endl;
     /* close the file */
     myfile.close();
 }
@@ -101,24 +66,24 @@ void B_calculation_f(const COMPLEX slice[], const int lattice_size, const double
     H_generation(lattice_size, H);
     V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, V);
     sum = H.copy();
-    print_matrix_f(sum, "H");
-    print_matrix_f(V, "V");
+    print_matrix_f(sum, "H", file);
+    print_matrix_f(V, "V", file);
 
     /* calculate H + V */
     matrix_sum(lattice_size, sum, V);
-    print_matrix_f(sum, "H + V");
+    print_matrix_f(sum, "H + V", file);
 
     /* calculate delta_tau * (H + V) */
     matrix_multiple(sum, lattice_size, delta_tau, product);
-    print_matrix_f(product, "delta_tau * (H + V)");
+    print_matrix_f(product, "delta_tau * (H + V)", file);
 
     /* calculate - delta_tau * (H + V) */
     matrix_negative(lattice_size, product, negative);
-    print_matrix_f(negative, "- delta_tau * (H + V)");
+    print_matrix_f(negative, "- delta_tau * (H + V)", file);
 
     /* calculate exp(- delta_tau * (H + V)) */
     matrix_exponential(negative, lattice_size, B);
-    print_matrix_f(B, "B = exp(- delta_tau * (H + V))");
+    print_matrix_f(B, "B = exp(- delta_tau * (H + V))", file);
     /* close the file */
     myfile.close();
 }
@@ -131,18 +96,18 @@ void O_calculation_f(const LaGenMatComplex& lattice, const int lattice_size, con
     LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
     O = LaGenMatComplex::eye(lattice_size, lattice_size);
-    print_matrix_f(O, "product");
+    print_matrix_f(O, "product", file);
     /* calculate B matrices */
     for(int x = 0; x < time_size; x++){
         clear_storage(slice, lattice_size);
         int t = time_size - x - 1;
         myfile << "t = " << t << ": ";
-        isolate_row(lattice, lattice_size, t, slice);
-        // print_array(slice, lattice_size, "slice");
+        isolate_row(lattice, lattice_size, t, slice, file);
+        // print_array_f(slice, lattice_size, "slice", file);
         B_calculation_v(slice, lattice_size, U, lambda, sigma, delta_tau, mu, B);
-        // print_matrix_f(B, "B");
+        // print_matrix_f(B, "B", file);
         matrix_product(O, B);
-        print_matrix_f(O, "product");
+        print_matrix_f(O, "product", file);
     }
     /* add I */
     matrix_sum(lattice_size, O, I);
@@ -166,16 +131,16 @@ void weight_calculation_f(const LaGenMatComplex& lattice, const int lattice_size
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
     myfile << "sigma = -1" << endl;
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
-    print_matrix_f(OUP, "O UP");
-    print_matrix_f(ODN, "O DN");
+    print_matrix_f(OUP, "O UP", file);
+    print_matrix_f(ODN, "O DN", file);
     /* calculate det(O) */
     matrix_determinant_e(lattice_size, OUP, detOUP);
     matrix_determinant_e(lattice_size, ODN, detODN);
-    print_scalar_f(detOUP, "det(O UP)");
-    print_scalar_f(detODN, "det(O DN)");
+    print_scalar_f(detOUP, "det(O UP)", file);
+    print_scalar_f(detODN, "det(O DN)", file);
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
-    print_scalar_f(weight, "weight");
+    print_scalar_f(weight, "weight", file);
     /* close the file */
     myfile.close();
 }
@@ -279,14 +244,14 @@ void test_weight(){
     weight.i = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    print_initial_parameters_f(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
-    print_matrix_f(lattice, "lattice");
+    print_matrix_f(lattice, "lattice", file);
     /* calculate the weight */
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight);
-    print_scalar_f(weight, "weight");
+    print_scalar_f(weight, "weight", file);
     /* close the file */
     myfile.close();
 }
@@ -301,12 +266,12 @@ void test_sweep(){
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    print_initial_parameters_f(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-    // print_matrix_f(lattice, "intialised lattice");
+    // print_matrix_f(lattice, "intialised lattice", file);
     generate_lattice(lattice_size, time_size, lattice);
-    print_matrix_f(lattice, "lattice");
+    print_matrix_f(lattice, "lattice", file);
     /* sweep the lattice */
     sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection);
     /* close the file */
@@ -326,7 +291,7 @@ void test_increasing_U(){
         /* generate initial conditions */
         U = i;
         initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
-        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+        print_initial_parameters_f(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
         /* generate a lattice of spins */
         LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);
