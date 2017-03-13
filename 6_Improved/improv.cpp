@@ -1100,7 +1100,7 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
         clear_array(slice, lattice_size);
         int t = time_size - x - 1;
         myfile << "t = " << t << ": ";
-        isolate_row(lattice, lattice_size, t, slice, file);
+        isolate_row(lattice, lattice_size, t, slice);
         // print_array(slice, lattice_size, "slice", file);
         B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, B);
         print_matrix(B, "B", file);
