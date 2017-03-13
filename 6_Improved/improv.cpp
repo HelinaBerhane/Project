@@ -842,7 +842,7 @@ void test_V(){
     int lattice_size = 5, time_size;
     LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
-    double U = 1, beta = 10, lambda, delta_tau, mu,;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
 
     /* calculate initial parameters */
     initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
