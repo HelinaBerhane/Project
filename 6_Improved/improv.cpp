@@ -522,7 +522,129 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     weight = scalar_multiple(detOUP, detODN);
     print_scalar(weight, "weight");
 }
+void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
 
+    /* initialise everything */
+    COMPLEX weightBefore;
+    COMPLEX weightAfter;
+    clear_scalar(weightBefore);
+    clear_scalar(weightAfter);
+    double probability = 0;
+    string result;
+    acceptance = 0;
+    rejection = 0;
+
+    /* sweep through the lattice */
+    for(int i = 0; i < iterations; i++){
+        for(int t = 0; t < time_size; t++){
+            for(int l = 0; l < lattice_size; l++){
+                /* calculate the weight before the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
+
+                /* propose the flip */
+                flip_spin(lattice, t, l);
+
+                /* calculate the weight after the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
+
+                /* calculate the ratio of weights */
+                probability = weightAfter.r / weightBefore.r;
+
+                /* accept or reject the flip */
+                double prob = random_double();
+                if(abs(probability) >= 1){
+                    acceptance++;
+                }else{
+                    if(probability > prob){
+                        acceptance++;
+                    }else{
+                        flip_spin(lattice, t, l);
+                        rejection++;
+                    }
+                }
+            }
+        }
+    }
+}
+void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
+
+    /* initialise everything */
+    COMPLEX weightBefore;
+    COMPLEX weightAfter;
+    clear_scalar(weightBefore);
+    clear_scalar(weightAfter);
+    double probability = 0;
+    string result;
+    int count = 0;
+    acceptance = 0;
+    rejection = 0;
+
+    /* output headings */
+    cout.width(11);
+    cout << "weight";
+    cout << " lattice" << endl;
+
+    /* sweep through the lattice */
+    for(int i = 0; i < iterations; i++){
+        for(int t = 0; t < time_size; t++){
+            for(int l = 0; l < lattice_size; l++){
+                /* calculate the weight before the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
+
+                /* propose the flip */
+                flip_spin(lattice, t, l);
+
+                /* calculate the weight after the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
+
+                /* calculate the ratio of weights */
+                probability = weightAfter.r / weightBefore.r;
+
+                /* accept or reject the flip */
+                double prob = random_double();
+                if(abs(probability) >= 1){
+                    result = "accepted";
+                    acceptance++;
+                }else{
+                    if(probability > prob){
+                        result = "accepted";
+                        acceptance++;
+                    }else{
+                        flip_spin(lattice, t, l);
+                        result = "rejected";
+                        rejection++;
+                    }
+                }
+                /* comments */
+                    //for negative values, we do some integration
+                    //P\to\tilde{P} = |P| and  F\to \tilde
+                    //you have to multiply each quan you measure bu the sign
+                count++;
+                if(count%1000 == 0){
+                    cout << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
+                    cout.width(15);
+                    cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
+                }
+                // if(result == "accepted"){
+                //     print_matrix(lattice);
+                // }else{
+                //     cout << endl;
+                // }
+            }
+            /* Comments */
+                //when you take measurements, there is noise
+                //we're doing marcov chain
+                //the simplest quan we measure is double occupancy \bra n_up n_down \ket
+        }
+    }
+    //results
+        // with most parameters = 1, it stabilised at all -1 spins
+    cout << "["<< acceptance << "/" << rejection << "]" << endl;
+    double acceptance_ratio = acceptance / (rejection + acceptance);
+    cout << "acceptance ratio = " << acceptance_ratio << endl;
+    double percentage_acceptance = acceptance / rejection;
+    cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
+}
 /* -- Testing -- */
 // - generic
 void test_flip_spins(){
@@ -769,137 +891,6 @@ void test_weight(){
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight);
     print_scalar(weight, "weight");
 }
-
-                        /* ------ TO TEST ------ */
-void test_output_to_file(){
-    ofstream myfile;
-    myfile.open ("test.txt");
-    myfile << "Here, have a test :) .\n";
-    myfile.close();
-}
-void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
-
-    /* initialise everything */
-    COMPLEX weightBefore;
-    COMPLEX weightAfter;
-    clear_scalar(weightBefore);
-    clear_scalar(weightAfter);
-    double probability = 0;
-    string result;
-    acceptance = 0;
-    rejection = 0;
-
-    /* sweep through the lattice */
-    for(int i = 0; i < iterations; i++){
-        for(int t = 0; t < time_size; t++){
-            for(int l = 0; l < lattice_size; l++){
-                /* calculate the weight before the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
-
-                /* propose the flip */
-                flip_spin(lattice, t, l);
-
-                /* calculate the weight after the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
-
-                /* calculate the ratio of weights */
-                probability = weightAfter.r / weightBefore.r;
-
-                /* accept or reject the flip */
-                double prob = random_double();
-                if(abs(probability) >= 1){
-                    acceptance++;
-                }else{
-                    if(probability > prob){
-                        acceptance++;
-                    }else{
-                        flip_spin(lattice, t, l);
-                        rejection++;
-                    }
-                }
-            }
-        }
-    }
-}
-void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
-
-    /* initialise everything */
-    COMPLEX weightBefore;
-    COMPLEX weightAfter;
-    clear_scalar(weightBefore);
-    clear_scalar(weightAfter);
-    double probability = 0;
-    string result;
-    int count = 0;
-    acceptance = 0;
-    rejection = 0;
-
-    /* output headings */
-    cout.width(11);
-    cout << "weight";
-    cout << " lattice" << endl;
-
-    /* sweep through the lattice */
-    for(int i = 0; i < iterations; i++){
-        for(int t = 0; t < time_size; t++){
-            for(int l = 0; l < lattice_size; l++){
-                /* calculate the weight before the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
-
-                /* propose the flip */
-                flip_spin(lattice, t, l);
-
-                /* calculate the weight after the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
-
-                /* calculate the ratio of weights */
-                probability = weightAfter.r / weightBefore.r;
-
-                /* accept or reject the flip */
-                double prob = random_double();
-                if(abs(probability) >= 1){
-                    result = "accepted";
-                    acceptance++;
-                }else{
-                    if(probability > prob){
-                        result = "accepted";
-                        acceptance++;
-                    }else{
-                        flip_spin(lattice, t, l);
-                        result = "rejected";
-                        rejection++;
-                    }
-                }
-                /* comments */
-                    //for negative values, we do some integration
-                    //P\to\tilde{P} = |P| and  F\to \tilde
-                    //you have to multiply each quan you measure bu the sign
-                count++;
-                if(count%1000 == 0){
-                    cout << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
-                    cout.width(15);
-                    cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
-                }
-                // if(result == "accepted"){
-                //     print_matrix(lattice);
-                // }else{
-                //     cout << endl;
-                // }
-            }
-            /* Comments */
-                //when you take measurements, there is noise
-                //we're doing marcov chain
-                //the simplest quan we measure is double occupancy \bra n_up n_down \ket
-        }
-    }
-    //results
-        // with most parameters = 1, it stabilised at all -1 spins
-    cout << "["<< acceptance << "/" << rejection << "]" << endl;
-    double acceptance_ratio = acceptance / (rejection + acceptance);
-    cout << "acceptance ratio = " << acceptance_ratio << endl;
-    double percentage_acceptance = acceptance / rejection;
-    cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
-}
 void test_sweep(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 1000;// = 10000;
@@ -935,8 +926,17 @@ void test_increasing_U(){
     }
 }
 
+                        /* ------ TO TEST ------ */
+//
+void test_output_to_file(){
+    ofstream myfile;
+    myfile.open ("test.txt");
+    myfile << "Here, have a test :) .\n";
+    myfile.close();
+}
+
                       /* ------ TO CONVERT ------ */
                     /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep();
+    test_output_to_file();
 }
