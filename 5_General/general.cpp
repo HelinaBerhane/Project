@@ -892,7 +892,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
                 count++;
-                if(i%1000=0){
+                if(i%1000 == 0){
                     cout << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
                     cout.width(15);
                     cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
