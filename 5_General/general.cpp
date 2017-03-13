@@ -927,7 +927,7 @@ void test_sweep(){
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
     /* sweep the lattice */
-    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
+    sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
 }
 void test_increasing_U(){
     /* initialise everything */
