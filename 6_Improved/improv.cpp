@@ -53,6 +53,21 @@ void print_initial_parameters(double U, double beta, double lambda, double delta
 	cout << "delta tau = " << delta_tau << endl;
     cout << "mu = " << mu << endl;
 }
+void print_initial_parameters(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file);
+    /* print the initial parameters */
+	myfile << "no of lattice points = " << lattice_size << endl;
+	myfile << "no of time slices = " << time_size << endl;
+	myfile << "U = " << U << endl;
+	myfile << "beta = " << beta << endl;
+	myfile << "lambda = " << lambda << endl;
+	myfile << "delta tau = " << delta_tau << endl;
+    myfile << "mu = " << mu << endl;
+    /* close the file */
+    myfile.close();
+}
 
 /* -- Processing -- */
 // Randomisation
@@ -789,6 +804,12 @@ void test_initial_parameters(){
     initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
 }
+void test_initial_parameters(const string file){
+    double U = 1, beta = 10, lambda, delta_tau, mu;
+    int lattice_size = 5, time_size;
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters_f(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+}
 void test_generate_lattice(){
     int lattice_size = 5, time_size = 17;
     LaGenMatComplex lattice;
@@ -936,7 +957,7 @@ void test_increasing_U(){
 
 /* ------ TO TEST ------ */
 /* -- Output -- */
-void print_scalar_f(const COMPLEX scalar, const string name, const string file){
+void print_scalar(const COMPLEX scalar, const string name, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file);
@@ -945,7 +966,7 @@ void print_scalar_f(const COMPLEX scalar, const string name, const string file){
     /* close the file */
     myfile.close();
 }
-void print_scalar_f(const double scalar, const string name, const string file){
+void print_scalar(const double scalar, const string name, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file);
@@ -954,7 +975,7 @@ void print_scalar_f(const double scalar, const string name, const string file){
     /* close the file */
     myfile.close();
 }
-void print_array_f(const COMPLEX array[], int array_size, const string name, const string file){
+void print_array(const COMPLEX array[], int array_size, const string name, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file);
@@ -967,7 +988,7 @@ void print_array_f(const COMPLEX array[], int array_size, const string name, con
     /* close the file */
     myfile.close();
 }
-void print_matrix_f(const LaGenMatComplex& matrix, const string name, const string file){
+void print_matrix(const LaGenMatComplex& matrix, const string name, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file);
@@ -976,29 +997,26 @@ void print_matrix_f(const LaGenMatComplex& matrix, const string name, const stri
     /* close the file */
     myfile.close();
 }
-void print_initial_parameters_f(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file);
-    /* print the initial parameters */
-	myfile << "no of lattice points = " << lattice_size << endl;
-	myfile << "no of time slices = " << time_size << endl;
-	myfile << "U = " << U << endl;
-	myfile << "beta = " << beta << endl;
-	myfile << "lambda = " << lambda << endl;
-	myfile << "delta tau = " << delta_tau << endl;
-    myfile << "mu = " << mu << endl;
-    /* close the file */
-    myfile.close();
-}
-void test_initial_parameters(const string file){
-    double U = 1, beta = 10, lambda, delta_tau, mu;
-    int lattice_size = 5, time_size;
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
-    print_initial_parameters_f(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+void test_output_functions(const string file){
+    /* initialise everything */
+    int array_size = 5, matrix_size = 3;
+
+    COMPLEX scalar;
+    scalar.r = 1;
+    scalar.i = 2;
+
+    COMPLEX array[array_size];
+    generate_slice(array_size, array);
+
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 4);
+
+    /* print everything */
+    print_scalar(scalar, "scalar", file);
+    print_array(array, "array", file);
+    print_matrix(matrix, "matrix", file);
 }
 
                     /* ------ Main QMC Program ------ */
 int main(){
-    test_initial_parameters("initial_parameters.txt");
+    test_output_functions("test.txt");
 }
