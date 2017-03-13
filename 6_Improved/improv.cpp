@@ -842,11 +842,11 @@ void test_V(){
     int lattice_size = 5, time_size;
     LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
-    double U = 1, beta = 10, lambda, delta_tau;
+    double U = 1, beta = 10, lambda, delta_tau, mu,;
 
     /* calculate initial parameters */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     cout << endl;
 
     /* generate the lattice */
@@ -876,12 +876,12 @@ void test_negH_exponential(){
 void test_B_calculation(){
     /* initialise everything */
     int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
     LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     /* generate time slice */
     generate_slice(lattice_size, slice);
     /* calculate B */
@@ -896,12 +896,12 @@ void test_B_calculation(){
 void test_O(){
     /* initialise everything */
     int lattice_size = 5, time_size = 0;
-    double U = 1, beta = 10, lambda, delta_tau;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     /* generate lattice */
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
@@ -912,13 +912,13 @@ void test_O(){
 void test_weight(){
     /* initialise stuff */
     int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
     COMPLEX weight;
     weight.r = 0;
     weight.i = 0;
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
@@ -930,11 +930,11 @@ void test_weight(){
 void test_sweep(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 10000;
-    double U = .1, beta = 1, lambda, delta_tau;
+    double U = .1, beta = 1, lambda, delta_tau, mu;
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
     // print_matrix(lattice, "intialised lattice");
@@ -946,14 +946,14 @@ void test_sweep(){
 void test_increasing_U(){
     /* initialise everything */
     int lattice_size = 5, time_size = 0, iterations = 120;
-    double U, beta = 5.0, lambda = 1.0, delta_tau = 1.0;
+    double U, beta = 5.0, lambda = 1.0, delta_tau, mu = 1.0;
     double acceptance = 0.0, rejection = 0.0;
     /* test U = 0 to 10 */
     for(int i = 1; i <= 10; i++){
         /* generate initial conditions */
         U = i;
-        initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-        print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+        initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
         /* generate a lattice of spins */
         LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);
