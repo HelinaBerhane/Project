@@ -999,6 +999,10 @@ void print_matrix(const LaGenMatComplex& matrix, const string name, const string
     myfile.close();
 }
 void test_output_functions(const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+
     /* initialise everything */
     int array_size = 5, matrix_size = 3;
 
@@ -1019,7 +1023,8 @@ void test_output_functions(const string file){
     print_matrix(matrix, "matrix", file);
     myfile << endl;
 
-    // [ ] figure out how to append to already existing files
+    /* close the file */
+    myfile.close();
 }
 
                     /* ------ Main QMC Program ------ */
