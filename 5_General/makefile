@@ -5,7 +5,8 @@
 Inc = /home/k1333466/Work/lib/lapackpp/include/lapackpp/
 Lib = /home/k1333466/Work/lib/lapackpp/lib/
 CXX = g++
-CXXFLAGS = -llapackpp -Wall -g
+# CXXFLAGS = -llapackpp -Wall -g
+CXXFLAGS = -llapackpp -O1
 
 all: matrix
 

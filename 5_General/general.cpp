@@ -892,9 +892,11 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
                 count++;
-                cout << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
-                cout.width(15);
-                cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
+                if(i%1000=0){
+                    cout << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
+                    cout.width(15);
+                    cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
+                }
                 // if(result == "accepted"){
                 //     print_matrix(lattice);
                 // }else{
@@ -923,11 +925,11 @@ void test_sweep(){
     print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-    print_matrix(lattice, "intialised lattice");
+    // print_matrix(lattice, "intialised lattice");
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
     /* sweep the lattice */
-    sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
+    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
 }
 void test_increasing_U(){
     /* initialise everything */
