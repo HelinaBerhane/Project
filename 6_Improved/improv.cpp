@@ -1021,5 +1021,5 @@ void test_output_functions(const string file){
 
                     /* ------ Main QMC Program ------ */
 int main(){
-    test_output_to_file("test.txt");
+    test_output_functions("test.txt");
 }
