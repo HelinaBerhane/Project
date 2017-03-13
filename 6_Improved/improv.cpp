@@ -823,32 +823,6 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
     }
 }
 void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
-    /* Plan */
-
-        /* Input */
-            // matrix_size      - int
-            // lattice          - LaGenMatComplex&
-            // U                - double
-            // iterations       - int
-
-        /* Processing */
-            // Calculate initial parameters
-                // Calculate lambda
-                // Calculate delta_tau
-            // for each iteration
-                // for each time slice
-                    // isolate the spins in an array
-                    // for each lattice point
-                        // calculate the probability of the spin flipping
-                        // decide whether it flips or not
-                        // record the flip in the original matrix
-                        // record the measurements
-
-        /* Output */
-            // a pritout of the lattice over time?
-            // probabiliy of flipping at each stage
-            // average spin
-            // ... ?
 
     /* initialise everything */
     COMPLEX weightBefore;
@@ -860,7 +834,6 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     int count = 0;
     acceptance = 0;
     rejection = 0;
-    double percentage_acceptance = 0.0;
 
     /* output headings */
     cout.width(11);
@@ -962,7 +935,6 @@ void test_increasing_U(){
         sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection);
     }
 }
-
 
                       /* ------ TO CONVERT ------ */
                     /* ------ Main QMC Program ------ */
