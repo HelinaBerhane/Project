@@ -56,7 +56,7 @@ void print_initial_parameters(double U, double beta, double lambda, double delta
 void print_initial_parameters(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size, const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* print the initial parameters */
 	myfile << "no of lattice points = " << lattice_size << endl;
 	myfile << "no of time slices = " << time_size << endl;
@@ -664,7 +664,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
 void test_output_to_file(const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* print stuff */
     myfile << "Here, have a test :) .\n";
     /* close the file */
@@ -960,7 +960,7 @@ void test_increasing_U(){
 void print_scalar(const COMPLEX scalar, const string name, const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* print the scalar */
     myfile << name << ": " << scalar << endl;
     /* close the file */
@@ -969,7 +969,7 @@ void print_scalar(const COMPLEX scalar, const string name, const string file){
 void print_scalar(const double scalar, const string name, const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* print the scalar */
     myfile << name << ": " << scalar << endl;
     /* close the file */
@@ -978,7 +978,7 @@ void print_scalar(const double scalar, const string name, const string file){
 void print_array(const COMPLEX array[], int array_size, const string name, const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* print stuff */
 	myfile << name << ": ";
     for(int i = 0; i < array_size; i++){
@@ -991,7 +991,8 @@ void print_array(const COMPLEX array[], int array_size, const string name, const
 void print_matrix(const LaGenMatComplex& matrix, const string name, const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
+
     /* print the matrix */
 	myfile << name << ":" << endl << matrix << endl;
     /* close the file */
@@ -1014,9 +1015,11 @@ void test_output_functions(const string file){
     print_scalar(scalar, "scalar", file);
     print_array(array, array_size, "array", file);
     print_matrix(matrix, "matrix", file);
+
+    // [ ] figure out how to append to already existing files
 }
 
                     /* ------ Main QMC Program ------ */
 int main(){
-    test_output_functions("test.txt");
+    test_output_to_file("test.txt");
 }
