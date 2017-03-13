@@ -967,5 +967,5 @@ void test_increasing_U(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_initial_parameters();
+    test_V();
 }
