@@ -37,34 +37,6 @@ void test_output_to_file(const string file){
 /* -- Processing -- */
 // Calculation
 // - qmc
-
-void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& O, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* initialise everything */
-    LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
-    COMPLEX slice[lattice_size];
-    O = LaGenMatComplex::eye(lattice_size, lattice_size);
-    print_matrix(O, "product", file);
-    /* calculate B matrices */
-    for(int x = 0; x < time_size; x++){
-        clear_array(slice, lattice_size);
-        int t = time_size - x - 1;
-        myfile << "t = " << t << ": ";
-        isolate_row(lattice, lattice_size, t, slice, file);
-        // print_array(slice, lattice_size, "slice", file);
-        B_calculation_v(slice, lattice_size, U, lambda, sigma, delta_tau, mu, B);
-        // print_matrix(B, "B", file);
-        matrix_product(O, B);
-        print_matrix(O, "product", file);
-    }
-    /* add I */
-    matrix_sum(lattice_size, O, I);
-    /* close the file */
-    myfile.close();
-}
 void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     /* open the file */
     ofstream myfile;
@@ -182,22 +154,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
 
 /* -- Testing -- */
 // - generic
-void test_O(const string file){
-    /* initialise everything */
-    int lattice_size = 5, time_size = 0;
-    double U = 1, beta = 10, lambda, delta_tau, mu;
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
-    /* generate lattice */
-    generate_lattice(lattice_size, time_size, lattice);
-    print_matrix(lattice, "lattice");
-    /* calculate O */
-    O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, O);
-    print_matrix(O, "O");
-}
+
 void test_weight(const string file){
     string file = "test.txt";
     /* open the file */

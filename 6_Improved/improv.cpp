@@ -494,6 +494,44 @@ void B_calculation_v(const COMPLEX slice[], const int lattice_size, const double
     matrix_exponential(negative, lattice_size, B);
     print_matrix(B, "B = exp(- delta_tau * (H + V))");
 }
+void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& B, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    B = 0;
+    LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex sum = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex product = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex negative = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex exponential = LaGenMatComplex::zeros(lattice_size, lattice_size);
+
+    /* calculate H and V */
+    H_generation(lattice_size, H);
+    V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, V);
+    print_matrix(H, "H", file);
+    print_matrix(V, "V", file);
+
+    /* calculate H + V */
+    sum = H.copy();
+    matrix_sum(lattice_size, sum, V);
+    print_matrix(sum, "H + V", file);
+
+    /* calculate delta_tau * (H + V) */
+    matrix_multiple(sum, lattice_size, delta_tau, product);
+    print_matrix(product, "delta_tau * (H + V)", file);
+
+    /* calculate - delta_tau * (H + V) */
+    matrix_negative(lattice_size, product, negative);
+    print_matrix(negative, "- delta_tau * (H + V)", file);
+
+    /* calculate exp(- delta_tau * (H + V)) */
+    matrix_exponential(negative, lattice_size, B);
+    print_matrix(B, "B = exp(- delta_tau * (H + V))", file);
+    /* close the file */
+    myfile.close();
+}
 void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& O){
     /* initialise everything */
     LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -950,6 +988,31 @@ void test_B_calculation(){
     /* print result */
     print_matrix(B,"B = e^-H e^-V");
 }
+void test_B_calculation(const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    int lattice_size = 5, time_size;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
+    LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    COMPLEX slice[lattice_size];
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    /* generate time slice */
+    generate_slice(lattice_size, slice);
+    /* calculate B */
+    myfile << "sigma = 1" << endl;
+    B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, mu, B, file);
+    B = 0;
+    myfile << "sigma = -1" << endl;
+    B_calculation(slice, lattice_size, U, lambda, -1, delta_tau, mu, B, file);
+    /* print result */
+    print_matrix(B,"B = e^-H e^-V", file);
+    /* close the file */
+    myfile.close();
+}
 void test_O(){
     /* initialise everything */
     int lattice_size = 5, time_size = 0;
@@ -1021,71 +1084,53 @@ void test_increasing_U(){
 
 /* ------ TO TEST ------ */
 /* -- Output -- */
-void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& B, const string file){
+
+void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& O, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
     /* initialise everything */
-    B = 0;
-    LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex sum = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex product = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex negative = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex exponential = LaGenMatComplex::zeros(lattice_size, lattice_size);
-
-    /* calculate H and V */
-    H_generation(lattice_size, H);
-    V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, V);
-    print_matrix(H, "H", file);
-    print_matrix(V, "V", file);
-
-    /* calculate H + V */
-    sum = H.copy();
-    matrix_sum(lattice_size, sum, V);
-    print_matrix(sum, "H + V", file);
-
-    /* calculate delta_tau * (H + V) */
-    matrix_multiple(sum, lattice_size, delta_tau, product);
-    print_matrix(product, "delta_tau * (H + V)", file);
-
-    /* calculate - delta_tau * (H + V) */
-    matrix_negative(lattice_size, product, negative);
-    print_matrix(negative, "- delta_tau * (H + V)", file);
-
-    /* calculate exp(- delta_tau * (H + V)) */
-    matrix_exponential(negative, lattice_size, B);
-    print_matrix(B, "B = exp(- delta_tau * (H + V))", file);
+    LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
+    COMPLEX slice[lattice_size];
+    O = LaGenMatComplex::eye(lattice_size, lattice_size);
+    print_matrix(O, "product", file);
+    /* calculate B matrices */
+    for(int x = 0; x < time_size; x++){
+        clear_array(slice, lattice_size);
+        int t = time_size - x - 1;
+        myfile << "t = " << t << ": ";
+        isolate_row(lattice, lattice_size, t, slice, file);
+        // print_array(slice, lattice_size, "slice", file);
+        B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, B);
+        print_matrix(B, "B", file);
+        // print_matrix(B, "B", file);
+        matrix_product(O, B);
+        print_matrix(O, "product", file);
+    }
+    /* add I */
+    matrix_sum(lattice_size, O, I);
     /* close the file */
     myfile.close();
 }
-void test_B_calculation(const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
+void test_O(const string file){
     /* initialise everything */
-    int lattice_size = 5, time_size;
+    int lattice_size = 5, time_size = 0;
     double U = 1, beta = 10, lambda, delta_tau, mu;
-    LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    COMPLEX slice[lattice_size];
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-    /* generate time slice */
-    generate_slice(lattice_size, slice);
-    /* calculate B */
-    myfile << "sigma = 1" << endl;
-    B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, mu, B, file);
-    B = 0;
-    myfile << "sigma = -1" << endl;
-    B_calculation(slice, lattice_size, U, lambda, -1, delta_tau, mu, B, file);
-    /* print result */
-    print_matrix(B,"B = e^-H e^-V", file);
-    /* close the file */
-    myfile.close();
+    /* generate lattice */
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice", file);
+    /* calculate O */
+    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, O, file);
+    print_matrix(O, "O", file);
 }
 
                     /* ------ Main QMC Program ------ */
 int main(){
-    test_B_calculation("test.txt");
+    test_O("test.txt");
 }
