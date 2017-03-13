@@ -808,7 +808,7 @@ void test_initial_parameters(const string file){
     double U = 1, beta = 10, lambda, delta_tau, mu;
     int lattice_size = 5, time_size;
     initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
-    print_initial_parameters_f(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
 }
 void test_generate_lattice(){
     int lattice_size = 5, time_size = 17;
@@ -1012,7 +1012,7 @@ void test_output_functions(const string file){
 
     /* print everything */
     print_scalar(scalar, "scalar", file);
-    print_array(array, "array", file);
+    print_array(array, array_size, "array", file);
     print_matrix(matrix, "matrix", file);
 }
 
