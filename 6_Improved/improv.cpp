@@ -170,6 +170,18 @@ void flip_spin_v(LaGenMatComplex& lattice, const int t, const int l){
     lattice(t,l).i = -lattice(t,l).i;
     cout << " -> " << lattice(t,l) << endl;
 }
+void flip_spin(LaGenMatComplex& lattice, const int t, const int l, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* print stuff */
+    myfile << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
+    lattice(t,l).r = -lattice(t,l).r;
+    lattice(t,l).i = -lattice(t,l).i;
+    myfile << " -> " << lattice(t,l) << endl;
+    /* close the file */
+    myfile.close();
+}
 // Generation
 void generate_scalar(COMPLEX& scalar, const int max_rand){
     scalar.r = random_int(max_rand);
@@ -738,6 +750,17 @@ void test_flip_spins(){
     /* flip spins */
     flip_spin_v(lattice, t, l);
 }
+void test_flip_spins(const string file){
+    /* initialise stuff */
+    int lattice_size = 5, time_size = 8;
+    int l = random_int(lattice_size-1), t = random_int(time_size-1);
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    /* generate lattice */
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice", file);
+    /* flip spins */
+    flip_spin(lattice, t, l, file);
+}
 void test_inverse(){
     int matrix_size = 3;
     LaGenMatComplex initialMatrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
@@ -998,32 +1021,71 @@ void test_increasing_U(){
 
 /* ------ TO TEST ------ */
 /* -- Output -- */
-void flip_spin(LaGenMatComplex& lattice, const int t, const int l, const string file){
+void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& B, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
-    /* print stuff */
-    myfile << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
-    lattice(t,l).r = -lattice(t,l).r;
-    lattice(t,l).i = -lattice(t,l).i;
-    myfile << " -> " << lattice(t,l) << endl;
+    /* initialise everything */
+    B = 0;
+    LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex sum = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex product = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex negative = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex exponential = LaGenMatComplex::zeros(lattice_size, lattice_size);
+
+    /* calculate H and V */
+    H_generation(lattice_size, H);
+    V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, V);
+    print_matrix(H, "H", file);
+    print_matrix(V, "V", file);
+
+    /* calculate H + V */
+    sum = H.copy();
+    matrix_sum(lattice_size, sum, V);
+    print_matrix(sum, "H + V", file);
+
+    /* calculate delta_tau * (H + V) */
+    matrix_multiple(sum, lattice_size, delta_tau, product);
+    print_matrix(product, "delta_tau * (H + V)", file);
+
+    /* calculate - delta_tau * (H + V) */
+    matrix_negative(lattice_size, product, negative);
+    print_matrix(negative, "- delta_tau * (H + V)", file);
+
+    /* calculate exp(- delta_tau * (H + V)) */
+    matrix_exponential(negative, lattice_size, B);
+    print_matrix(B, "B = exp(- delta_tau * (H + V))", file);
     /* close the file */
     myfile.close();
 }
-void test_flip_spins(const string file){
-    /* initialise stuff */
-    int lattice_size = 5, time_size = 8;
-    int l = random_int(lattice_size-1), t = random_int(time_size-1);
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    /* generate lattice */
-    generate_lattice(lattice_size, time_size, lattice);
-    print_matrix(lattice, "lattice", file);
-    /* flip spins */
-    flip_spin(lattice, t, l, file);
+void test_B_calculation(const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    int lattice_size = 5, time_size;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
+    LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    COMPLEX slice[lattice_size];
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    /* generate time slice */
+    generate_slice(lattice_size, slice);
+    /* calculate B */
+    myfile << "sigma = 1" << endl;
+    B_calculation(slice, lattice_size, U, lambda, 1, delta_tau, mu, B, file);
+    B = 0;
+    myfile << "sigma = -1" << endl;
+    B_calculation(slice, lattice_size, U, lambda, -1, delta_tau, mu, B, file);
+    /* print result */
+    print_matrix(B,"B = e^-H e^-V", file);
+    /* close the file */
+    myfile.close();
 }
-
 
                     /* ------ Main QMC Program ------ */
 int main(){
-    test_flip_spins("test.txt");
+    test_B_calculation("test.txt");
 }
