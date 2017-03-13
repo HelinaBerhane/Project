@@ -348,10 +348,10 @@ void initial_parameter_calculation(const double U, const double beta, double& la
     delta_tau = beta / time_size;           // = sqrt(0.125 / U) by convension
 }
 void test_initial_parameters(){
-    double U = 1, beta = 10, lambda, delta_tau;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
     int lattice_size = 5, time_size;
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
 }
 /* -- Testing -- */
 
