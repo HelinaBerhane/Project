@@ -1,4 +1,5 @@
 #include <iostream> //cout
+#include <fstream>
 #include <string>
 #include "improv.h"
 #include <gmd.h> 	//LaGenMatDouble
@@ -770,6 +771,13 @@ void test_weight(){
 }
 
                         /* ------ TO TEST ------ */
+void test_output_to_file(){
+    ofstream myfile;
+    myfile.open ("test.txt");
+    myfile << "Here, have a test :) .\n";
+    myfile.close();
+    return 0;
+}
 void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
 
     /* initialise everything */
@@ -915,12 +923,14 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     //results
         // with most parameters = 1, it stabilised at all -1 spins
     cout << "["<< acceptance << "/" << rejection << "]" << endl;
-    percentage_acceptance = acceptance / rejection;
+    double acceptance_ratio = acceptance / (rejection + acceptance);
+    cout << "acceptance ratio = " << percentage_acceptance << endl;
+    double percentage_acceptance = acceptance / rejection;
     cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
 }
 void test_sweep(){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 10000;
+    int lattice_size = 5, time_size, iterations = 1000;// = 10000;
     double U = .1, beta = 1, lambda, delta_tau, mu;
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
@@ -952,6 +962,7 @@ void test_increasing_U(){
         sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection);
     }
 }
+
 
                       /* ------ TO CONVERT ------ */
                     /* ------ Main QMC Program ------ */
