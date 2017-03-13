@@ -478,6 +478,49 @@ void O_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, con
     /* add I */
     matrix_sum(lattice_size, O, I);
 }
+void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight){
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    /* calculate O */
+    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
+    /* calculate det(O) */
+    matrix_determinant_e(lattice_size, OUP, detOUP);
+    matrix_determinant_e(lattice_size, ODN, detODN);
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+}
+void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight){
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    /* calculate O */
+    cout << "sigma = 1" << endl;
+    O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
+    cout << "sigma = -1" << endl;
+    O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
+    print_matrix(OUP, "O UP");
+    print_matrix(ODN, "O DN");
+    /* calculate det(O) */
+    matrix_determinant_e(lattice_size, OUP, detOUP);
+    matrix_determinant_e(lattice_size, ODN, detODN);
+    print_scalar(detOUP, "det(O UP)");
+    print_scalar(detODN, "det(O DN)");
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+    print_scalar(weight, "weight");
+}
 
 /* -- Testing -- */
 // - generic
@@ -707,53 +750,6 @@ void test_O(){
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, O);
     print_matrix(O, "O");
 }
-
-                        /* ------ TO TEST ------ */
-//
-/* -- Testing -- */
-void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight){
-    /* initialise everything */
-    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    COMPLEX detOUP;
-    COMPLEX detODN;
-    clear_scalar(weight);
-    clear_scalar(detOUP);
-    clear_scalar(detODN);
-    /* calculate O */
-    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
-    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
-    /* calculate det(O) */
-    matrix_determinant_e(lattice_size, OUP, detOUP);
-    matrix_determinant_e(lattice_size, ODN, detODN);
-    /* calculate weight */
-    weight = scalar_multiple(detOUP, detODN);
-}
-void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight){
-    /* initialise everything */
-    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    COMPLEX detOUP;
-    COMPLEX detODN;
-    clear_scalar(weight);
-    clear_scalar(detOUP);
-    clear_scalar(detODN);
-    /* calculate O */
-    cout << "sigma = 1" << endl;
-    O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
-    cout << "sigma = -1" << endl;
-    O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
-    print_matrix(OUP, "O UP");
-    print_matrix(ODN, "O DN");
-    /* calculate det(O) */
-    matrix_determinant_e(lattice_size, OUP, detOUP);
-    matrix_determinant_e(lattice_size, ODN, detODN);
-    print_scalar(detOUP, "det(O UP)");
-    print_scalar(detODN, "det(O DN)");
-    /* calculate weight */
-    weight = scalar_multiple(detOUP, detODN);
-    print_scalar(weight, "weight");
-}
 void test_weight(){
     /* initialise stuff */
     int lattice_size = 5, time_size;
@@ -773,8 +769,7 @@ void test_weight(){
     print_scalar(weight, "weight");
 }
 
-                        /* ------ TO CONVERT ------ */
-//
+                        /* ------ TO TEST ------ */
 void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
 
     /* initialise everything */
@@ -923,9 +918,6 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     percentage_acceptance = acceptance / rejection;
     cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
 }
-/* -- Testing -- */
-
-
 void test_sweep(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 10000;
@@ -961,8 +953,8 @@ void test_increasing_U(){
     }
 }
 
-
-/* ------ Main QMC Program ------ */
+                      /* ------ TO CONVERT ------ */
+                    /* ------ Main QMC Program ------ */
 int main(){
-    test_weight();
+    test_sweep();
 }
