@@ -1017,7 +1017,7 @@ void test_flip_spins(const string file){
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     /* generate lattice */
     generate_lattice(lattice_size, time_size, lattice);
-    print_matrix(lattice, "lattice");
+    print_matrix(lattice, "lattice", file);
     /* flip spins */
     flip_spin(lattice, t, l, file);
 }
