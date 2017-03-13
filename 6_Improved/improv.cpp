@@ -469,7 +469,7 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
         clear_storage(slice, lattice_size);
         int t = time_size - x - 1;
         isolate_row(lattice, lattice_size, t, slice);
-        B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, B);
+        B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, B);
         matrix_product(O, B);
     }
     /* add I */
@@ -507,8 +507,8 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     clear_scalar(detOUP);
     clear_scalar(detODN);
     /* calculate O */
-    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, OUP);
-    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, ODN);
+    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
     /* calculate det(O) */
     matrix_determinant_e(lattice_size, OUP, detOUP);
     matrix_determinant_e(lattice_size, ODN, detODN);
@@ -526,9 +526,9 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     clear_scalar(detODN);
     /* calculate O */
     cout << "sigma = 1" << endl;
-    O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
+    O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, mu, OUP);
     cout << "sigma = -1" << endl;
-    O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, ODN);
+    O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
     print_matrix(OUP, "O UP");
     print_matrix(ODN, "O DN");
     /* calculate det(O) */
@@ -563,7 +563,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 flip_spin(lattice, t, l);
 
                 /* calculate the weight after the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
 
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
