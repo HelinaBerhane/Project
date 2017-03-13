@@ -1,6 +1,6 @@
 #include <iostream> //cout
 #include <string>
-#include "general.h"
+#include "improv.h"
 #include <gmd.h> 	//LaGenMatDouble
 #include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
 #include <blas3pp.h>
@@ -60,6 +60,12 @@ int random_int(const int max_rand){
     std::uniform_int_distribution<> dist(0, max_rand);
     return dist(gen);
 }
+double random_double(){
+    random_device rd;
+    mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0, 1);
+    return dis(gen);
+}
 // Manipulation
 void array_to_diag(const COMPLEX array[], const int array_size, LaGenMatComplex& diag){
     diag = 0;
@@ -103,6 +109,20 @@ void isolate_row(const LaGenMatComplex& matrix, const int matrix_width, const in
     for(int i = 0; i < matrix_width; i++){
         array[i] = matrix(row, i);
     }
+}
+void flip_scalar(COMPLEX& spin){
+    spin.r = -spin.r;
+    spin.i = -spin.i;
+}
+void flip_spin(LaGenMatComplex& lattice, const int t, const int l){
+    lattice(t,l).r = -lattice(t,l).r;
+    lattice(t,l).i = -lattice(t,l).i;
+}
+void flip_spin_v(LaGenMatComplex& lattice, const int t, const int l){
+    cout << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
+    lattice(t,l).r = -lattice(t,l).r;
+    lattice(t,l).i = -lattice(t,l).i;
+    cout << " -> " << lattice(t,l) << endl;
 }
 // Generation
 void generate_scalar(COMPLEX& scalar, const int max_rand){
@@ -454,8 +474,210 @@ void O_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, con
     /* add I */
     matrix_sum(lattice_size, O, I);
 }
+void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    /* calculate O */
+    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, OUP);
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, ODN);
+    /* calculate det(O) */
+    matrix_determinant_e(lattice_size, OUP, detOUP);
+    matrix_determinant_e(lattice_size, ODN, detODN);
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+}
+void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    /* calculate O */
+    cout << "sigma = 1" << endl;
+    O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, OUP);
+    cout << "sigma = -1" << endl;
+    O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, ODN);
+    print_matrix(OUP, "O UP");
+    print_matrix(ODN, "O DN");
+    /* calculate det(O) */
+    matrix_determinant_e(lattice_size, OUP, detOUP);
+    matrix_determinant_e(lattice_size, ODN, detODN);
+    print_scalar(detOUP, "det(O UP)");
+    print_scalar(detODN, "det(O DN)");
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+    print_scalar(weight, "weight");
+}
+void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, double& acceptance, double& rejection){
+
+    /* initialise everything */
+    COMPLEX weightBefore;
+    COMPLEX weightAfter;
+    clear_scalar(weightBefore);
+    clear_scalar(weightAfter);
+    double probability = 0;
+    string result;
+    acceptance = 0;
+    rejection = 0;
+
+    /* sweep through the lattice */
+    for(int i = 0; i < iterations; i++){
+        for(int t = 0; t < time_size; t++){
+            for(int l = 0; l < lattice_size; l++){
+                /* calculate the weight before the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
+
+                /* propose the flip */
+                flip_spin(lattice, t, l);
+
+                /* calculate the weight after the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
+
+                /* calculate the ratio of weights */
+                probability = weightAfter.r / weightBefore.r;
+
+                /* accept or reject the flip */
+                double prob = random_double();
+                if(abs(probability) >= 1){
+                    acceptance++;
+                }else{
+                    if(probability > prob){
+                        acceptance++;
+                    }else{
+                        flip_spin(lattice, t, l);
+                        rejection++;
+                    }
+                }
+            }
+        }
+    }
+}
+void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, double& acceptance, double& rejection){
+    /* Plan */
+
+        /* Input */
+            // matrix_size      - int
+            // lattice          - LaGenMatComplex&
+            // U                - double
+            // iterations       - int
+
+        /* Processing */
+            // Calculate initial parameters
+                // Calculate lambda
+                // Calculate delta_tau
+            // for each iteration
+                // for each time slice
+                    // isolate the spins in an array
+                    // for each lattice point
+                        // calculate the probability of the spin flipping
+                        // decide whether it flips or not
+                        // record the flip in the original matrix
+                        // record the measurements
+
+        /* Output */
+            // a pritout of the lattice over time?
+            // probabiliy of flipping at each stage
+            // average spin
+            // ... ?
+
+    /* initialise everything */
+    COMPLEX weightBefore;
+    COMPLEX weightAfter;
+    clear_scalar(weightBefore);
+    clear_scalar(weightAfter);
+    double probability = 0;
+    string result;
+    int count = 0;
+    acceptance = 0;
+    rejection = 0;
+    double percentage_acceptance = 0.0;
+
+    /* output headings */
+    cout.width(11);
+    cout << "weight";
+    cout << " lattice" << endl;
+
+    /* sweep through the lattice */
+    for(int i = 0; i < iterations; i++){
+        for(int t = 0; t < time_size; t++){
+            for(int l = 0; l < lattice_size; l++){
+                /* calculate the weight before the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
+
+                /* propose the flip */
+                flip_spin(lattice, t, l);
+
+                /* calculate the weight after the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
+
+                /* calculate the ratio of weights */
+                probability = weightAfter.r / weightBefore.r;
+
+                /* accept or reject the flip */
+                double prob = random_double();
+                if(abs(probability) >= 1){
+                    result = "accepted";
+                    acceptance++;
+                }else{
+                    if(probability > prob){
+                        result = "accepted";
+                        acceptance++;
+                    }else{
+                        flip_spin(lattice, t, l);
+                        result = "rejected";
+                        rejection++;
+                    }
+                }
+                /* comments */
+                    //for negative values, we do some integration
+                    //P\to\tilde{P} = |P| and  F\to \tilde
+                    //you have to multiply each quan you measure bu the sign
+                count++;
+                if(count%1000 == 0){
+                    cout << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
+                    cout.width(15);
+                    cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
+                }
+                // if(result == "accepted"){
+                //     print_matrix(lattice);
+                // }else{
+                //     cout << endl;
+                // }
+            }
+            /* Comments */
+                //when you take measurements, there is noise
+                //we're doing marcov chain
+                //the simplest quan we measure is double occupancy \bra n_up n_down \ket
+        }
+    }
+    //results
+        // with most parameters = 1, it stabilised at all -1 spins
+    cout << "["<< acceptance << "/" << rejection << "]" << endl;
+    percentage_acceptance = acceptance / rejection;
+    cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
+}
 /* -- Testing -- */
 // - generic
+void test_flip_spins(){
+    /* initialise stuff */
+    int lattice_size = 5, time_size = 8;
+    int l = random_int(lattice_size-1), t = random_int(time_size-1);
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    /* generate lattice */
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice");
+    /* flip spins */
+    flip_spin_v(lattice, t, l);
+}
 void test_inverse(){
     int matrix_size = 3;
     LaGenMatComplex initialMatrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
@@ -671,53 +893,6 @@ void test_O(){
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, O);
     print_matrix(O, "O");
 }
-
-						/* ------ TO TEST ------ */
-//...
-
-void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
-    /* initialise everything */
-    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    COMPLEX detOUP;
-    COMPLEX detODN;
-    clear_scalar(weight);
-    clear_scalar(detOUP);
-    clear_scalar(detODN);
-    /* calculate O */
-    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, OUP);
-    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, ODN);
-    /* calculate det(O) */
-    matrix_determinant_e(lattice_size, OUP, detOUP);
-    matrix_determinant_e(lattice_size, ODN, detODN);
-    /* calculate weight */
-    weight = scalar_multiple(detOUP, detODN);
-}
-void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, COMPLEX& weight){
-    /* initialise everything */
-    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    COMPLEX detOUP;
-    COMPLEX detODN;
-    clear_scalar(weight);
-    clear_scalar(detOUP);
-    clear_scalar(detODN);
-    /* calculate O */
-    cout << "sigma = 1" << endl;
-    O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, OUP);
-    cout << "sigma = -1" << endl;
-    O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, ODN);
-    print_matrix(OUP, "O UP");
-    print_matrix(ODN, "O DN");
-    /* calculate det(O) */
-    matrix_determinant_e(lattice_size, OUP, detOUP);
-    matrix_determinant_e(lattice_size, ODN, detODN);
-    print_scalar(detOUP, "det(O UP)");
-    print_scalar(detODN, "det(O DN)");
-    /* calculate weight */
-    weight = scalar_multiple(detOUP, detODN);
-    print_scalar(weight, "weight");
-}
 void test_weight(){
     /* initialise stuff */
     int lattice_size = 5, time_size;
@@ -735,185 +910,6 @@ void test_weight(){
     /* calculate the weight */
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weight);
     print_scalar(weight, "weight");
-}
-double random_double(){
-    random_device rd;
-    mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(0, 1);
-    return dis(gen);
-}
-void flip_scalar(COMPLEX& spin){
-    spin.r = -spin.r;
-    spin.i = -spin.i;
-}
-void flip_spin(LaGenMatComplex& lattice, const int t, const int l){
-    lattice(t,l).r = -lattice(t,l).r;
-    lattice(t,l).i = -lattice(t,l).i;
-}
-void flip_spin_v(LaGenMatComplex& lattice, const int t, const int l){
-    cout << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
-    lattice(t,l).r = -lattice(t,l).r;
-    lattice(t,l).i = -lattice(t,l).i;
-    cout << " -> " << lattice(t,l) << endl;
-}
-void test_flip_spins(){
-    /* initialise stuff */
-    int lattice_size = 5, time_size = 8;
-    int l = random_int(lattice_size-1), t = random_int(time_size-1);
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    /* generate lattice */
-    generate_lattice(lattice_size, time_size, lattice);
-    print_matrix(lattice, "lattice");
-    /* flip spins */
-    flip_spin_v(lattice, t, l);
-}
-void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, double& acceptance, double& rejection){
-
-    /* initialise everything */
-    COMPLEX weightBefore;
-    COMPLEX weightAfter;
-    clear_scalar(weightBefore);
-    clear_scalar(weightAfter);
-    double probability = 0;
-    string result;
-    acceptance = 0;
-    rejection = 0;
-
-    /* sweep through the lattice */
-    for(int i = 0; i < iterations; i++){
-        for(int t = 0; t < time_size; t++){
-            for(int l = 0; l < lattice_size; l++){
-                /* calculate the weight before the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
-
-                /* propose the flip */
-                flip_spin(lattice, t, l);
-
-                /* calculate the weight after the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
-
-                /* calculate the ratio of weights */
-                probability = weightAfter.r / weightBefore.r;
-
-                /* accept or reject the flip */
-                double prob = random_double();
-                if(abs(probability) >= 1){
-                    acceptance++;
-                }else{
-                    if(probability > prob){
-                        acceptance++;
-                    }else{
-                        flip_spin(lattice, t, l);
-                        rejection++;
-                    }
-                }
-            }
-        }
-    }
-}
-void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const int iterations, double& acceptance, double& rejection){
-    /* Plan */
-
-        /* Input */
-            // matrix_size      - int
-            // lattice          - LaGenMatComplex&
-            // U                - double
-            // iterations       - int
-
-        /* Processing */
-            // Calculate initial parameters
-                // Calculate lambda
-                // Calculate delta_tau
-            // for each iteration
-                // for each time slice
-                    // isolate the spins in an array
-                    // for each lattice point
-                        // calculate the probability of the spin flipping
-                        // decide whether it flips or not
-                        // record the flip in the original matrix
-                        // record the measurements
-
-        /* Output */
-            // a pritout of the lattice over time?
-            // probabiliy of flipping at each stage
-            // average spin
-            // ... ?
-
-    /* initialise everything */
-    COMPLEX weightBefore;
-    COMPLEX weightAfter;
-    clear_scalar(weightBefore);
-    clear_scalar(weightAfter);
-    double probability = 0;
-    string result;
-    int count = 0;
-    acceptance = 0;
-    rejection = 0;
-    double percentage_acceptance = 0.0;
-
-    /* output headings */
-    cout.width(11);
-    cout << "weight";
-    cout << " lattice" << endl;
-
-    /* sweep through the lattice */
-    for(int i = 0; i < iterations; i++){
-        for(int t = 0; t < time_size; t++){
-            for(int l = 0; l < lattice_size; l++){
-                /* calculate the weight before the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightBefore);
-
-                /* propose the flip */
-                flip_spin(lattice, t, l);
-
-                /* calculate the weight after the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, weightAfter);
-
-                /* calculate the ratio of weights */
-                probability = weightAfter.r / weightBefore.r;
-
-                /* accept or reject the flip */
-                double prob = random_double();
-                if(abs(probability) >= 1){
-                    result = "accepted";
-                    acceptance++;
-                }else{
-                    if(probability > prob){
-                        result = "accepted";
-                        acceptance++;
-                    }else{
-                        flip_spin(lattice, t, l);
-                        result = "rejected";
-                        rejection++;
-                    }
-                }
-                /* comments */
-                    //for negative values, we do some integration
-                    //P\to\tilde{P} = |P| and  F\to \tilde
-                    //you have to multiply each quan you measure bu the sign
-                count++;
-                if(count%1000 == 0){
-                    cout << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
-                    cout.width(15);
-                    cout << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
-                }
-                // if(result == "accepted"){
-                //     print_matrix(lattice);
-                // }else{
-                //     cout << endl;
-                // }
-            }
-            /* Comments */
-                //when you take measurements, there is noise
-                //we're doing marcov chain
-                //the simplest quan we measure is double occupancy \bra n_up n_down \ket
-        }
-    }
-    //results
-        // with most parameters = 1, it stabilised at all -1 spins
-    cout << "["<< acceptance << "/" << rejection << "]" << endl;
-    percentage_acceptance = acceptance / rejection;
-    cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
 }
 void test_sweep(){
     /* initialise everything */
@@ -949,26 +945,6 @@ void test_increasing_U(){
         sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
     }
 }
-
-						/* ------ TO CONVERT ------ */
-// matrix_size                      -> lattice_size or time_size
-// len                              -> array_size
-// matrix_eigenvstuff               -> LaEigSolve
-// float                            -> double
-// scalar_exponential_main(n,i,r)   -> scalar_exponential(n,r)
-// matrix_exponential(m,ms,i,r)     -> matrix_exponential(m,ms,r)
-// generate_matrix                  -> LaGenMatComplex::rand
-// scalar_product_f                 -> scalar_product
-// basic_random_int                 -> random_int
-// generate_lattice_array           -> generate_slice
-// iterations                       -> ...
-// void test_...(...)               -> void test_...( );
-// five_matrix_multiplication       -> n_matrix_product
-// my_matrix_determinant(,)         -> matrix_determinant(,,d)
-// calculate_weight                 -> weight_calculation
-// generate_H                       -> H_generation
-// random_probability               -> random_double
-
 
 
 /* ------ Main QMC Program ------ */

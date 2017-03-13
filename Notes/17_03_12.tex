@@ -1,0 +1,161 @@
+\section{Introduction}
+
+
+
+\subsection{Magnetism}
+
+{\quo{Both the static and dynamic magnetic properties of the equilibrium magnetic system have been the most investigated magnetic system}}\SDyn
+
+{\quo{As one of the principle static magnetic properties, the magnetic ordering has been the most widely studied property.}}\SDyn
+
+{\quo{The Curie-Weiss law describes the dependance of magnetisation on temperature in paramagnets.}}\SDyn
+
+This was {\quo{later generalised to describe the phenomenon of ferromagnetism.}}\SDyn
+
+{\quo{magnetic ordering introduces a regular ordered magnetic structure in many crystals,}} which {\quo{means that in the absence of a magnetic field, the mean magneitc moment of at least one atom in each unit cell of the crystal $\ne 0$}} \SDyn
+
+\paragraph{Ferromagnets}
+{\quo{In ferromagnets, the mean magnetic moments of all the atoms have the same orientation, provided that the temperature of the ferromagnetic does not exceed a critical {\na{Curie}} temperature $T_c$}}\SDyn
+{\quo{for this reason, ferromagnets have spontaneous magnetic moments (i.e. $\ne 0$ macroscopic magnetic moments) even in the absence of an external field}}\SDyn
+
+\paragraph{Anti-ferromagnets}
+{\quo{The mean atomic magnetic moments compensate each other within each unit cell in zero external magnetic field.}}\SDyn
+i.e. {\quo{an antiferromagnet consists of a set of antiparallel magnetic sub lattices, each of which has a non-zero mean magnetic moment.}}\SDyn
+
+{\quo{this occurs if the temperature of the antiferromanget is lower than a critical {\na{Neil}} temperature $T_N$}}\SDyn
+
+\paragraph{Ferrimagnetism}
+{\quo{There exists a number of antiparallel magnetic sub lattices whose magnetic moments are uncompensated in contrast to anti-ferromagnetism}}\SDyn
+$\therefore$ {\quo{ferrets exhibit spontaneous net magnetic moments, even}} without an {\quo{external magnetic field.}}
+{\err{continue from \SDyn page 2.}}
+
+\subsection{High Temperature Superconductors}
+
+\subsubsection{Cuprates}
+{\quo{Despite the apparent complexity of different cuprates, they all have two dimensional $CuO_2$ planes.}}\SCor
+
+{\quo{In essence, all high temperature superconductors consist of these two dimensional planes, sandwiched between intervening atomic layers.}}\SCor
+
+{\quo{These layers are composed mostly out of alkaline-earths, rare earths, oxygen and halogenides.}}\SCor
+
+{\quo{Depending on the number of $CuO_2$ planes per unit cell, the materials have a single, double or triple-plane form.}}\SCor
+
+{\quo{It’s widely accepted that the $CuO_2$ planes host electronic excitations which are most relevant to superconductivity.}}\SCor
+
+{\quo{However, there’s still some controversy about the role of the co-called apical oxygen atoms, located above and below the $CuO_2$ plane}}\SCor
+{\qs{\begin{itemize}
+	\item define “co-called”
+	\item define “apical”
+\end{itemize}}}
+
+{\quo{It’s experimentally well established that the parent compounds are charge transfer insulators and}} are {\quo{ordered anti-ferromagnetically below a {\na{Neil}} temperature $T_n$.}}
+
+{\quo{Below the temperature $T_n$, the unpaired holes of the $Cu^{2+}$ ions are anti-ferromagnetically coupled via super-exchange through the $O^{2-}$}}
+{\qs{\begin{itemize}
+	\item define “anti-ferromagnetism”
+	\item define “magnetically coupled”
+	\item define “super-exchange”
+	\item define $Cu^{2+}$ or $O^{2-}$
+\end{itemize}}}
+
+{\quo{The picture of a magnetic insulator contradicts the simple band-structure point of view.}}
+{\qs{\begin{itemize}
+	\item define “the simple band-structure point of view”
+\end{itemize}}}
+
+\subsection{Models}
+
+\subsubsection{Ising Model}
+
+{\quo{The Ising model consists of spins }} $(\pm 1)$ {\quo{which are confined to the sites of a lattice.}}\guide
+
+{\quo{These spins interact with their nearest neighbours on the lattice with interaction constant $\mathcal{J}$.}}\guide
+
+{\quo{The Hamiltonian for this model}} is given by:
+\begin{align*}
+	\mathcal{H} =&\; -\mathcal{J}\sum_{i, j}{\sigma_i \sigma_j} - H\sum_i{\sigma_i}\\
+	\sigma_i =&\; \pm 1\\
+\end{align*}
+
+This {\quo{model has been solved exactly in one dimension,}} so it’s {\quo{known that there is no transition.}}
+
+{\quo{In two dimensions, }} it has been shown {\quo{that there is a second order phase transition with divergences in the :}} \guide
+\begin{itemize}
+	\item specific heat
+	\item susceptibility
+	\item correlation length
+\end{itemize}
+
+{\quo{The Ising model can be simulated using simple sampling techniques: spin configurations can be generated randomly with their contribution weighted by a Boltzmann factor.}} \guide
+{\quo{Unfortunately, most of the configurations which are produced in this}} way {\quo{will contribute relatively little to the equilibrium averages.}}\guide
+{\quo{\na{more sophisticated methods are required if we’re to obtain results of sufficient accuracy to be useful.}}}
+
+|———————————————————————————————|
+
+
+\section{Calculations}
+
+\subsection{Weight}
+Whether
+
+\subsection{Partition Function}
+The partition function is defined as
+
+\subsection{Greens Function}
+In order to calculate the greens function,
+
+\subsection{Hirsch Fye Quantum Monte Carlo Algorithm}
+
+In order to solve the Anderson impurity model
+A quantum Monte Carlo algorithm was written in order to
+
+\subsubsection{Algorithm}
+
+\paragraph{General Structure}
+
+The algorithm generated a 2 dimensional lattice of spins, with
+\begin{itemize}
+	\item the width $=$ the number of physical lattice points
+	\item the length $=$ the number of time slices
+
+Then, it would pass through the lattice, going to each lattice point in a time slice in order, before moving on to the next time slice.
+
+For each point in the lattice, it would flip the spin and calculate the probability of the spin staying flipped.
+
+This probability was calculated as the ratio of the weight after the flip over the weight before the flip.
+
+If:
+\begin{itemize}
+	\item $p>1$, the flip would be automatically accepted
+	\item $0<p<1$, a random number would be used as the upper bound for acceptance
+	\item $p<0$,
+\end{itemize}
+
+Once it has swept through the entire lattice, it would start again at the beginning, and would continue for {\err{x}} iterations.
+
+\paragraph{Initial Conditions}
+
+The algorithm needed 3 input conditions, from which the rest could be calculated.
+These were:
+\begin{itemize}
+	\item $U = $ the
+	\item $\beta = \frac{1}{T}$
+		\item where $T = $ the temperature
+	\item
+\end{itemize}
+
+
+
+\paragraph{Finite Size Effects}
+
+{\quo{The effects of the finiteness of the system could be dramatic.}}\guide
+
+{\quo{Since our interest is in determining the properties of the corresponding infinite system,}} we need {\quo{some sound, theoretically based methods for extracting such behaviour for the results obtained on the finite system.}} \guide
+
+{\quo{One fundamental difficult which arises in interpreting simulations data is that the equilibrium, thermodynamic behaviour of a finite system is smooth as it passes through a phase transition.}} \guide
+{\err{Do we even need to think about phase transitions? If not, return to page 77 of \guide}}
+
+\paragraph{unknown tidbits}
+\begin{\itemize}
+	\item {\quo{the correlation length is limited by the lattice size $L$}}\guide
+\end{itemize}

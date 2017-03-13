@@ -3,23 +3,10 @@
 #define LA_COMPLEX_SUPPORT
 
 #include <gmc.h> 	//LaGenMatComplex
-#include <lavc.h> //LaVectorComplex
+#include <lavc.h>  //LaVectorComplex
 #include <string>
 
 // n.b. string -> std::string
-
-/* -- Output -- */
-#include <iostream> //cout
-#include <string>
-#include "general.h"
-#include <gmd.h> 	//LaGenMatDouble
-#include <laslv.h>  //LUFactorizeIP, LaLUInverseIP, etc.
-#include <blas3pp.h>
-#include <random>   //random_device, mt19937
-#include <cstdlib>	//rand, srand
-#include <math.h>
-
-using namespace std;
 void print_scalar(const COMPLEX scalar);
 void print_scalar(const COMPLEX scalar, const string name);
 void print_scalar(const double scalar, const string name);
