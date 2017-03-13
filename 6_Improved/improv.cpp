@@ -980,21 +980,6 @@ void print_initial_parameters_f(double U, double beta, double lambda, double del
     /* open the file */
     ofstream myfile;
     myfile.open(file);
-    /* print stuff */
-	myfile << "no of lattice points = " << lattice_size << endl;
-	myfile << "no of time slices = " << time_size << endl;
-	myfile << "U = " << U << endl;
-	myfile << "beta = " << beta << endl;
-	myfile << "lambda = " << lambda << endl;
-	myfile << "delta tau = " << delta_tau << endl;
-    myfile << "mu = " << mu << endl;
-    /* close the file */
-    myfile.close();
-}
-void print_initial_parameters_f(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file);
     /* print the initial parameters */
 	myfile << "no of lattice points = " << lattice_size << endl;
 	myfile << "no of time slices = " << time_size << endl;
