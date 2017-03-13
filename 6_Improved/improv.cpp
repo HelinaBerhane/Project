@@ -927,7 +927,6 @@ void test_increasing_U(){
 
 /* ------ TO TEST ------ */
 void test_output_to_file(const string file){
-    string file = "test.txt";
     /* open the file */
     ofstream myfile;
     myfile.open(file);
