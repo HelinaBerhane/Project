@@ -8,12 +8,12 @@
 
 // n.b. string -> std::string
 void print_scalar(const COMPLEX scalar);
-void print_scalar(const COMPLEX scalar, const string name);
-void print_scalar(const double scalar, const string name);
-void print_array(const COMPLEX array[], int array_size, const string name);
-void print_vector(const LaVectorComplex& vector, const string name);
+void print_scalar(const COMPLEX scalar, const std::string name);
+void print_scalar(const double scalar, const std::string name);
+void print_array(const COMPLEX array[], int array_size, const std::string name);
+void print_vector(const LaVectorComplex& vector, const std::string name);
 void print_matrix(const LaGenMatComplex& matrix);
-void print_matrix(const LaGenMatComplex& matrix, const string name);
+void print_matrix(const LaGenMatComplex& matrix, const std::string name);
 void print_initial_parameters(double U, double beta, double lambda, double delta_tau, int time_size, int lattice_size);
 int random_int(const int max_rand);
 double random_double();
