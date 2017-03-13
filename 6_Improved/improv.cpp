@@ -16,7 +16,7 @@ using namespace std;
 // check that everything is reset to 0 or I where needed
 
 						/* ------ WORKING ------ */
-
+//
 /* -- Output -- */
 void print_scalar(const COMPLEX scalar){
     cout << scalar << endl;
@@ -43,14 +43,7 @@ void print_matrix(const LaGenMatComplex& matrix){
 void print_matrix(const LaGenMatComplex& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }
-void print_initial_parameters(double U, double beta, double lambda, double delta_tau, int time_size, int lattice_size){
-	cout << "no of lattice points = " << lattice_size << endl;
-	cout << "no of time slices = " << time_size << endl;
-	cout << "U = " << U << endl;
-	cout << "beta = " << beta << endl;
-	cout << "lambda = " << lambda << endl;
-	cout << "delta tau = " << delta_tau << endl;
-}
+
 
 /* -- Processing -- */
 // Randomisation
@@ -66,6 +59,7 @@ double random_double(){
     std::uniform_real_distribution<> dis(0, 1);
     return dis(gen);
 }
+
 // Manipulation
 void array_to_diag(const COMPLEX array[], const int array_size, LaGenMatComplex& diag){
     diag = 0;
@@ -124,6 +118,7 @@ void flip_spin_v(LaGenMatComplex& lattice, const int t, const int l){
     lattice(t,l).i = -lattice(t,l).i;
     cout << " -> " << lattice(t,l) << endl;
 }
+
 // Generation
 void generate_scalar(COMPLEX& scalar, const int max_rand){
     scalar.r = random_int(max_rand);
@@ -333,12 +328,38 @@ void matrix_determinant_e(const int matrix_size, const LaGenMatComplex& matrix, 
         scalar_product(result, eigenvalues(i));
     }
 }
+
+                        /* ------ TO TEST ------ */
+//
 // - qmc
-void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
+void print_initial_parameters(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size){
+	cout << "no of lattice points = " << lattice_size << endl;
+	cout << "no of time slices = " << time_size << endl;
+	cout << "U = " << U << endl;
+	cout << "beta = " << beta << endl;
+	cout << "lambda = " << lambda << endl;
+	cout << "delta tau = " << delta_tau << endl;
+    cout << "mu = " << mu << endl;
+}
+void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, double& mu, int& time_size){
+    mu = U / 2;                             // by definition
     lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
     time_size = ceil(beta / lambda);        // by definition
     delta_tau = beta / time_size;           // = sqrt(0.125 / U) by convension
 }
+void test_initial_parameters(){
+    double U = 1, beta = 10, lambda, delta_tau;
+    int lattice_size = 5, time_size;
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
+}
+/* -- Testing -- */
+
+                        /* ------ TO CONVERT ------ */
+//
+// print_initial_parameters      (U,b,l,d,t,l) -> (U,b,l,d,m,t,l)
+// initial_parameter_calculation (U,b,l,d,t)   -> (U,b,l,d,m,t)
+
 void H_generation(const int lattice_size, LaGenMatComplex& H){
     /* initialise everything */
     int matrix_volume = lattice_size * lattice_size, n;
@@ -795,12 +816,7 @@ void test_matrix_determinant(){
     print_scalar(result, "determinant (from eigenstuff)");
 }
 // - qmc
-void test_initial_parameters(){
-    double U = 1, beta = 10, lambda, delta_tau;
-    int lattice_size = 5, time_size;
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size);
-}
+
 void test_generate_lattice(){
     int lattice_size = 5, time_size = 17;
     LaGenMatComplex lattice;
@@ -949,5 +965,5 @@ void test_increasing_U(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep();
+    test_initial_parameters();
 }
