@@ -849,6 +849,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     int count = 0;
     acceptance = 0;
     rejection = 0;
+    double percentage_acceptance = 0.0;
 
     /* output headings */
     cout.width(11);
@@ -908,11 +909,14 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     }
     //results
         // with most parameters = 1, it stabilised at all -1 spins
+    cout << "["<< acceptance << "/" << rejection << "]" << endl;
+    percentage_acceptance = acceptance / rejection;
+    cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
 }
 void test_sweep(){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 3;
-    double U = 1, beta = 10, lambda, delta_tau;
+    int lattice_size = 5, time_size, iterations = 100;
+    double U = 1, beta = 5, lambda, delta_tau;
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
@@ -927,9 +931,9 @@ void test_sweep(){
 }
 void test_increasing_U(){
     /* initialise everything */
-    int lattice_size = 5, time_size = 0, iterations = 4;
-    double U, beta = 10.0, lambda = 1.0, delta_tau = 1.0;
-    double acceptance = 0.0, rejection = 0.0, percentage_acceptance = 0.0;
+    int lattice_size = 5, time_size = 0, iterations = 120;
+    double U, beta = 5.0, lambda = 1.0, delta_tau = 1.0;
+    double acceptance = 0.0, rejection = 0.0;
     /* test U = 0 to 10 */
     for(int i = 1; i <= 10; i++){
         /* generate initial conditions */
@@ -940,10 +944,7 @@ void test_increasing_U(){
         LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);
         /* sweep the lattice */
-        sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
-        cout << "["<< acceptance << "/" << rejection << "]" << endl;
-        percentage_acceptance = acceptance / rejection;
-        cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
+        sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, iterations, acceptance, rejection);
     }
 }
 
@@ -970,5 +971,5 @@ void test_increasing_U(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_increasing_U();
+    test_sweep();
 }
