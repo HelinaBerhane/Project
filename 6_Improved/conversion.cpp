@@ -14,7 +14,7 @@
 
 // - Example
 void test_output_to_file(){
-    string file = test;
+    string file = "test.txt";
     /* open the file */
     ofstream myfile;
     myfile.open(file);
