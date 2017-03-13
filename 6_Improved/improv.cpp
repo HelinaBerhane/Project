@@ -926,7 +926,7 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-void test_output_to_file(){
+void test_output_to_file(const string file){
     string file = "test.txt";
     /* open the file */
     ofstream myfile;
@@ -982,5 +982,5 @@ void print_initial_parameters_f(double U, double beta, double lambda, double del
 
                     /* ------ Main QMC Program ------ */
 int main(){
-    test_output_to_file();
+    test_output_to_file("test.txt");
 }
