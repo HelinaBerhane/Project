@@ -1,32 +1,33 @@
 /* ------ TO CONVERT ------ */
 
-// [x] void ...(...)        -> void ..._f(...)
+// [x] void ...(...)        -> void ...(...)
 // [x] void ...(...)        -> void ...(..., const string file)
 
 // [x] print_scalar         -> print_scalar_f
-// [x] print_scalar_f(...)  -> print_scalar_f(..., " ", file)
+// [x] print_scalar(...)  -> print_scalar(..., " ", file)
 // [x] print_array          -> print_array_f
-// [x] print_array_f(...)   -> print_array_f(..., " ", file)
+// [x] print_array(...)   -> print_array(..., " ", file)
 // [x] print_matrix         -> print_matrix_f
-// [x] print_matrix_f(...)  -> print_matrix_f(..., " ", file)
+// [x] print_matrix(...)  -> print_matrix(..., " ", file)
 
 // [x] print_initial_parameters        -> print_initial_parameters_f
-// [x] print_initial_parameters_f(...) -> print_initial_parameters_f(...,file)
+// [x] print_initial_parameters(...) -> print_initial_parameters(...,file)
 
+// [x] cout << ... -> myfile << ...
+// [x] storage     -> array
 
-// [ ] cout << ...          -> myfile << ...
-// [ ] storage              -> array
+// [x] void test_...()      -> void test_(file)
+// [x] open the files
+// [x] close the files
 
-// [ ] void test_...()      -> void test_(file)
-// [ ] open the files
-// [ ] close the files
+// [x] flip_spin(...) -> flip_spin(..., file)
 
 
 // - Example
 void test_output_to_file(const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* print stuff */
     myfile << "Here, have a test :) .\n";
     /* close the file */
@@ -35,24 +36,13 @@ void test_output_to_file(const string file){
 
 /* -- Processing -- */
 // Manipulation
-void flip_spin_f(LaGenMatComplex& lattice, const int t, const int l){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file);
-    /* print stuff */
-    myfile << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
-    lattice(t,l).r = -lattice(t,l).r;
-    lattice(t,l).i = -lattice(t,l).i;
-    myfile << " -> " << lattice(t,l) << endl;
-    /* close the file */
-    myfile.close();
-}
+
 // Calculation
 // - qmc
-void B_calculation_f(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& B){
+void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& B, const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* initialise everything */
     B = 0;
     LaGenMatComplex H = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -65,59 +55,59 @@ void B_calculation_f(const COMPLEX slice[], const int lattice_size, const double
     /* calculate H and V */
     H_generation(lattice_size, H);
     V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, V);
-    sum = H.copy();
-    print_matrix_f(sum, "H", file);
-    print_matrix_f(V, "V", file);
+    print_matrix(H, "H", file);
+    print_matrix(V, "V", file);
 
     /* calculate H + V */
+    sum = H.copy();
     matrix_sum(lattice_size, sum, V);
-    print_matrix_f(sum, "H + V", file);
+    print_matrix(sum, "H + V", file);
 
     /* calculate delta_tau * (H + V) */
     matrix_multiple(sum, lattice_size, delta_tau, product);
-    print_matrix_f(product, "delta_tau * (H + V)", file);
+    print_matrix(product, "delta_tau * (H + V)", file);
 
     /* calculate - delta_tau * (H + V) */
     matrix_negative(lattice_size, product, negative);
-    print_matrix_f(negative, "- delta_tau * (H + V)", file);
+    print_matrix(negative, "- delta_tau * (H + V)", file);
 
     /* calculate exp(- delta_tau * (H + V)) */
     matrix_exponential(negative, lattice_size, B);
-    print_matrix_f(B, "B = exp(- delta_tau * (H + V))", file);
+    print_matrix(B, "B = exp(- delta_tau * (H + V))", file);
     /* close the file */
     myfile.close();
 }
-void O_calculation_f(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& O){
+void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& O, const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* initialise everything */
     LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
     LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
     O = LaGenMatComplex::eye(lattice_size, lattice_size);
-    print_matrix_f(O, "product", file);
+    print_matrix(O, "product", file);
     /* calculate B matrices */
     for(int x = 0; x < time_size; x++){
-        clear_storage(slice, lattice_size);
+        clear_array(slice, lattice_size);
         int t = time_size - x - 1;
         myfile << "t = " << t << ": ";
         isolate_row(lattice, lattice_size, t, slice, file);
-        // print_array_f(slice, lattice_size, "slice", file);
+        // print_array(slice, lattice_size, "slice", file);
         B_calculation_v(slice, lattice_size, U, lambda, sigma, delta_tau, mu, B);
-        // print_matrix_f(B, "B", file);
+        // print_matrix(B, "B", file);
         matrix_product(O, B);
-        print_matrix_f(O, "product", file);
+        print_matrix(O, "product", file);
     }
     /* add I */
     matrix_sum(lattice_size, O, I);
     /* close the file */
     myfile.close();
 }
-void weight_calculation_f(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight){
+void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* initialise everything */
     LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
     LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
@@ -131,23 +121,23 @@ void weight_calculation_f(const LaGenMatComplex& lattice, const int lattice_size
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
     myfile << "sigma = -1" << endl;
     O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
-    print_matrix_f(OUP, "O UP", file);
-    print_matrix_f(ODN, "O DN", file);
+    print_matrix(OUP, "O UP", file);
+    print_matrix(ODN, "O DN", file);
     /* calculate det(O) */
     matrix_determinant_e(lattice_size, OUP, detOUP);
     matrix_determinant_e(lattice_size, ODN, detODN);
-    print_scalar_f(detOUP, "det(O UP)", file);
-    print_scalar_f(detODN, "det(O DN)", file);
+    print_scalar(detOUP, "det(O UP)", file);
+    print_scalar(detODN, "det(O DN)", file);
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
-    print_scalar_f(weight, "weight", file);
+    print_scalar(weight, "weight", file);
     /* close the file */
     myfile.close();
 }
-void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
+void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
 
     /* initialise everything */
     COMPLEX weightBefore;
@@ -173,7 +163,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
 
                 /* propose the flip */
-                flip_spin(lattice, t, l);
+                flip_spin(lattice, t, l, file);
 
                 /* calculate the weight after the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
@@ -191,7 +181,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
                         result = "accepted";
                         acceptance++;
                     }else{
-                        flip_spin(lattice, t, l);
+                        flip_spin(lattice, t, l, file);
                         result = "rejected";
                         rejection++;
                     }
@@ -207,7 +197,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
                     myfile << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
                 }
                 // if(result == "accepted"){
-                //     print_matrix_f(lattice);
+                //     print_matrix(lattice);
                 // }else{
                 //     myfile << endl;
                 // }
@@ -231,11 +221,11 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
 
 /* -- Testing -- */
 // - generic
-void test_weight(){
+void test_weight(const string file){
     string file = "test.txt";
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* initialise stuff */
     int lattice_size = 5, time_size;
     double U = 1, beta = 10, lambda, delta_tau, mu;
@@ -244,44 +234,44 @@ void test_weight(){
     weight.i = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
-    print_initial_parameters_f(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
-    print_matrix_f(lattice, "lattice", file);
+    print_matrix(lattice, "lattice", file);
     /* calculate the weight */
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight);
-    print_scalar_f(weight, "weight", file);
+    print_scalar(weight, "weight", file);
     /* close the file */
     myfile.close();
 }
-void test_sweep(){
+void test_sweep(const string file){
     string file = "test.txt";
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 1000;// = 10000;
     double U = .1, beta = 1, lambda, delta_tau, mu;
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
-    print_initial_parameters_f(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-    // print_matrix_f(lattice, "intialised lattice", file);
+    // print_matrix(lattice, "intialised lattice", file);
     generate_lattice(lattice_size, time_size, lattice);
-    print_matrix_f(lattice, "lattice", file);
+    print_matrix(lattice, "lattice", file);
     /* sweep the lattice */
     sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection);
     /* close the file */
     myfile.close();
 }
-void test_increasing_U(){
+void test_increasing_U(const string file){
     string file = "test.txt";
     /* open the file */
     ofstream myfile;
-    myfile.open(file);
+    myfile.open(file, std::ios_base::app);
     /* initialise everything */
     int lattice_size = 5, time_size = 0, iterations = 120;
     double U, beta = 5.0, lambda = 1.0, delta_tau, mu;

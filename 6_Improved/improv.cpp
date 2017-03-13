@@ -28,12 +28,43 @@ void print_scalar(const COMPLEX scalar, const string name){
 void print_scalar(const double scalar, const string name){
     cout << name << ": " << scalar << endl;
 }
+void print_scalar(const COMPLEX scalar, const string name, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* print the scalar */
+    myfile << name << ": " << scalar << endl;
+    /* close the file */
+    myfile.close();
+}
+void print_scalar(const double scalar, const string name, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* print the scalar */
+    myfile << name << ": " << scalar << endl;
+    /* close the file */
+    myfile.close();
+}
 void print_array(const COMPLEX array[], int array_size, const string name){
 	cout << name << ": ";
     for(int i = 0; i < array_size; i++){
         cout << array[i] << " ";
     }
     cout << endl;
+}
+void print_array(const COMPLEX array[], int array_size, const string name, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* print stuff */
+	myfile << name << ": ";
+    for(int i = 0; i < array_size; i++){
+        myfile << array[i] << " ";
+    }
+    myfile << endl;
+    /* close the file */
+    myfile.close();
 }
 void print_vector(const LaVectorComplex& vector, const string name){
     cout << name << ":" << endl << vector << endl;
@@ -43,6 +74,16 @@ void print_matrix(const LaGenMatComplex& matrix){
 }
 void print_matrix(const LaGenMatComplex& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
+}
+void print_matrix(const LaGenMatComplex& matrix, const string name, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+
+    /* print the matrix */
+	myfile << name << ":" << endl << matrix << endl;
+    /* close the file */
+    myfile.close();
 }
 void print_initial_parameters(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size){
 	cout << "no of lattice points = " << lattice_size << endl;
@@ -104,22 +145,10 @@ void clear_scalar(COMPLEX& scalar){
     scalar.r = 0;
     scalar.i = 0;
 }
-void clear_storage(COMPLEX storage[], const int storage_size){
-    for(int i = 0; i < storage_size; i++){
-        storage[i].r = 0;
-        storage[i].i = 0;
-    }
-}
-void store_matrix(const LaGenMatComplex& matrix, const int matrix_number, const int matrix_size, COMPLEX storage[], const int storage_size){
-    /* initialise everything */
-    int matrix_volume = matrix_size * matrix_size;
-    /* store the matrix in storage */
-    for(int r = 0; r < matrix_size; r++){
-        for(int c = 0; c < matrix_size; c++){
-            int i = (matrix_number * matrix_volume) + (r * matrix_size) + c;
-            storage[i].r = matrix(r,c).r;
-            storage[i].i = matrix(r,c).i;
-        }
+void clear_array(COMPLEX array[], const int array_size){
+    for(int i = 0; i < array_size; i++){
+        array[i].r = 0;
+        array[i].i = 0;
     }
 }
 void isolate_row(const LaGenMatComplex& matrix, const int matrix_width, const int row, COMPLEX array[]){
@@ -461,7 +490,7 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
     O = LaGenMatComplex::eye(lattice_size, lattice_size);
     /* calculate B matrices */
     for(int x = 0; x < time_size; x++){
-        clear_storage(slice, lattice_size);
+        clear_array(slice, lattice_size);
         int t = time_size - x - 1;
         isolate_row(lattice, lattice_size, t, slice);
         B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, B);
@@ -479,7 +508,7 @@ void O_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, con
     print_matrix(O, "product");
     /* calculate B matrices */
     for(int x = 0; x < time_size; x++){
-        clear_storage(slice, lattice_size);
+        clear_array(slice, lattice_size);
         int t = time_size - x - 1;
         cout << "t = " << t << ": ";
         isolate_row(lattice, lattice_size, t, slice);
@@ -670,6 +699,34 @@ void test_output_to_file(const string file){
     /* close the file */
     myfile.close();
 }
+void test_output_functions(const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+
+    /* initialise everything */
+    int array_size = 5, matrix_size = 3;
+
+    COMPLEX scalar;
+    scalar.r = 1;
+    scalar.i = 2;
+
+    COMPLEX array[array_size];
+    generate_slice(array_size, array);
+
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 4);
+
+    /* print everything */
+    print_scalar(scalar, "scalar", file);
+    myfile << endl;
+    print_array(array, array_size, "array", file);
+    myfile << endl;
+    print_matrix(matrix, "matrix", file);
+    myfile << endl;
+
+    /* close the file */
+    myfile.close();
+}
 void test_flip_spins(){
     /* initialise stuff */
     int lattice_size = 5, time_size = 8;
@@ -766,22 +823,6 @@ void test_diagonal_exponential(){
     diagonal_matrix_exponential(test, matrix_size, result);
     print_matrix(test, "test");
     print_matrix(result);
-}
-void test_store_matrix(){
-    /* initialise everything */
-    int matrix_size = 5, storage_size = matrix_size * matrix_size * 3;
-    COMPLEX storage[storage_size];
-    clear_storage(storage, storage_size);
-    LaGenMatComplex A = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
-    LaGenMatComplex B = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
-    LaGenMatComplex C = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
-    /* store the matrices in storage */
-    store_matrix(A, 0, matrix_size, storage, storage_size);
-    print_array(storage, storage_size, "storage");
-    store_matrix(B, 1, matrix_size, storage, storage_size);
-    print_array(storage, storage_size, "storage");
-    store_matrix(C, 2, matrix_size, storage, storage_size);
-    print_array(storage, storage_size, "storage");
 }
 void test_matrix_determinant(){
     /* initialise everything */
@@ -957,77 +998,32 @@ void test_increasing_U(){
 
 /* ------ TO TEST ------ */
 /* -- Output -- */
-void print_scalar(const COMPLEX scalar, const string name, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* print the scalar */
-    myfile << name << ": " << scalar << endl;
-    /* close the file */
-    myfile.close();
-}
-void print_scalar(const double scalar, const string name, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* print the scalar */
-    myfile << name << ": " << scalar << endl;
-    /* close the file */
-    myfile.close();
-}
-void print_array(const COMPLEX array[], int array_size, const string name, const string file){
+void flip_spin(LaGenMatComplex& lattice, const int t, const int l, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
     /* print stuff */
-	myfile << name << ": ";
-    for(int i = 0; i < array_size; i++){
-        myfile << array[i] << " ";
-    }
-    myfile << endl;
+    myfile << "flipped ("<<t<<", "<<l<<"): " << lattice(t,l);
+    lattice(t,l).r = -lattice(t,l).r;
+    lattice(t,l).i = -lattice(t,l).i;
+    myfile << " -> " << lattice(t,l) << endl;
     /* close the file */
     myfile.close();
 }
-void print_matrix(const LaGenMatComplex& matrix, const string name, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-
-    /* print the matrix */
-	myfile << name << ":" << endl << matrix << endl;
-    /* close the file */
-    myfile.close();
+void test_flip_spins(const string file){
+    /* initialise stuff */
+    int lattice_size = 5, time_size = 8;
+    int l = random_int(lattice_size-1), t = random_int(time_size-1);
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    /* generate lattice */
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice");
+    /* flip spins */
+    flip_spin(lattice, t, l, file);
 }
-void test_output_functions(const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
 
-    /* initialise everything */
-    int array_size = 5, matrix_size = 3;
-
-    COMPLEX scalar;
-    scalar.r = 1;
-    scalar.i = 2;
-
-    COMPLEX array[array_size];
-    generate_slice(array_size, array);
-
-    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 4);
-
-    /* print everything */
-    print_scalar(scalar, "scalar", file);
-    myfile << endl;
-    print_array(array, array_size, "array", file);
-    myfile << endl;
-    print_matrix(matrix, "matrix", file);
-    myfile << endl;
-
-    /* close the file */
-    myfile.close();
-}
 
                     /* ------ Main QMC Program ------ */
 int main(){
-    test_output_functions("test.txt");
+    test_flip_spins("test.txt");
 }
