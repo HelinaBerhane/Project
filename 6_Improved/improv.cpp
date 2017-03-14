@@ -1184,5 +1184,5 @@ void test_weight(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_weight("test.txt");
+    test_weight("weight_U1_B10.txt");
 }
