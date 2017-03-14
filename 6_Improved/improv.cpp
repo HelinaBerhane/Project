@@ -1147,9 +1147,9 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     /* calculate O */
     myfile << "sigma = 1" << endl;
     O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
-    print_matrix(OUP, "O UP", file);
+    print_matrix(OUP, "O UP", file, file);
     myfile << "sigma = -1" << endl;
-    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN, file);
     print_matrix(ODN, "O DN", file);
     /* calculate det(O) */
     matrix_determinant_e(lattice_size, OUP, detOUP);
@@ -1160,6 +1160,7 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
     print_scalar(weight, "weight", file);
+    myfile << endl;
     /* close the file */
     myfile.close();
 }
@@ -1179,6 +1180,24 @@ void test_weight(const string file){
     print_matrix(lattice, "lattice", file);
     /* calculate the weight */
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
+}
+void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
+    /* open the file */
+    ofstream myfile;
+    myfile.open("spin.txt", std::ios_base::app);
+    /* calculate total spin */
+    double total_spin = 0;
+    for(int t = 0; t < time_size; t++){
+        for(int l = 0; l < lattice_size; l++){
+            total_spin += lattice(t,l);
+            myfile << total_spin << endl;
+        }
+    }
+    myfile << endl;
+    double average_spin = total_spin / (time_size * lattice_size);
+    myfile << average_spin << endl << endl;
+    /* close the file */
+    myfile.close();
 }
 
 
