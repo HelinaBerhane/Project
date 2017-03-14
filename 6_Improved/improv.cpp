@@ -1156,6 +1156,7 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     matrix_determinant_e(lattice_size, ODN, detODN);
     print_scalar(detOUP, "det(O UP)", file);
     print_scalar(detODN, "det(O DN)", file);
+    myfile << endl;
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
     print_scalar(weight, "weight", file);
@@ -1178,7 +1179,6 @@ void test_weight(const string file){
     print_matrix(lattice, "lattice", file);
     /* calculate the weight */
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
-    print_scalar(weight, "weight", file);
 }
 
 
