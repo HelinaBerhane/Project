@@ -106,6 +106,7 @@ void print_initial_parameters(double U, double beta, double lambda, double delta
 	myfile << "lambda = " << lambda << endl;
 	myfile << "delta tau = " << delta_tau << endl;
     myfile << "mu = " << mu << endl;
+    myfile << endl;
     /* close the file */
     myfile.close();
 }
@@ -1094,17 +1095,18 @@ void O_calculation(const LaGenMatComplex& lattice, const int lattice_size, const
     LaGenMatComplex I = LaGenMatComplex::eye(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
     O = LaGenMatComplex::eye(lattice_size, lattice_size);
-    print_matrix(O, "product", file);
+    print_matrix(O, "initial product", file);
     /* calculate B matrices */
-    for(int x = 0; x < time_size; x++){
+    for(int t = time_size - 1; t >= 0 ; t--){
+        myfile << "t = " << t << ": " << endl;
+        /* isolate the time slice */
         clear_array(slice, lattice_size);
-        int t = time_size - x - 1;
-        myfile << "t = " << t << ": ";
         isolate_row(lattice, lattice_size, t, slice);
-        // print_array(slice, lattice_size, "slice", file);
+        print_array(slice, lattice_size, "slice", file);
+        /* calculate the B matrix */
         B_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, B);
         print_matrix(B, "B", file);
-        // print_matrix(B, "B", file);
+        /* calculate the O matrix */
         matrix_product(O, B);
         print_matrix(O, "product", file);
     }
@@ -1129,8 +1131,9 @@ void test_O(const string file){
     O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, O, file);
     print_matrix(O, "O", file);
 }
+// figure out why the time slice indices don't print where they should
 
-                    /* ------ Main QMC Program ------ */
+/* ------ Main QMC Program ------ */
 int main(){
     test_O("test.txt");
 }
