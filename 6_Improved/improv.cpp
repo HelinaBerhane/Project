@@ -1147,7 +1147,7 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     /* calculate O */
     myfile << "sigma = 1" << endl;
     O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
-    print_matrix(OUP, "O UP", file, file);
+    print_matrix(OUP, "O UP", file);
     myfile << "sigma = -1" << endl;
     O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN, file);
     print_matrix(ODN, "O DN", file);
@@ -1189,7 +1189,7 @@ void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, c
     double total_spin = 0;
     for(int t = 0; t < time_size; t++){
         for(int l = 0; l < lattice_size; l++){
-            total_spin += lattice(t,l);
+            total_spin += lattice(t,l).r;
             myfile << total_spin << endl;
         }
     }
