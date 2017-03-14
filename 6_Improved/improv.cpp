@@ -1132,9 +1132,63 @@ void test_increasing_U(){
 /* -- Output -- */
 
 
+void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    /* calculate O */
+    myfile << "sigma = 1" << endl;
+    O_calculation_v(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
+    myfile << "sigma = -1" << endl;
+    O_calculation_v(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
+    print_matrix(OUP, "O UP", file);
+    print_matrix(ODN, "O DN", file);
+    /* calculate det(O) */
+    matrix_determinant_e(lattice_size, OUP, detOUP);
+    matrix_determinant_e(lattice_size, ODN, detODN);
+    print_scalar(detOUP, "det(O UP)", file);
+    print_scalar(detODN, "det(O DN)", file);
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+    print_scalar(weight, "weight", file);
+    /* close the file */
+    myfile.close();
+}
+void test_weight(const string file){
+    string file = "test.txt";
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise stuff */
+    int lattice_size = 5, time_size;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
+    COMPLEX weight;
+    weight.r = 0;
+    weight.i = 0;
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    /* generate lattice */
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice", file);
+    /* calculate the weight */
+    weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight);
+    print_scalar(weight, "weight", file);
+    /* close the file */
+    myfile.close();
+}
 
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_O("test.txt");
+    test_weight("test.txt");
 }
