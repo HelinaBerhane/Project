@@ -1163,10 +1163,6 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     myfile.close();
 }
 void test_weight(const string file){
-    string file = "test.txt";
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
     /* initialise stuff */
     int lattice_size = 5, time_size;
     double U = 1, beta = 10, lambda, delta_tau, mu;
@@ -1181,10 +1177,8 @@ void test_weight(const string file){
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice", file);
     /* calculate the weight */
-    weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight);
+    weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
     print_scalar(weight, "weight", file);
-    /* close the file */
-    myfile.close();
 }
 
 
