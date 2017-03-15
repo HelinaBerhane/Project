@@ -1021,7 +1021,8 @@ void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size,
     }
     myfile << endl;
     double average_spin = total_spin / (time_size * lattice_size);
-    myfile << average_spin << endl << endl;
+    print_scalar(average_spin, "", "av_spin.txt")
+    // myfile << average_spin << endl << endl;
     /* close the file */
     myfile.close();
 }
@@ -1481,7 +1482,7 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
+void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -1524,26 +1525,14 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                         rejection++;
                     }
                 }
-                /* comments */
-                    //for negative values, we do some integration
-                    //P\to\tilde{P} = |P| and  F\to \tilde
-                    //you have to multiply each quan you measure bu the sign
                 count++;
                 if(count % (time_size * lattice_size * iterations / 100) == 0){
                     myfile << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
                     myfile.width(15);
                     myfile << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
                 }
-                // if(result == "accepted"){
-                //     print_matrix(lattice);
-                // }else{
-                //     myfile << endl;
-                // }
+                calculate_total_spin_f(lattice, const int time_size, const int lattice_size);
             }
-            /* Comments */
-                //when you take measurements, there is noise
-                //we're doing marcov chain
-                //the simplest quan we measure is double occupancy \bra n_up n_down \ket
         }
     }
     //results
@@ -1571,7 +1560,7 @@ void test_sweep(const string file){
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice", file);
     /* sweep the lattice */
-    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection, file);
+    sweep_lattice_f(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection, file);
 }
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
