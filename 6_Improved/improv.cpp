@@ -1531,5 +1531,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_imaginary_weight("test.txt");
+    test_matrix_determinant();
 }
