@@ -1244,12 +1244,12 @@ COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matri
             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
         }
         cout << pow (10, scale * matrix_size) << endl;
-        return determinant * pow (scale * matrix_size);
+        return determinant * pow (10,scale * matrix_size);
     }
 }
 void test_matrix_determinant(){
     /* initialise everything */
-    double scale = 8;
+    double matrix_size = 4, scale = 8;
     LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
     LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
     COMPLEX result;
