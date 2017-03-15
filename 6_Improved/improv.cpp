@@ -1240,7 +1240,9 @@ void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice
     /* close the file */
     myfile.close();
 }
-void update_greens_function
+void update_greens_function(){
+    //
+}
 void test_increasing_mu(const string file){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 40;
