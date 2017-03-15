@@ -1199,7 +1199,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
             /* determine the coefficient */
             coefficient = determinant_coefficient(matrix, i);
-                // = +- the i
+            print_scalar(coefficient, "coefficient");
             /* calculate the cofactor */
             generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
             print_matrix(cofactorMatrix, "cofactorMatrix");
