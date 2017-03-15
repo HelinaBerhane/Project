@@ -1130,6 +1130,83 @@ void test_increasing_U(){
 
 /* ------ TO TEST ------ */
 /* -- Output -- */
+COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
+    /* initialise everything */
+    COMPLEX AD;
+    COMPLEX BC;
+    COMPLEX det;
+    /* multiply opposite corners */
+    scalar_multiplication(matrix(0,0), matrix(1,1), AD);
+    scalar_multiplication(matrix(0,1), matrix(1,0), BC);
+    /* - B */
+    det.r = AD.r - BC.r;
+    det.r = AD.i - BC.i;
+    return det;
+}
+void test_simple_matrix_determinant(){
+    /* initialise everything */
+    LaGenMatComplex matrix = LaGenMatComplex::rand(2,2,0,5);
+    print_matrix(matrix, "matrix");
+    /* calculate determinant */
+    simple_matrix_determinant(matrix);
+    print_scalar(simple_matrix_determinant(matrix), "det(M)");
+}
+COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
+    COMPLEX coefficient;
+    if(i % 2 == 1){
+        // if odd
+        cout << i << "= odd";
+        coefficient.r = - matrix(0, i).r;
+        coefficient.i = - matrix(0, i).i;
+    }else{
+        // if even
+        cout << i << "= even";
+        coefficient.r = matrix(0, i).r;
+        coefficient.i = matrix(0, i).i;
+    }
+    return coefficient;
+}
+void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int i, LaGenMatComplex& cofactorMatrix){
+    for(int r = 1; r < matrix_size; r++){ // skip first row
+        int newC = 0;
+        for(int c = 0; c < matrix_size; c++){
+            if(c != i){ // slip column
+                cofactorMatrix(r - 1, newC).r = matrix(r, c).r;
+                cofactorMatrix(r - 1, newC).i = matrix(r, c).i;
+                newC++;
+            }
+        }
+    }
+}
+COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
+    /* initialise everything */
+    COMPLEX determinant;
+    LaGenMatComplex cofactorMatrix;
+    COMPLEX coefficient;
+    cofactorMatrix = 0;
+    /* do stuff */
+    if(matrix_size == 2){
+        return simple_matrix_determinant(matrix);
+    }else{
+        //for each i in the first row
+        for(int i = 0; i < matrix_size; i++){
+            /* initialise everything */
+            int cofactor_size = matrix_size - 1;
+            clear_scalar(determinant);
+            clear_scalar(coefficient);
+            cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
+            /* determine the coefficient */
+            coefficient = determinant_coefficient(matrix, i);
+                // = +- the i
+            /* calculate the cofactor */
+            generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
+            //print_matrix(cofactorMatrix, "cofactorMatrix");
+            /* finish calculation */
+            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
+        }
+    }
+    return determinant;
+}
 void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     /* open the file */
     ofstream myfile;
@@ -1152,6 +1229,11 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     /* calculate det(O) */
     matrix_determinant_e(lattice_size, OUP, detOUP);
     matrix_determinant_e(lattice_size, ODN, detODN);
+
+    // figure out what to do about O being too big !!!
+        // det(O) should be
+        // (5*5)*(4*2)*(3*2)*(2*4)*10^40 ~ 10^44
+
     print_scalar(detOUP, "det(O UP)", file);
     print_scalar(detODN, "det(O DN)", file);
     myfile << endl;
@@ -1317,5 +1399,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_imaginary_weight("test.txt");
+    test_simple_matrix_determinant();
 }
