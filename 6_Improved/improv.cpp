@@ -1161,11 +1161,12 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     if(weight.i != 0){
         print_scalar(weight, "weight");
         print_matrix(lattice, "lattice", "imag_weight.txt");
-        print_matrix(OUP, "O UP", file);
-        print_matrix(ODN, "O DN", file);
-        print_scalar(detOUP, "det(O UP)", file);
-        print_scalar(detODN, "det(O DN)", file);
+        print_matrix(OUP, "O UP", "imag_weight.txt");
+        print_matrix(ODN, "O DN", "imag_weight.txt");
+        print_scalar(detOUP, "det(O UP)", "imag_weight.txt");
+        print_scalar(detODN, "det(O DN)", "imag_weight.txt");
         print_scalar(weight, "weight", "imag_weight.txt");
+        myfile << endl;
     }
     myfile << endl;
     /* close the file */
