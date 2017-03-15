@@ -1190,12 +1190,12 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     if(matrix_size == 2){
         return simple_matrix_determinant(matrix);
     }else{
+        clear_scalar(determinant);
+        clear_scalar(coefficient);
         //for each i in the first row
         for(int i = 0; i < matrix_size; i++){
             /* initialise everything */
             int cofactor_size = matrix_size - 1;
-            clear_scalar(determinant);
-            clear_scalar(coefficient);
             cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
             /* determine the coefficient */
             coefficient = determinant_coefficient(matrix, i);
