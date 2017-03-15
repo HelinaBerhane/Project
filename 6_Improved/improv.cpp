@@ -1154,13 +1154,9 @@ void test_increasing_U(){
 COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
     COMPLEX coefficient;
     if(i % 2 == 1){
-        // if odd
-        cout << i << "= odd";
         coefficient.r = - matrix(0, i).r;
         coefficient.i = - matrix(0, i).i;
     }else{
-        // if even
-        cout << i << "= even";
         coefficient.r = matrix(0, i).r;
         coefficient.i = matrix(0, i).i;
     }
@@ -1172,7 +1168,7 @@ void test_determinant_coefficient(){
     print_matrix(matrix, "matrix");
     /* calculate coefficients */
     for(int i = 0; i < 4; i++){
-        cout << determinant_coefficient(matrix, i) << " ";
+        cout << determinant_coefficient(matrix, i) << endl;
     }
     cout << endl;
 }
