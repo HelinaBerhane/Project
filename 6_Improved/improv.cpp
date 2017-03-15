@@ -1565,7 +1565,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
 }
 void test_sweep(const string file){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 1000;// = 10000;
+    int lattice_size = 5, time_size, iterations = 10;// = 10000;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
