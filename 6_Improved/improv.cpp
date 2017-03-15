@@ -1432,7 +1432,7 @@ void test_imaginary_weight(const string file){
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "weight_i.txt");
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
 
-    for(int i = 0; i < 40; i++){
+    for(int i = 0; i < 10; i++){
         /* generate lattice */
         generate_lattice(lattice_size, time_size, lattice);
 
@@ -1442,8 +1442,8 @@ void test_imaginary_weight(const string file){
         /* calculate weight */
         clear_scalar(weight);
         weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
+        cout << weight << endl;
     }
-    cout << weight << endl;
 }
 
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
