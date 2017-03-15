@@ -1529,7 +1529,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
                 count++;
-                if(count%9000 == 0){
+                if(count% (9*iterations) == 0){
                     print_scalar(weightBefore, "weight before", file);
                     print_scalar(weightBefore, "weight before", file);
                     myfile << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
@@ -1551,9 +1551,9 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     //results
         // with most parameters = 1, it stabilised at all -1 spins
     myfile << "["<< acceptance << "/" << rejection << "]" << endl;
-    double acceptance_ratio = acceptance / (rejection + acceptance);
+    double acceptance_ratio = acceptance / rejection;
     myfile << "acceptance ratio = " << acceptance_ratio << endl;
-    double percentage_acceptance = acceptance / rejection;
+    double percentage_acceptance = acceptance / (rejection + acceptance);
     myfile << "percentage acceptance = " << percentage_acceptance << endl << endl;
     cout << percentage_acceptance << endl;
     /* close the file */
