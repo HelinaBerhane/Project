@@ -393,8 +393,8 @@ void matrix_determinant_e(const int matrix_size, const LaGenMatComplex& matrix, 
     }
 }
 // - qmc
-void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, double& mu, int& time_size){
-    mu = U / 2;                             // by definition
+void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
+    // mu = U / 2;                             // by definition
     lambda = acoshf(exp(sqrt(0.125*U)/2));  // by definition
     time_size = ceil(beta / lambda);        // by definition
     delta_tau = beta / time_size;           // = sqrt(0.125 / U) by convension
@@ -931,15 +931,15 @@ void test_matrix_determinant(){
 }
 // - qmc
 void test_initial_parameters(){
-    double U = 1, beta = 10, lambda, delta_tau, mu;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     int lattice_size = 5, time_size;
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
 }
 void test_initial_parameters(const string file){
-    double U = 1, beta = 10, lambda, delta_tau, mu;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     int lattice_size = 5, time_size;
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
 }
 void test_generate_lattice(){
@@ -983,10 +983,10 @@ void test_V(){
     int lattice_size = 5, time_size;
     LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
-    double U = 1, beta = 10, lambda, delta_tau, mu;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
 
     /* calculate initial parameters */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     cout << endl;
 
@@ -1001,11 +1001,11 @@ void test_V(){
 void test_B_calculation(){
     /* initialise everything */
     int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau, mu;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     /* generate time slice */
     generate_slice(lattice_size, slice);
@@ -1024,11 +1024,11 @@ void test_B_calculation(const string file){
     myfile.open(file, std::ios_base::app);
     /* initialise everything */
     int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau, mu;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     LaGenMatComplex B = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
     /* generate time slice */
     generate_slice(lattice_size, slice);
@@ -1046,11 +1046,11 @@ void test_B_calculation(const string file){
 void test_O(){
     /* initialise everything */
     int lattice_size = 5, time_size = 0;
-    double U = 1, beta = 10, lambda, delta_tau, mu;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     /* generate lattice */
     generate_lattice(lattice_size, time_size, lattice);
@@ -1062,11 +1062,11 @@ void test_O(){
 void test_O(const string file){
     /* initialise everything */
     int lattice_size = 5, time_size = 0;
-    double U = 1, beta = 10, lambda, delta_tau, mu;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
     /* generate lattice */
     generate_lattice(lattice_size, time_size, lattice);
@@ -1078,12 +1078,12 @@ void test_O(const string file){
 void test_weight(){
     /* initialise stuff */
     int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau, mu;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     COMPLEX weight;
     weight.r = 0;
     weight.i = 0;
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
@@ -1096,10 +1096,10 @@ void test_weight(){
 void test_sweep(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 1000;// = 10000;
-    double U = .1, beta = 1, lambda, delta_tau, mu;
+    double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
@@ -1112,7 +1112,7 @@ void test_sweep(){
 void test_increasing_U(){
     /* initialise everything */
     int lattice_size = 5, time_size = 0, iterations = 120;
-    double U, beta = 5.0, lambda = 1.0, delta_tau, mu;
+    double U, beta = 5.0, lambda = 1.0, delta_tau, mu = U / 2;
     double acceptance = 0.0, rejection = 0.0;
     /* test U = 0 to 10 */
     for(int i = 1; i <= 10; i++){
@@ -1130,8 +1130,6 @@ void test_increasing_U(){
 
 /* ------ TO TEST ------ */
 /* -- Output -- */
-
-
 void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     /* open the file */
     ofstream myfile;
@@ -1160,6 +1158,9 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
     print_scalar(weight, "weight", file);
+    if(weight.i != 0){
+        print_scalar(weight, "weight", "imag_weight.txt");
+    }
     myfile << endl;
     /* close the file */
     myfile.close();
@@ -1167,13 +1168,14 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
 void test_weight(const string file){
     /* initialise stuff */
     int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau, mu;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     COMPLEX weight;
     weight.r = 0;
     weight.i = 0;
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size, "imag_weight.txt");
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
@@ -1181,7 +1183,7 @@ void test_weight(const string file){
     /* calculate the weight */
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
 }
-void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
+void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
     /* open the file */
     ofstream myfile;
     myfile.open("spin.txt", std::ios_base::app);
@@ -1199,9 +1201,53 @@ void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, c
     /* close the file */
     myfile.close();
 }
+void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
+    // calculates the single particle Green’s function
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex invUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex invDN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
 
+    /* calculate O */
+    myfile << "sigma = 1" << endl;
+    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
+    print_matrix(OUP, "O UP", file);
+    myfile << "sigma = -1" << endl;
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN, file);
+    print_matrix(ODN, "O DN", file);
+
+    /* calculate det(O) */
+    matrix_determinant_e(lattice_size, OUP, detOUP);
+    matrix_determinant_e(lattice_size, ODN, detODN);
+    print_scalar(detOUP, "det(O UP)", file);
+    print_scalar(detODN, "det(O DN)", file);
+    myfile << endl;
+
+    /* calculate O^-1 */
+    matrix_inverse(OUP, lattice_size, invUP);
+    matrix_inverse(ODN, lattice_size, invDN);
+    print_matrix(invUP, "(O DN)^-1", file);
+    print_matrix(invDN, "(O DN)^-1", file);
+}
+// void update_greens_function
+void test_increasing_mu(){
+    /* initialise everything */
+    int lattice_size = 5, time_size, iterations = 10;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U/2;
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    for(double mu = 0; mu < iterations; mu++){
+        /* generate initial conditions */
+        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+        /* sweep across the lattice */
+        /* calculate average spin */
+        calculate_total_spin_f(lattice, time_size, lattice_size);
+    }
+}
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_weight("weight_U1_B10.txt");
+    test_weight("test.txt");
 }
