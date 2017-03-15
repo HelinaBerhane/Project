@@ -1171,8 +1171,8 @@ void test_determinant_coefficient(){
     LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
     print_matrix(matrix, "matrix");
     /* calculate coefficients */
-    for(int element = 0; element < matrix_size; element++){
-        cout << determinant_coefficient(matrix, element) << " ";
+    for(int i = 0; i < 4; i++){
+        cout << determinant_coefficient(matrix, i) << " ";
     }
     cout << endl;
 }
