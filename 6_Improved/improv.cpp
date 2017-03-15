@@ -1160,6 +1160,11 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     print_scalar(weight, "weight", file);
     if(weight.i != 0){
         print_scalar(weight, "weight");
+        print_matrix(lattice, "lattice", "imag_weight.txt");
+        print_matrix(OUP, "O UP", file);
+        print_matrix(ODN, "O DN", file);
+        print_scalar(detOUP, "det(O UP)", file);
+        print_scalar(detODN, "det(O DN)", file);
         print_scalar(weight, "weight", "imag_weight.txt");
     }
     myfile << endl;
@@ -1176,13 +1181,33 @@ void test_weight(const string file){
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-    // print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "imag_weight.txt");
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice", file);
     /* calculate the weight */
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
+}
+void test_imaginary_weight(const string file){
+    /* initialise stuff */
+    int lattice_size = 5, time_size;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
+    COMPLEX weight;
+    clear_scalar(weight);
+
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "imag_weight.txt");
+
+    /* generate lattice */
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    generate_lattice(lattice_size, time_size, lattice);
+    /* calculate the weight */
+    for(int i = 0; i < 10; i++){
+        clear_scalar(weight);
+        weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
+    }
 }
 void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
     /* open the file */
@@ -1268,5 +1293,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_weight("test.txt");
+    test_imaginary_weight("test.txt");
 }
