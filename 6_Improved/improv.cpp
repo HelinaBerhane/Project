@@ -1188,27 +1188,6 @@ void test_weight(const string file){
     /* calculate the weight */
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
 }
-void test_imaginary_weight(const string file){
-    /* initialise stuff */
-    int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
-    COMPLEX weight;
-    clear_scalar(weight);
-
-    /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "imag_weight.txt");
-
-    /* generate lattice */
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-    generate_lattice(lattice_size, time_size, lattice);
-    /* calculate the weight */
-    for(int i = 0; i < 10; i++){
-        clear_scalar(weight);
-        weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
-    }
-}
 void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
     /* open the file */
     ofstream myfile;
@@ -1227,6 +1206,32 @@ void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size,
     /* close the file */
     myfile.close();
 }
+void test_imaginary_weight(const string file){
+    /* initialise stuff */
+    int lattice_size = 5, time_size;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
+    COMPLEX weight;
+    clear_scalar(weight);
+
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "imag_weight.txt");
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+
+    for(int i = 0; i < 10; i++){
+        /* generate lattice */
+        generate_lattice(lattice_size, time_size, lattice);
+
+        /* calculate total spin */
+        calculate_total_spin_f(lattice, time_size, lattice_size);
+
+        /* calculate weight */
+        clear_scalar(weight);
+        weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
+    }
+}
+
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
 
