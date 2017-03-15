@@ -1206,6 +1206,24 @@ void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size,
     /* close the file */
     myfile.close();
 }
+void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* calculate total spin */
+    double total_spin = 0;
+    for(int t = 0; t < time_size; t++){
+        for(int l = 0; l < lattice_size; l++){
+            total_spin += lattice(t,l).r;
+            myfile << total_spin << endl;
+        }
+    }
+    myfile << endl;
+    double average_spin = total_spin / (time_size * lattice_size);
+    myfile << average_spin << endl << endl;
+    /* close the file */
+    myfile.close();
+}
 void test_imaginary_weight(const string file){
     /* initialise stuff */
     int lattice_size = 5, time_size;
@@ -1224,7 +1242,7 @@ void test_imaginary_weight(const string file){
         generate_lattice(lattice_size, time_size, lattice);
 
         /* calculate total spin */
-        calculate_total_spin_f(lattice, time_size, lattice_size);
+        calculate_total_spin(lattice, time_size, lattice_size, file);
 
         /* calculate weight */
         clear_scalar(weight);
