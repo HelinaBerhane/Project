@@ -1366,19 +1366,19 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     print_matrix(OUP, "O UP", file);
     // myfile << "sigma = -1" << endl;
     O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
-    // print_matrix(ODN, "O DN", file);
+    print_matrix(ODN, "O DN", file);
 
     /* calculate det(O) */
     myfile << "my determinants:" << endl;
     detOUP = matrix_determinant(lattice_size, OUP);
     detOUP = matrix_determinant(lattice_size, ODN);
     print_scalar(detOUP, "det(O UP)", file);
-    // print_scalar(detODN, "det(O DN)", file);
+    print_scalar(detODN, "det(O DN)", file);
     myfile << "eigen determinants:" << endl;
     matrix_determinant_e(lattice_size, OUP, detOUP_e);
     matrix_determinant_e(lattice_size, ODN, detODN_e);
     print_scalar(detOUP_e, "det(O UP) (e)", file);
-    // print_scalar(detODN_e, "det(O DN) (e)", file);
+    print_scalar(detODN_e, "det(O DN) (e)", file);
     myfile << endl;
 
     // figure out what to do about O being too big !!!
