@@ -1371,10 +1371,10 @@ void test_imaginary_weight(const string file){
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "imag_weight.txt");
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "weight_i.txt");
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
 
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 100; i++){
         /* generate lattice */
         generate_lattice(lattice_size, time_size, lattice);
 
@@ -1453,5 +1453,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_imaginary_weight("weight_i.txt");
+    test_imaginary_weight("test.txt");
 }
