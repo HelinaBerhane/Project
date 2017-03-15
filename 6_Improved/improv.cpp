@@ -1529,7 +1529,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
                 count++;
-                if(count% (9*iterations) == 0){
+                if(count % (time_size * lattice_size * iterations / 100) == 0){
                     print_scalar(weightBefore, "weight before", file);
                     print_scalar(weightBefore, "weight before", file);
                     myfile << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
