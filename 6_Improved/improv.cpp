@@ -951,20 +951,6 @@ void test_diagonal_exponential(){
     print_matrix(test, "test");
     print_matrix(result);
 }
-void test_matrix_determinant(){
-    /* initialise everything */
-    int matrix_size = 4;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size, matrix_size, 0, 9);
-    print_matrix(matrix, "initial matrix");
-    COMPLEX result;
-    // clear_scalar(result);
-    /* calculate determinant */
-    // result = matrix_determinant(matrix_size, matrix);
-    // print_scalar(result, "determinant");
-    clear_scalar(result);
-    matrix_determinant_e(matrix_size, matrix, result);
-    print_scalar(result, "determinant (from eigenstuff)");
-}
 void test_simple_matrix_determinant(){
     /* initialise everything */
     LaGenMatComplex matrix = LaGenMatComplex::rand(2,2,0,5);
@@ -1223,15 +1209,15 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     }
     return determinant;
 }
-void test_matrix_determinant(){
+void matrix_determinant(){
     /* initialise everything */
     LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
     print_matrix(matrix, "initial matrix");
     COMPLEX result;
     clear_scalar(result);
     /* calculate determinant */
-    print_scalar(my_matrix_determinant(4, matrix), "my determinant");
-    matrix_determinant(4, matrix, result);
+    print_scalar(matrix_determinant(4, matrix), "my determinant");
+    matrix_determinant_e(4, matrix, result);
     print_scalar(result, "eigenvalue determinant");
 }
 void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
