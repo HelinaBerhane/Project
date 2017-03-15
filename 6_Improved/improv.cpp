@@ -405,6 +405,17 @@ COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
     det.i = AD.i - BC.i;
     return det;
 }
+COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
+    COMPLEX coefficient;
+    if(i % 2 == 1){
+        coefficient.r = - matrix(0, i).r;
+        coefficient.i = - matrix(0, i).i;
+    }else{
+        coefficient.r = matrix(0, i).r;
+        coefficient.i = matrix(0, i).i;
+    }
+    return coefficient;
+}
 // - qmc
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size){
     // mu = U / 2;                             // by definition
@@ -950,6 +961,16 @@ void test_simple_matrix_determinant(){
     simple_matrix_determinant(matrix);
     print_scalar(simple_matrix_determinant(matrix), "det(M)");
 }
+void test_determinant_coefficient(){
+    /* initialise everything */
+    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
+    print_matrix(matrix, "matrix");
+    /* calculate coefficients */
+    for(int i = 0; i < 4; i++){
+        cout << determinant_coefficient(matrix, i) << endl;
+    }
+    cout << endl;
+}
 // - qmc
 void test_initial_parameters(){
     double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
@@ -1150,28 +1171,6 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-/* -- Output -- */
-COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
-    COMPLEX coefficient;
-    if(i % 2 == 1){
-        coefficient.r = - matrix(0, i).r;
-        coefficient.i = - matrix(0, i).i;
-    }else{
-        coefficient.r = matrix(0, i).r;
-        coefficient.i = matrix(0, i).i;
-    }
-    return coefficient;
-}
-void test_determinant_coefficient(){
-    /* initialise everything */
-    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
-    print_matrix(matrix, "matrix");
-    /* calculate coefficients */
-    for(int i = 0; i < 4; i++){
-        cout << determinant_coefficient(matrix, i) << endl;
-    }
-    cout << endl;
-}
 void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int i, LaGenMatComplex& cofactorMatrix){
     for(int r = 1; r < matrix_size; r++){ // skip first row
         int newC = 0;
@@ -1182,6 +1181,17 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
                 newC++;
             }
         }
+    }
+}
+void test_cofactor_matrix(){
+    /* initialise everything */
+    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
+    LaGenMatComplex cofactor = LaGenMatComplex::zeros(3,3);
+    print_matrix(matrix, "matrix");
+    /* calculate reduced matrix */
+    for(int i = 0; i < 4; i++){
+        generate_cofactor_matrix(4, matrix, i, cofactor);
+        print_matrix(cofactor, "cofactor matrix");
     }
 }
 COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
@@ -1405,5 +1415,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_determinant_coefficient();
+    test_cofactor_matrix();
 }
