@@ -1118,7 +1118,7 @@ void test_increasing_U(){
     for(int i = 1; i <= 10; i++){
         /* generate initial conditions */
         U = i;
-        initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+        initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
         print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
         /* generate a lattice of spins */
         LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
@@ -1240,28 +1240,28 @@ void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice
     /* close the file */
     myfile.close();
 }
-// void update_greens_function
-// void test_increasing_mu(const string file){
-//     /* initialise everything */
-//     int lattice_size = 5, time_size, iterations = 40;
-//     double U = 1, beta = 10, lambda, delta_tau, mu;
-//     /* generate initial conditions */
-//     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-//     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-//     /* generate lattice */
-//     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-//     generate_lattice(lattice_size, time_size, lattice);
-//     print_matrix(lattice, "lattice", file);
-//     /* plot mu */
-//     for(double i = 0; i < iterations; i++){
-//         mu = i * U / 8;
-//         /* generate initial conditions */
-//         print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-//         /* sweep across the lattice */
-//         /* calculate average spin */
-//         calculate_total_spin_f(lattice, time_size, lattice_size);
-//     }
-// }
+void update_greens_function
+void test_increasing_mu(const string file){
+    /* initialise everything */
+    int lattice_size = 5, time_size, iterations = 40;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    /* generate lattice */
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice", file);
+    /* plot mu */
+    for(double i = 0; i < iterations; i++){
+        mu = i * U / 8;
+        /* generate initial conditions */
+        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+        /* sweep across the lattice */
+        /* calculate average spin */
+        calculate_total_spin_f(lattice, time_size, lattice_size);
+    }
+}
 
 /* ------ Main QMC Program ------ */
 int main(){
