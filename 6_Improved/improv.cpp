@@ -1390,7 +1390,7 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     /* calculate det(O) */
     myfile << "my determinants:" << endl;
     detOUP = matrix_determinant_v(lattice_size, OUP);
-    detOUP = matrix_determinant_v(lattice_size, ODN);
+    detODN = matrix_determinant_v(lattice_size, ODN);
     print_scalar(detOUP, "det(O UP)", file);
     print_scalar(detODN, "det(O DN)", file);
     myfile << "eigen determinants:" << endl;
