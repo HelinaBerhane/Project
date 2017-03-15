@@ -1489,8 +1489,6 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     /* initialise everything */
     COMPLEX weightBefore;
     COMPLEX weightAfter;
-    clear_scalar(weightBefore);
-    clear_scalar(weightAfter);
     double probability = 0;
     string result;
     int count = 0;
@@ -1501,15 +1499,14 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     for(int i = 0; i < iterations; i++){
         for(int t = 0; t < time_size; t++){
             for(int l = 0; l < lattice_size; l++){
+                clear_scalar(weightBefore);
+                clear_scalar(weightAfter);
                 /* calculate the weight before the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
                 /* propose the flip */
                 flip_spin(lattice, t, l);
                 /* calculate the weight after the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
-                if(weightAfter == weightBefore){
-                    myfile << endl << " -- ERROR -- " << endl;
-                }
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
                 /* accept or reject the flip */
@@ -1533,8 +1530,6 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                     //you have to multiply each quan you measure bu the sign
                 count++;
                 if(count % (time_size * lattice_size * iterations / 100) == 0){
-                    print_scalar(weightBefore, "weight before", file);
-                    print_scalar(weightBefore, "weight before", file);
                     myfile << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
                     myfile.width(15);
                     myfile << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
