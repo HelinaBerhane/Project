@@ -1021,7 +1021,7 @@ void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size,
     }
     myfile << endl;
     double average_spin = total_spin / (time_size * lattice_size);
-    print_scalar(average_spin, "", "av_spin.txt")
+    print_scalar(average_spin, "", "av_spin.txt");
     // myfile << average_spin << endl << endl;
     /* close the file */
     myfile.close();
@@ -1531,7 +1531,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
                     myfile.width(15);
                     myfile << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
                 }
-                calculate_total_spin_f(lattice, const int time_size, const int lattice_size);
+                calculate_total_spin_f(lattice, time_size, lattice_size);
             }
         }
     }
