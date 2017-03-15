@@ -1559,6 +1559,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     myfile << "acceptance ratio = " << acceptance_ratio << endl;
     double percentage_acceptance = acceptance / rejection;
     myfile << "percentage acceptance = " << percentage_acceptance << endl << endl;
+    cout << percentage_acceptance << endl;
     /* close the file */
     myfile.close();
 }
