@@ -1159,6 +1159,7 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     weight = scalar_multiple(detOUP, detODN);
     print_scalar(weight, "weight", file);
     if(weight.i != 0){
+        print_scalar(weight, "weight");
         print_scalar(weight, "weight", "imag_weight.txt");
     }
     myfile << endl;
