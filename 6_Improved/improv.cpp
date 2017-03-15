@@ -1250,6 +1250,42 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
+void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
+    /* open the file */
+    ofstream myfile;
+    myfile.open("spin.txt", std::ios_base::app);
+    /* calculate total spin */
+    double total_spin = 0;
+    for(int t = 0; t < time_size; t++){
+        for(int l = 0; l < lattice_size; l++){
+            total_spin += lattice(t,l).r;
+            myfile << total_spin << endl;
+        }
+    }
+    myfile << endl;
+    double average_spin = total_spin / (time_size * lattice_size);
+    myfile << average_spin << endl << endl;
+    /* close the file */
+    myfile.close();
+}
+void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* calculate total spin */
+    double total_spin = 0;
+    for(int t = 0; t < time_size; t++){
+        for(int l = 0; l < lattice_size; l++){
+            total_spin += lattice(t,l).r;
+            myfile << total_spin << endl;
+        }
+    }
+    myfile << endl;
+    double average_spin = total_spin / (time_size * lattice_size);
+    myfile << average_spin << endl << endl;
+    /* close the file */
+    myfile.close();
+}
 void weight_calculation_vv(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     /* open the file */
     ofstream myfile;
@@ -1308,7 +1344,7 @@ void weight_calculation_vv(const LaGenMatComplex& lattice, const int lattice_siz
     /* close the file */
     myfile.close();
 }
-void weight_calculation_vv(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
+void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -1381,43 +1417,7 @@ void test_weight(const string file){
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice", file);
     /* calculate the weight */
-    weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
-}
-void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
-    /* open the file */
-    ofstream myfile;
-    myfile.open("spin.txt", std::ios_base::app);
-    /* calculate total spin */
-    double total_spin = 0;
-    for(int t = 0; t < time_size; t++){
-        for(int l = 0; l < lattice_size; l++){
-            total_spin += lattice(t,l).r;
-            myfile << total_spin << endl;
-        }
-    }
-    myfile << endl;
-    double average_spin = total_spin / (time_size * lattice_size);
-    myfile << average_spin << endl << endl;
-    /* close the file */
-    myfile.close();
-}
-void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* calculate total spin */
-    double total_spin = 0;
-    for(int t = 0; t < time_size; t++){
-        for(int l = 0; l < lattice_size; l++){
-            total_spin += lattice(t,l).r;
-            myfile << total_spin << endl;
-        }
-    }
-    myfile << endl;
-    double average_spin = total_spin / (time_size * lattice_size);
-    myfile << average_spin << endl << endl;
-    /* close the file */
-    myfile.close();
+    weight_calculation_vv(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
 }
 void test_imaginary_weight(const string file){
     /* initialise stuff */
@@ -1441,7 +1441,7 @@ void test_imaginary_weight(const string file){
 
         /* calculate weight */
         clear_scalar(weight);
-        weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
+        weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
     }
     cout << weight << endl;
 }
