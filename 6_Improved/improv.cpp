@@ -1497,11 +1497,6 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     acceptance = 0;
     rejection = 0;
 
-    /* output headings */
-    myfile.width(11);
-    myfile << "weight";
-    myfile << " lattice" << endl;
-
     /* sweep through the lattice */
     for(int i = 0; i < iterations; i++){
         for(int t = 0; t < time_size; t++){
@@ -1581,7 +1576,7 @@ void test_sweep(const string file){
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice", file);
     /* sweep the lattice */
-    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection);
+    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection, file);
 }
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
