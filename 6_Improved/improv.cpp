@@ -1277,10 +1277,9 @@ void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, c
     for(int t = 0; t < time_size; t++){
         for(int l = 0; l < lattice_size; l++){
             total_spin += lattice(t,l).r;
-            myfile << total_spin << endl;
         }
     }
-    myfile << endl;
+    myfile << total_spin << endl;
     double average_spin = total_spin / (time_size * lattice_size);
     myfile << average_spin << endl << endl;
     /* close the file */
