@@ -214,6 +214,9 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
 }
 // Calculation
 // - generic
+double check_size(const double number){
+    return floor(log10(number));
+}
 void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
     result.r = A.r / B;
     result.i = A.i / B;
@@ -390,6 +393,107 @@ void matrix_determinant_e(const int matrix_size, const LaGenMatComplex& matrix, 
     /* calculate determinant */
     for(int i = 0; i < matrix_size; i++){
         scalar_product(result, eigenvalues(i));
+    }
+}
+COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
+    /* initialise everything */
+    COMPLEX AD;
+    COMPLEX BC;
+    COMPLEX det;
+    int max_size = 1000000;
+    /* multiply opposite corners */
+    scalar_multiplication(matrix(0,0), matrix(1,1), AD);
+    scalar_multiplication(matrix(0,1), matrix(1,0), BC);
+    /* - B */
+    det.r = AD.r - BC.r;
+    det.i = AD.i - BC.i;
+    return det;
+}
+COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
+    COMPLEX coefficient;
+    if(i % 2 == 1){
+        coefficient.r = - matrix(0, i).r;
+        coefficient.i = - matrix(0, i).i;
+    }else{
+        coefficient.r = matrix(0, i).r;
+        coefficient.i = matrix(0, i).i;
+    }
+    return coefficient;
+}
+void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int i, LaGenMatComplex& cofactorMatrix){
+    for(int r = 1; r < matrix_size; r++){
+        int newC = 0;
+        for(int c = 0; c < matrix_size; c++){
+            if(c != i){
+                cofactorMatrix(r - 1, newC).r = matrix(r, c).r;
+                cofactorMatrix(r - 1, newC).i = matrix(r, c).i;
+                newC++;
+            }
+        }
+    }
+}
+COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
+    /* initialise everything */
+    COMPLEX determinant;
+    LaGenMatComplex cofactorMatrix;
+    COMPLEX coefficient;
+    cofactorMatrix = 0;
+    /* calculate determinant */
+    if(matrix_size == 2){
+        return simple_matrix_determinant(matrix);
+    }else{
+        clear_scalar(determinant);
+        clear_scalar(coefficient);
+        //for each i in the first row
+        for(int i = 0; i < matrix_size; i++){
+            /* initialise everything */
+            int cofactor_size = matrix_size - 1;
+            cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
+            /* determine the coefficient */
+            coefficient = determinant_coefficient(matrix, i);
+            /* calculate the cofactor */
+            generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
+            /* finish calculation */
+            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
+        }
+        return determinant;
+    }
+}
+COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matrix){
+    /* initialise everything */
+    LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex cofactorMatrix;
+    COMPLEX determinant;
+    COMPLEX coefficient;
+    cofactorMatrix = 0;
+    /* test size of elements */
+    double scale = check_size(matrix(0,0).r);
+    /* scale matrix */
+    matrix_multiple(matrix, matrix_size, 1 / scale, scaled_matrix);
+    print_matrix(scaled_matrix, "scaled matrix");
+    /* do stuff */
+    if(matrix_size == 2){
+        return simple_matrix_determinant(matrix);
+    }else{
+        clear_scalar(determinant);
+        clear_scalar(coefficient);
+        //for each i in the first row
+        for(int i = 0; i < matrix_size; i++){
+            /* initialise everything */
+            int cofactor_size = matrix_size - 1;
+            cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
+            /* determine the coefficient */
+            coefficient = determinant_coefficient(matrix, i);
+            print_scalar(coefficient, "coefficient");
+            /* calculate the cofactor */
+            generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
+            print_matrix(cofactorMatrix, "cofactorMatrix");
+            /* finish calculation */
+            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
+        }
+        cout << pow (10, scale * matrix_size) << endl;
+        scalar_product(determinant, pow (10, scale * matrix_size));
+        return determinant;
     }
 }
 // - qmc
@@ -644,6 +748,142 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     weight = scalar_multiple(detOUP, detODN);
     print_scalar(weight, "weight");
 }
+void weight_calculation_vv(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    COMPLEX detOUP_e;
+    COMPLEX detODN_e;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    clear_scalar(detOUP_e);
+    clear_scalar(detODN_e);
+
+    /* calculate O */
+    myfile << "sigma = 1" << endl;
+    O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP, file);
+    print_matrix(OUP, "O UP", file);
+    myfile << "sigma = -1" << endl;
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN, file);
+    print_matrix(ODN, "O DN", file);
+
+    /* calculate det(O) */
+    myfile << "my determinants:" << endl;
+    detOUP = matrix_determinant(lattice_size, OUP);
+    detODN = matrix_determinant(lattice_size, ODN);
+    print_scalar(detOUP, "det(O UP)", file);
+    print_scalar(detODN, "det(O DN)", file);
+    myfile << "eigen determinants:" << endl;
+    matrix_determinant_e(lattice_size, OUP, detOUP_e);
+    matrix_determinant_e(lattice_size, ODN, detODN_e);
+    print_scalar(detOUP_e, "det(O UP) (e)", file);
+    print_scalar(detODN_e, "det(O DN) (e)", file);
+    myfile << endl;
+
+    // figure out what to do about O being too big !!!
+        // det(O) should be ~ 10^44
+
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+    print_scalar(weight, "weight", file);
+    if(weight.i != 0){
+        print_scalar(weight, "weight");
+        print_matrix(lattice, "lattice", "imag_weight.txt");
+        print_matrix(OUP, "O UP", "imag_weight.txt");
+        print_matrix(ODN, "O DN", "imag_weight.txt");
+        print_scalar(detOUP, "det(O UP)", "imag_weight.txt");
+        print_scalar(detODN, "det(O DN)", "imag_weight.txt");
+        print_scalar(weight, "weight", "imag_weight.txt");
+        myfile << endl;
+    }
+    myfile << endl;
+    /* close the file */
+    myfile.close();
+}
+void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    /* calculate O */
+    // myfile << "sigma = 1" << endl;
+    O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP);
+    print_matrix(OUP, "O UP", file);
+    // myfile << "sigma = -1" << endl;
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
+    print_matrix(ODN, "O DN", file);
+
+    /* calculate det(O) */
+    detOUP = matrix_determinant(lattice_size, OUP);
+    detODN = matrix_determinant(lattice_size, ODN);
+    print_scalar(detOUP, "det(O UP)", file);
+    print_scalar(detODN, "det(O DN)", file);
+    myfile << endl;
+
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+    print_scalar(weight, "weight", file);
+    if(weight.i != 0){
+        print_scalar(weight, "weight");
+        print_matrix(lattice, "lattice", "imag_weight.txt");
+        print_matrix(OUP, "O UP", "imag_weight.txt");
+        print_matrix(ODN, "O DN", "imag_weight.txt");
+        print_scalar(detOUP, "det(O UP)", "imag_weight.txt");
+        print_scalar(detODN, "det(O DN)", "imag_weight.txt");
+        print_scalar(weight, "weight", "imag_weight.txt");
+        myfile << endl;
+    }
+    myfile << endl;
+    /* close the file */
+    myfile.close();
+}
+void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    /* calculate O */
+    O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP);
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
+    /* calculate det(O) */
+    detOUP = matrix_determinant(lattice_size, OUP);
+    detODN = matrix_determinant(lattice_size, ODN);
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+    if(weight.i != 0){
+        print_scalar(weight, "weight");
+        print_matrix(lattice, "lattice", "imag_weight.txt");
+        print_matrix(OUP, "O UP", "imag_weight.txt");
+        print_matrix(ODN, "O DN", "imag_weight.txt");
+        print_scalar(detOUP, "det(O UP)", "imag_weight.txt");
+        print_scalar(detODN, "det(O DN)", "imag_weight.txt");
+        print_scalar(weight, "weight", "imag_weight.txt");
+        myfile << endl;
+    }
+    /* close the file */
+    myfile.close();
+}
+
 void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection){
 
     /* initialise everything */
@@ -767,7 +1007,41 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
     double percentage_acceptance = acceptance / rejection;
     cout << "percentage acceptance = " << percentage_acceptance << endl << endl;
 }
-
+void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
+    /* open the file */
+    ofstream myfile;
+    myfile.open("spin.txt", std::ios_base::app);
+    /* calculate total spin */
+    double total_spin = 0;
+    for(int t = 0; t < time_size; t++){
+        for(int l = 0; l < lattice_size; l++){
+            total_spin += lattice(t,l).r;
+            myfile << total_spin << endl;
+        }
+    }
+    myfile << endl;
+    double average_spin = total_spin / (time_size * lattice_size);
+    myfile << average_spin << endl << endl;
+    /* close the file */
+    myfile.close();
+}
+void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* calculate total spin */
+    double total_spin = 0;
+    for(int t = 0; t < time_size; t++){
+        for(int l = 0; l < lattice_size; l++){
+            total_spin += lattice(t,l).r;
+        }
+    }
+    myfile << total_spin << endl;
+    double average_spin = total_spin / (time_size * lattice_size);
+    myfile << average_spin << endl << endl;
+    /* close the file */
+    myfile.close();
+}
 /* -- Testing -- */
 // - generic
 void test_output_to_file(const string file){
@@ -915,35 +1189,55 @@ void test_diagonal_exponential(){
     print_matrix(test, "test");
     print_matrix(result);
 }
-// void test_simple_matrix_determinant(){
-//     /* initialise everything */
-//     LaGenMatComplex matrix = LaGenMatComplex::rand(2,2,0,5);
-//     print_matrix(matrix, "matrix");
-//     /* calculate determinant */
-//     simple_matrix_determinant(matrix);
-//     print_scalar(simple_matrix_determinant(matrix), "det(M)");
-// }
-// void test_determinant_coefficient(){
-//     /* initialise everything */
-//     LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
-//     print_matrix(matrix, "matrix");
-//     /* calculate coefficients */
-//     for(int i = 0; i < 4; i++){
-//         cout << determinant_coefficient(matrix, i) << endl;
-//     }
-//     cout << endl;
-// }
-// void test_cofactor_matrix(){
-//     /* initialise everything */
-//     LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
-//     LaGenMatComplex cofactor = LaGenMatComplex::zeros(3,3);
-//     print_matrix(matrix, "matrix");
-//     /* calculate reduced matrix */
-//     for(int i = 0; i < 4; i++){
-//         generate_cofactor_matrix(4, matrix, i, cofactor);
-//         print_matrix(cofactor, "cofactor matrix");
-//     }
-// }
+void test_simple_matrix_determinant(){
+    /* initialise everything */
+    LaGenMatComplex matrix = LaGenMatComplex::rand(2,2,0,5);
+    print_matrix(matrix, "matrix");
+    /* calculate determinant */
+    simple_matrix_determinant(matrix);
+    print_scalar(simple_matrix_determinant(matrix), "det(M)");
+}
+void test_determinant_coefficient(){
+    /* initialise everything */
+    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
+    print_matrix(matrix, "matrix");
+    /* calculate coefficients */
+    for(int i = 0; i < 4; i++){
+        cout << determinant_coefficient(matrix, i) << endl;
+    }
+    cout << endl;
+}
+void test_cofactor_matrix(){
+    /* initialise everything */
+    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
+    LaGenMatComplex cofactor = LaGenMatComplex::zeros(3,3);
+    print_matrix(matrix, "matrix");
+    /* calculate reduced matrix */
+    for(int i = 0; i < 4; i++){
+        generate_cofactor_matrix(4, matrix, i, cofactor);
+        print_matrix(cofactor, "cofactor matrix");
+    }
+}
+void test_matrix_determinant(){
+    /* initialise everything */
+    double matrix_size = 4, scale = 8;
+    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
+    LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    COMPLEX result;
+    clear_scalar(result);
+    /* scale the matrix */
+    matrix_multiple(matrix, matrix_size, scale, scaled_matrix);
+    print_matrix(matrix, "initial matrix");
+    print_matrix(scaled_matrix, "scaled matrix");
+    /* calculate determinant */
+    print_scalar(matrix_determinant_v(4, matrix), "my determinant");
+    matrix_determinant_e(4, matrix, result);
+    print_scalar(result, "eigenvalue determinant");
+
+    print_scalar(matrix_determinant_v(4, scaled_matrix), "my determinant");
+    matrix_determinant_e(4, scaled_matrix, result);
+    print_scalar(result, "eigenvalue determinant");
+}
 // - qmc
 void test_initial_parameters(){
     double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
@@ -1108,6 +1402,49 @@ void test_weight(){
     weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight);
     print_scalar(weight, "weight");
 }
+void test_weight(const string file){
+    /* initialise stuff */
+    int lattice_size = 5, time_size;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
+    COMPLEX weight;
+    weight.r = 0;
+    weight.i = 0;
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    /* generate lattice */
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice", file);
+    /* calculate the weight */
+    weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
+}
+void test_imaginary_weight(const string file){
+    /* initialise stuff */
+    int lattice_size = 5, time_size;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
+    COMPLEX weight;
+    clear_scalar(weight);
+
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "weight_i.txt");
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+
+    for(int i = 0; i < 10; i++){
+        /* generate lattice */
+        generate_lattice(lattice_size, time_size, lattice);
+
+        /* calculate total spin */
+        calculate_total_spin(lattice, time_size, lattice_size, file);
+
+        /* calculate weight */
+        clear_scalar(weight);
+        weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
+        cout << weight << endl;
+    }
+}
 void test_sweep(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 1000;// = 10000;
@@ -1144,326 +1481,106 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-double check_size(const double number){
-    return floor(log10(number));
-}
-COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
+void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+
     /* initialise everything */
-    COMPLEX AD;
-    COMPLEX BC;
-    COMPLEX det;
-    int max_size = 1000000;
-    /* multiply opposite corners */
-    scalar_multiplication(matrix(0,0), matrix(1,1), AD);
-    scalar_multiplication(matrix(0,1), matrix(1,0), BC);
-    /* - B */
-    det.r = AD.r - BC.r;
-    det.i = AD.i - BC.i;
-    return det;
-}
-COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
-    COMPLEX coefficient;
-    if(i % 2 == 1){
-        coefficient.r = - matrix(0, i).r;
-        coefficient.i = - matrix(0, i).i;
-    }else{
-        coefficient.r = matrix(0, i).r;
-        coefficient.i = matrix(0, i).i;
-    }
-    return coefficient;
-}
-void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int i, LaGenMatComplex& cofactorMatrix){
-    for(int r = 1; r < matrix_size; r++){
-        int newC = 0;
-        for(int c = 0; c < matrix_size; c++){
-            if(c != i){
-                cofactorMatrix(r - 1, newC).r = matrix(r, c).r;
-                cofactorMatrix(r - 1, newC).i = matrix(r, c).i;
-                newC++;
+    COMPLEX weightBefore;
+    COMPLEX weightAfter;
+    clear_scalar(weightBefore);
+    clear_scalar(weightAfter);
+    double probability = 0;
+    string result;
+    int count = 0;
+    acceptance = 0;
+    rejection = 0;
+
+    /* output headings */
+    myfile.width(11);
+    myfile << "weight";
+    myfile << " lattice" << endl;
+
+    /* sweep through the lattice */
+    for(int i = 0; i < iterations; i++){
+        for(int t = 0; t < time_size; t++){
+            for(int l = 0; l < lattice_size; l++){
+                /* calculate the weight before the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
+
+                /* propose the flip */
+                flip_spin(lattice, t, l, file);
+
+                /* calculate the weight after the flip */
+                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
+
+                /* calculate the ratio of weights */
+                probability = weightAfter.r / weightBefore.r;
+
+                /* accept or reject the flip */
+                double prob = random_double();
+                if(abs(probability) >= 1){
+                    result = "accepted";
+                    acceptance++;
+                }else{
+                    if(probability > prob){
+                        result = "accepted";
+                        acceptance++;
+                    }else{
+                        flip_spin(lattice, t, l, file);
+                        result = "rejected";
+                        rejection++;
+                    }
+                }
+                /* comments */
+                    //for negative values, we do some integration
+                    //P\to\tilde{P} = |P| and  F\to \tilde
+                    //you have to multiply each quan you measure bu the sign
+                count++;
+                if(count%1000 == 0){
+                    myfile << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
+                    myfile.width(15);
+                    myfile << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
+                }
+                // if(result == "accepted"){
+                //     print_matrix(lattice);
+                // }else{
+                //     myfile << endl;
+                // }
             }
+            /* Comments */
+                //when you take measurements, there is noise
+                //we're doing marcov chain
+                //the simplest quan we measure is double occupancy \bra n_up n_down \ket
         }
     }
-}
-COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
-    /* initialise everything */
-    COMPLEX determinant;
-    LaGenMatComplex cofactorMatrix;
-    COMPLEX coefficient;
-    cofactorMatrix = 0;
-    /* calculate determinant */
-    if(matrix_size == 2){
-        return simple_matrix_determinant(matrix);
-    }else{
-        clear_scalar(determinant);
-        clear_scalar(coefficient);
-        //for each i in the first row
-        for(int i = 0; i < matrix_size; i++){
-            /* initialise everything */
-            int cofactor_size = matrix_size - 1;
-            cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
-            /* determine the coefficient */
-            coefficient = determinant_coefficient(matrix, i);
-            /* calculate the cofactor */
-            generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
-            /* finish calculation */
-            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
-        }
-        return determinant;
-    }
-}
-COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matrix){
-    /* initialise everything */
-    LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    LaGenMatComplex cofactorMatrix;
-    COMPLEX determinant;
-    COMPLEX coefficient;
-    cofactorMatrix = 0;
-    /* test size of elements */
-    double scale = check_size(matrix(0,0).r);
-    /* scale matrix */
-    matrix_multiple(matrix, matrix_size, 1 / scale, scaled_matrix);
-    print_matrix(scaled_matrix, "scaled matrix");
-    /* do stuff */
-    if(matrix_size == 2){
-        return simple_matrix_determinant(matrix);
-    }else{
-        clear_scalar(determinant);
-        clear_scalar(coefficient);
-        //for each i in the first row
-        for(int i = 0; i < matrix_size; i++){
-            /* initialise everything */
-            int cofactor_size = matrix_size - 1;
-            cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
-            /* determine the coefficient */
-            coefficient = determinant_coefficient(matrix, i);
-            print_scalar(coefficient, "coefficient");
-            /* calculate the cofactor */
-            generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
-            print_matrix(cofactorMatrix, "cofactorMatrix");
-            /* finish calculation */
-            scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
-        }
-        cout << pow (10, scale * matrix_size) << endl;
-        scalar_product(determinant, pow (10, scale * matrix_size));
-        return determinant;
-    }
-}
-void test_matrix_determinant(){
-    /* initialise everything */
-    double matrix_size = 4, scale = 8;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
-    LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    COMPLEX result;
-    clear_scalar(result);
-    /* scale the matrix */
-    matrix_multiple(matrix, matrix_size, scale, scaled_matrix);
-    print_matrix(matrix, "initial matrix");
-    print_matrix(scaled_matrix, "scaled matrix");
-    /* calculate determinant */
-    print_scalar(matrix_determinant_v(4, matrix), "my determinant");
-    matrix_determinant_e(4, matrix, result);
-    print_scalar(result, "eigenvalue determinant");
-
-    print_scalar(matrix_determinant_v(4, scaled_matrix), "my determinant");
-    matrix_determinant_e(4, scaled_matrix, result);
-    print_scalar(result, "eigenvalue determinant");
-}
-
-void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
-    /* open the file */
-    ofstream myfile;
-    myfile.open("spin.txt", std::ios_base::app);
-    /* calculate total spin */
-    double total_spin = 0;
-    for(int t = 0; t < time_size; t++){
-        for(int l = 0; l < lattice_size; l++){
-            total_spin += lattice(t,l).r;
-            myfile << total_spin << endl;
-        }
-    }
-    myfile << endl;
-    double average_spin = total_spin / (time_size * lattice_size);
-    myfile << average_spin << endl << endl;
+    //results
+        // with most parameters = 1, it stabilised at all -1 spins
+    myfile << "["<< acceptance << "/" << rejection << "]" << endl;
+    double acceptance_ratio = acceptance / (rejection + acceptance);
+    myfile << "acceptance ratio = " << acceptance_ratio << endl;
+    double percentage_acceptance = acceptance / rejection;
+    myfile << "percentage acceptance = " << percentage_acceptance << endl << endl;
     /* close the file */
     myfile.close();
 }
-void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* calculate total spin */
-    double total_spin = 0;
-    for(int t = 0; t < time_size; t++){
-        for(int l = 0; l < lattice_size; l++){
-            total_spin += lattice(t,l).r;
-        }
-    }
-    myfile << total_spin << endl;
-    double average_spin = total_spin / (time_size * lattice_size);
-    myfile << average_spin << endl << endl;
-    /* close the file */
-    myfile.close();
-}
-void weight_calculation_vv(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
+void test_sweep(const string file){
     /* initialise everything */
-    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    COMPLEX detOUP;
-    COMPLEX detODN;
-    COMPLEX detOUP_e;
-    COMPLEX detODN_e;
-    clear_scalar(weight);
-    clear_scalar(detOUP);
-    clear_scalar(detODN);
-    clear_scalar(detOUP_e);
-    clear_scalar(detODN_e);
-
-    /* calculate O */
-    myfile << "sigma = 1" << endl;
-    O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP, file);
-    print_matrix(OUP, "O UP", file);
-    myfile << "sigma = -1" << endl;
-    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN, file);
-    print_matrix(ODN, "O DN", file);
-
-    /* calculate det(O) */
-    myfile << "my determinants:" << endl;
-    detOUP = matrix_determinant(lattice_size, OUP);
-    detOUP = matrix_determinant(lattice_size, ODN);
-    print_scalar(detOUP, "det(O UP)", file);
-    print_scalar(detODN, "det(O DN)", file);
-    myfile << "eigen determinants:" << endl;
-    matrix_determinant_e(lattice_size, OUP, detOUP_e);
-    matrix_determinant_e(lattice_size, ODN, detODN_e);
-    print_scalar(detOUP_e, "det(O UP) (e)", file);
-    print_scalar(detODN_e, "det(O DN) (e)", file);
-    myfile << endl;
-
-    // figure out what to do about O being too big !!!
-        // det(O) should be ~ 10^44
-
-    /* calculate weight */
-    weight = scalar_multiple(detOUP, detODN);
-    print_scalar(weight, "weight", file);
-    if(weight.i != 0){
-        print_scalar(weight, "weight");
-        print_matrix(lattice, "lattice", "imag_weight.txt");
-        print_matrix(OUP, "O UP", "imag_weight.txt");
-        print_matrix(ODN, "O DN", "imag_weight.txt");
-        print_scalar(detOUP, "det(O UP)", "imag_weight.txt");
-        print_scalar(detODN, "det(O DN)", "imag_weight.txt");
-        print_scalar(weight, "weight", "imag_weight.txt");
-        myfile << endl;
-    }
-    myfile << endl;
-    /* close the file */
-    myfile.close();
-}
-void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* initialise everything */
-    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    COMPLEX detOUP;
-    COMPLEX detODN;
-    COMPLEX detOUP_e;
-    COMPLEX detODN_e;
-    clear_scalar(weight);
-    clear_scalar(detOUP);
-    clear_scalar(detODN);
-    clear_scalar(detOUP_e);
-    clear_scalar(detODN_e);
-
-    /* calculate O */
-    // myfile << "sigma = 1" << endl;
-    O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP);
-    print_matrix(OUP, "O UP", file);
-    // myfile << "sigma = -1" << endl;
-    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
-    print_matrix(ODN, "O DN", file);
-
-    /* calculate det(O) */
-    myfile << "my determinants:" << endl;
-    detOUP = matrix_determinant(lattice_size, OUP);
-    detODN = matrix_determinant(lattice_size, ODN);
-    print_scalar(detOUP, "det(O UP)", file);
-    print_scalar(detODN, "det(O DN)", file);
-    myfile << "eigen determinants:" << endl;
-    matrix_determinant_e(lattice_size, OUP, detOUP_e);
-    matrix_determinant_e(lattice_size, ODN, detODN_e);
-    print_scalar(detOUP_e, "det(O UP) (e)", file);
-    print_scalar(detODN_e, "det(O DN) (e)", file);
-    myfile << endl;
-
-    // figure out what to do about O being too big !!!
-        // det(O) should be ~ 10^44
-
-    /* calculate weight */
-    weight = scalar_multiple(detOUP, detODN);
-    print_scalar(weight, "weight", file);
-    if(weight.i != 0){
-        print_scalar(weight, "weight");
-        print_matrix(lattice, "lattice", "imag_weight.txt");
-        print_matrix(OUP, "O UP", "imag_weight.txt");
-        print_matrix(ODN, "O DN", "imag_weight.txt");
-        print_scalar(detOUP, "det(O UP)", "imag_weight.txt");
-        print_scalar(detODN, "det(O DN)", "imag_weight.txt");
-        print_scalar(weight, "weight", "imag_weight.txt");
-        myfile << endl;
-    }
-    myfile << endl;
-    /* close the file */
-    myfile.close();
-}
-void test_weight(const string file){
-    /* initialise stuff */
-    int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
-    COMPLEX weight;
-    weight.r = 0;
-    weight.i = 0;
+    int lattice_size = 5, time_size, iterations = 1000;// = 10000;
+    double U = .1, beta = 1, lambda, delta_tau, mu;
+    double acceptance = 0, rejection = 0;
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
     /* generate lattice */
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
+    // print_matrix(lattice, "intialised lattice", file);
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice", file);
-    /* calculate the weight */
-    weight_calculation_vv(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
+    /* sweep the lattice */
+    sweep_lattice_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection);
 }
-void test_imaginary_weight(const string file){
-    /* initialise stuff */
-    int lattice_size = 5, time_size;
-    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
-    COMPLEX weight;
-    clear_scalar(weight);
-
-    /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "weight_i.txt");
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-
-    for(int i = 0; i < 10; i++){
-        /* generate lattice */
-        generate_lattice(lattice_size, time_size, lattice);
-
-        /* calculate total spin */
-        calculate_total_spin(lattice, time_size, lattice_size, file);
-
-        /* calculate weight */
-        clear_scalar(weight);
-        weight_calculation_v(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
-        cout << weight << endl;
-    }
-}
-
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
 
@@ -1503,7 +1620,6 @@ void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice
     /* close the file */
     myfile.close();
 }
-
 void update_greens_function(){
     //
 }
@@ -1531,5 +1647,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_imaginary_weight("test.txt");
+    test_sweep("test.txt");
 }
