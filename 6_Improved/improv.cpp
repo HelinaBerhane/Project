@@ -1206,8 +1206,8 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             /* finish calculation */
             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
         }
+        return determinant;
     }
-    return determinant;
 }
 void test_matrix_determinant(){
     /* initialise everything */
