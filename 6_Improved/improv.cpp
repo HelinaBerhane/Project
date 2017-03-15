@@ -715,11 +715,11 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     clear_scalar(detOUP);
     clear_scalar(detODN);
     /* calculate O */
-    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
+    O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP);
     O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
     /* calculate det(O) */
-    matrix_determinant_e(lattice_size, OUP, detOUP);
-    matrix_determinant_e(lattice_size, ODN, detODN);
+    detOUP = matrix_determinant(lattice_size, OUP);
+    detODN = matrix_determinant(lattice_size, ODN);
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
 }
@@ -740,8 +740,8 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
     print_matrix(OUP, "O UP");
     print_matrix(ODN, "O DN");
     /* calculate det(O) */
-    matrix_determinant_e(lattice_size, OUP, detOUP);
-    matrix_determinant_e(lattice_size, ODN, detODN);
+    detOUP = matrix_determinant(lattice_size, OUP);
+    detODN = matrix_determinant(lattice_size, ODN);
     print_scalar(detOUP, "det(O UP)");
     print_scalar(detODN, "det(O DN)");
     /* calculate weight */
@@ -1481,7 +1481,7 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
+void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -1508,12 +1508,14 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
             for(int l = 0; l < lattice_size; l++){
                 /* calculate the weight before the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
+                print_scalar(weightBefore, "weight before", file);
 
                 /* propose the flip */
                 flip_spin(lattice, t, l, file);
 
                 /* calculate the weight after the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
+                print_scalar(weightBefore, "weight before", file);
 
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
@@ -1568,10 +1570,10 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
 void test_sweep(const string file){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 1000;// = 10000;
-    double U = .1, beta = 1, lambda, delta_tau, mu;
+    double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, mu, time_size);
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
