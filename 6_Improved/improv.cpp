@@ -1140,7 +1140,7 @@ COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
     scalar_multiplication(matrix(0,1), matrix(1,0), BC);
     /* - B */
     det.r = AD.r - BC.r;
-    det.r = AD.i - BC.i;
+    det.i = AD.i - BC.i;
     return det;
 }
 void test_simple_matrix_determinant(){
