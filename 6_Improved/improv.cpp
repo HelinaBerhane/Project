@@ -1503,18 +1503,12 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
             for(int l = 0; l < lattice_size; l++){
                 /* calculate the weight before the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
-                print_scalar(weightBefore, "weight before", file);
-
                 /* propose the flip */
-                flip_spin(lattice, t, l, file);
-
+                flip_spin(lattice, t, l);
                 /* calculate the weight after the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
-                print_scalar(weightBefore, "weight before", file);
-
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
-
                 /* accept or reject the flip */
                 double prob = random_double();
                 if(abs(probability) >= 1){
@@ -1525,7 +1519,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                         result = "accepted";
                         acceptance++;
                     }else{
-                        flip_spin(lattice, t, l, file);
+                        flip_spin(lattice, t, l);
                         result = "rejected";
                         rejection++;
                     }
@@ -1535,7 +1529,9 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
                     //P\to\tilde{P} = |P| and  F\to \tilde
                     //you have to multiply each quan you measure bu the sign
                 count++;
-                if(count%1000 == 0){
+                if(count%9000 == 0){
+                    print_scalar(weightBefore, "weight before", file);
+                    print_scalar(weightBefore, "weight before", file);
                     myfile << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
                     myfile.width(15);
                     myfile << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
@@ -1565,7 +1561,7 @@ void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int
 }
 void test_sweep(const string file){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 10;// = 10000;
+    int lattice_size = 5, time_size, iterations = 100;// = 10000;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
