@@ -1174,8 +1174,8 @@ void test_weight(const string file){
     weight.i = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size, file);
-    print_initial_parameters(U, beta, lambda, delta_tau, time_size, lattice_size, "imag_weight.txt");
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "imag_weight.txt");
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
@@ -1203,6 +1203,11 @@ void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size,
 }
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
+
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+
     /* initialise everything */
     LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
     LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
@@ -1231,14 +1236,25 @@ void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice
     matrix_inverse(ODN, lattice_size, invDN);
     print_matrix(invUP, "(O DN)^-1", file);
     print_matrix(invDN, "(O DN)^-1", file);
+
+    /* close the file */
+    myfile.close();
 }
 // void update_greens_function
-void test_increasing_mu(){
+void test_increasing_mu(const string file){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 10;
-    double U = 1, beta = 10, lambda, delta_tau, mu = U/2;
+    int lattice_size = 5, time_size, iterations = 40;
+    double U = 1, beta = 10, lambda, delta_tau, mu;
+    /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    for(double mu = 0; mu < iterations; mu++){
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    /* generate lattice */
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+    generate_lattice(lattice_size, time_size, lattice);
+    print_matrix(lattice, "lattice", file);
+    /* plot mu */
+    for(double i = 0; i < iterations; i++){
+        mu = i * U / 8;
         /* generate initial conditions */
         print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
         /* sweep across the lattice */
