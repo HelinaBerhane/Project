@@ -1202,7 +1202,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
                 // = +- the i
             /* calculate the cofactor */
             generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
-            //print_matrix(cofactorMatrix, "cofactorMatrix");
+            print_matrix(cofactorMatrix, "cofactorMatrix");
             /* finish calculation */
             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
         }
