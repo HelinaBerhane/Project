@@ -915,35 +915,35 @@ void test_diagonal_exponential(){
     print_matrix(test, "test");
     print_matrix(result);
 }
-void test_simple_matrix_determinant(){
-    /* initialise everything */
-    LaGenMatComplex matrix = LaGenMatComplex::rand(2,2,0,5);
-    print_matrix(matrix, "matrix");
-    /* calculate determinant */
-    simple_matrix_determinant(matrix);
-    print_scalar(simple_matrix_determinant(matrix), "det(M)");
-}
-void test_determinant_coefficient(){
-    /* initialise everything */
-    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
-    print_matrix(matrix, "matrix");
-    /* calculate coefficients */
-    for(int i = 0; i < 4; i++){
-        cout << determinant_coefficient(matrix, i) << endl;
-    }
-    cout << endl;
-}
-void test_cofactor_matrix(){
-    /* initialise everything */
-    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
-    LaGenMatComplex cofactor = LaGenMatComplex::zeros(3,3);
-    print_matrix(matrix, "matrix");
-    /* calculate reduced matrix */
-    for(int i = 0; i < 4; i++){
-        generate_cofactor_matrix(4, matrix, i, cofactor);
-        print_matrix(cofactor, "cofactor matrix");
-    }
-}
+// void test_simple_matrix_determinant(){
+//     /* initialise everything */
+//     LaGenMatComplex matrix = LaGenMatComplex::rand(2,2,0,5);
+//     print_matrix(matrix, "matrix");
+//     /* calculate determinant */
+//     simple_matrix_determinant(matrix);
+//     print_scalar(simple_matrix_determinant(matrix), "det(M)");
+// }
+// void test_determinant_coefficient(){
+//     /* initialise everything */
+//     LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
+//     print_matrix(matrix, "matrix");
+//     /* calculate coefficients */
+//     for(int i = 0; i < 4; i++){
+//         cout << determinant_coefficient(matrix, i) << endl;
+//     }
+//     cout << endl;
+// }
+// void test_cofactor_matrix(){
+//     /* initialise everything */
+//     LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
+//     LaGenMatComplex cofactor = LaGenMatComplex::zeros(3,3);
+//     print_matrix(matrix, "matrix");
+//     /* calculate reduced matrix */
+//     for(int i = 0; i < 4; i++){
+//         generate_cofactor_matrix(4, matrix, i, cofactor);
+//         print_matrix(cofactor, "cofactor matrix");
+//     }
+// }
 // - qmc
 void test_initial_parameters(){
     double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
@@ -1219,7 +1219,7 @@ COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matri
     COMPLEX coefficient;
     cofactorMatrix = 0;
     /* test size of elements */
-    double scale = check_size(matrix(0,0));
+    double scale = check_size(matrix(0,0).r);
     /* scale matrix */
     matrix_multiple(matrix, matrix_size, 1 / scale, scaled_matrix);
     print_matrix(scaled_matrix, "scaled matrix");
@@ -1243,7 +1243,7 @@ COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matri
             /* finish calculation */
             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
         }
-        cout << pow (scale * matrix_size) << endl;
+        cout << pow (10, scale * matrix_size) << endl;
         return determinant * pow (scale * matrix_size);
     }
 }
