@@ -1250,7 +1250,7 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
+void weight_calculation_vv(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -1286,6 +1286,64 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     matrix_determinant_e(lattice_size, ODN, detODN_e);
     print_scalar(detOUP_e, "det(O UP) (e)", file);
     print_scalar(detODN_e, "det(O DN) (e)", file);
+    myfile << endl;
+
+    // figure out what to do about O being too big !!!
+        // det(O) should be ~ 10^44
+
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+    print_scalar(weight, "weight", file);
+    if(weight.i != 0){
+        print_scalar(weight, "weight");
+        print_matrix(lattice, "lattice", "imag_weight.txt");
+        print_matrix(OUP, "O UP", "imag_weight.txt");
+        print_matrix(ODN, "O DN", "imag_weight.txt");
+        print_scalar(detOUP, "det(O UP)", "imag_weight.txt");
+        print_scalar(detODN, "det(O DN)", "imag_weight.txt");
+        print_scalar(weight, "weight", "imag_weight.txt");
+        myfile << endl;
+    }
+    myfile << endl;
+    /* close the file */
+    myfile.close();
+}
+void weight_calculation_vv(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    COMPLEX detOUP_e;
+    COMPLEX detODN_e;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    clear_scalar(detOUP_e);
+    clear_scalar(detODN_e);
+
+    /* calculate O */
+    // myfile << "sigma = 1" << endl;
+    O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP, file);
+    print_matrix(OUP, "O UP", file);
+    // myfile << "sigma = -1" << endl;
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN, file);
+    // print_matrix(ODN, "O DN", file);
+
+    /* calculate det(O) */
+    myfile << "my determinants:" << endl;
+    detOUP = matrix_determinant(lattice_size, OUP);
+    detOUP = matrix_determinant(lattice_size, ODN);
+    print_scalar(detOUP, "det(O UP)", file);
+    // print_scalar(detODN, "det(O DN)", file);
+    myfile << "eigen determinants:" << endl;
+    matrix_determinant_e(lattice_size, OUP, detOUP_e);
+    matrix_determinant_e(lattice_size, ODN, detODN_e);
+    print_scalar(detOUP_e, "det(O UP) (e)", file);
+    // print_scalar(detODN_e, "det(O DN) (e)", file);
     myfile << endl;
 
     // figure out what to do about O being too big !!!
@@ -1374,7 +1432,7 @@ void test_imaginary_weight(const string file){
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "weight_i.txt");
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
 
-    for(int i = 0; i < 100; i++){
+    for(int i = 0; i < 40; i++){
         /* generate lattice */
         generate_lattice(lattice_size, time_size, lattice);
 
@@ -1385,6 +1443,7 @@ void test_imaginary_weight(const string file){
         clear_scalar(weight);
         weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weight, file);
     }
+    cout << weight << endl;
 }
 
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
