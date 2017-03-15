@@ -1175,7 +1175,7 @@ void test_weight(const string file){
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "imag_weight.txt");
+    // print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "imag_weight.txt");
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
