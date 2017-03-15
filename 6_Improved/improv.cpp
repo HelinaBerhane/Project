@@ -1209,7 +1209,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     }
     return determinant;
 }
-void matrix_determinant(){
+void test_matrix_determinant(){
     /* initialise everything */
     LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
     print_matrix(matrix, "initial matrix");
