@@ -1046,7 +1046,7 @@ void test_matrix_determinant(){
 
     }
     /* calculate determinant */
-    print_scalar(matrix_determinant(4, matrix), "my determinant");
+    print_scalar(matrix_determinant_v(4, matrix), "my determinant");
     matrix_determinant_e(4, matrix, result);
     print_scalar(result, "eigenvalue determinant");
 }
@@ -1453,5 +1453,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_determinant();
+    test_imaginary_weight();
 }
