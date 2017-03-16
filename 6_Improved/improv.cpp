@@ -223,6 +223,13 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
 }
 // Calculation
 // - generic
+string generate_file_name(const int lattice_size, const int time_size, const int iterations, const string test){
+    string LL = "_L" + to_string(lattice_size);
+    string TT = "_T" + to_string(time_size);
+    string i  = "_i" + to_string(iterations);
+    string t  = "_"  + test;
+    return UU.substr(0,6) + BB.substr(0,7) + i + t + ".txt";
+}
 double check_size(const double number){
     return floor(log10(number));
 }
@@ -1051,6 +1058,17 @@ void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, c
 }
 /* -- Testing -- */
 // - generic
+void test_concatenate_strings(){
+    /* initialise everything */
+    int lattice_size = 5, time_size, iterations = 100;
+    double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
+    double acceptance = 0, rejection = 0;
+    string test = "test";
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    cout << generate_file_name(lattice_size, time_size, iterations, test) << endl;
+}
 void test_output_to_file(const string file){
     /* open the file */
     ofstream myfile;
@@ -1488,42 +1506,98 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-string generate_file_name(const int lattice_size, const int time_size, const int iterations, const double U, const double beta, const double lambda, const double delta, const double mu, const string test){
-
-    string UU =  "U" + to_string(U);
-    string BB = "_B" + to_string(beta);
-    string LL = "_L" + to_string(lattice_size);
-    string TT = "_T" + to_string(time_size);
-    string l  = "_l" + to_string(lambda);
-    string d  = "_d" + to_string(delta);
-    string m  = "_m" + to_string(mu);
-    string t  = "_"  + test;
-    return UU.substr(0,6) + BB.substr(0,7) /* + LL + TT + l.substr(0,7) + d.substr(0,7) + m.substr(0,7) */ + t + ".txt";
+void judge_acceptance(const double probability, string result, int acceptance, int rejection){
+    double random_double = random_double();
+    if(abs(probability) >= 1){
+        result = "accepted";
+        acceptance++;
+    }else{
+        if(probability > prob){
+            result = "accepted";
+            acceptance++;
+        }else{
+            result = "rejected";
+            rejection++;
+        }
+    }
 }
-void test_concatenate_strings(){
-    /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 100;
-    double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
-    double acceptance = 0, rejection = 0;
-    string test = "test";
-    /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
-    cout << generate_file_name(lattice_size, time_size, iterations, U, beta, lambda, delta_tau, mu, test) << endl;
-}
-void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
+void measure_weight(const int count, const double probability, const COMPLEX weightBefore, const COMPLEX weightAfter, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
+    /* log results */
+    myfile << " (" << count << ") - probability = " << probability << " - ";
+    myfile << "weightBefore = " << weightBefore << " - ";
+    myfile << "weightAfter = "  << weightAfter  << endl;
+    /* close the file */
+    myfile.close();
+}
+void measure_result(const int count, const int acceptance, const int rejection, const string result, const double probability, const string result_file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(result_file, std::ios_base::app);
+    /* log results */
+    myfile << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
+    /* close the file */
+    myfile.close();
+}
+void measure_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string spin_file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(spin_file, std::ios_base::app);
+    /* calculate total spin */
+    double total_spin = 0;
+    for(int t = 0; t < time_size; t++){
+        for(int l = 0; l < lattice_size; l++){
+            total_spin += lattice(t,l).r;
+        }
+    }
+    double average_spin = total_spin / (time_size * lattice_size);
+    /* log stuff */
+    myfile << average_spin << endl;
+    /* close the file */
+    myfile.close();
+}
+void measure_final_acceptance(const int acceptance, const int rejection, const int total_count, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(spin_file, std::ios_base::app);
+    /* calculate stuff */
+    double acceptance_ratio = acceptance / rejection;
+    double percentage_acceptance = acceptance / total_count;
+    /* log stuff */
+    myfile << "["<< acceptance << "/" << rejection << "] - ";
+    myfile << "acceptance ratio = " << acceptance_ratio << " - ";
+    myfile << "percentage acceptance = " << percentage_acceptance << endl << endl;
+    /* close the file */
+    myfile.close();
+}
+void print_space(const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(spin_file, std::ios_base::app);
+    /* log stuff */
+    myfile << endl;
+    /* close the file */
+    myfile.close();
+}
 
+void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations){
     /* initialise everything */
-    COMPLEX weightBefore;
-    COMPLEX weightAfter;
+    COMPLEX weightBefore, weightAfter;
     double probability = 0;
     string result;
-    int count = 0;
-    acceptance = 0;
-    rejection = 0;
+    int count = 0, acceptance = 0, rejection = 0;
+    int total_count = lattice_size * time_size * iterations;
+    string rf = generate_file_name(lattice_size, time_size, iterations, "results");
+    string wf = generate_file_name(lattice_size, time_size, iterations, "weights");
+    string sf = generate_file_name(lattice_size, time_size, iterations, "spins");
+
+
+    /* output initial conditions */
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, rf);
+    print_matrix(lattice, "lattice", rf);
+    print_space(rf);
 
     /* sweep through the lattice */
     for(int i = 0; i < iterations; i++){
@@ -1531,65 +1605,49 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
             for(int l = 0; l < lattice_size; l++){
                 clear_scalar(weightBefore);
                 clear_scalar(weightAfter);
+                count++;
+
                 /* calculate the weight before the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
+
                 /* propose the flip */
                 flip_spin(lattice, t, l);
+
                 /* calculate the weight after the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
+
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
+
                 /* accept or reject the flip */
-                double prob = random_double();
-                if(abs(probability) >= 1){
-                    result = "accepted";
-                    acceptance++;
-                }else{
-                    if(probability > prob){
-                        result = "accepted";
-                        acceptance++;
-                    }else{
-                        flip_spin(lattice, t, l);
-                        result = "rejected";
-                        rejection++;
-                    }
+                judge_acceptance(probability, result, acceptance, rejection);
+                if(result == "rejected"){
+                    flip_spin(lattice, t, l);
                 }
-                count++;
-                if(count % (time_size * lattice_size * iterations / 100) == 0){
-                    myfile << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
-                    myfile.width(15);
-                    myfile << " - weightBefore: " << weightBefore << ", weightAfter: " << weightAfter << endl;
+
+                /* output results */
+                if(count % (total_count / 100) == 0){
+                    measure_result(count, acceptance, rejection, result, probability, rf);
+                    measure_weight(count, probability, weightBefore, weightAfter, wf);
+                    measure_spin(lattice, time_size, lattice_size, sf);
                 }
-                calculate_total_spin_f(lattice, time_size, lattice_size);
             }
         }
     }
-    //results
-        // with most parameters = 1, it stabilised at all -1 spins
-    myfile << "["<< acceptance << "/" << rejection << "]" << endl;
-    double acceptance_ratio = acceptance / rejection;
-    myfile << "acceptance ratio = " << acceptance_ratio << endl;
-    double percentage_acceptance = acceptance / (rejection + acceptance);
-    myfile << "percentage acceptance = " << percentage_acceptance << endl << endl;
-    cout << percentage_acceptance << endl;
-    /* close the file */
-    myfile.close();
+    print_space(rf);
+    measure_final_acceptance(acceptance, rejection, total_count, file, rf);
 }
-void test_sweep(const string file){
+void test_sweep_f(){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 100;// = 10000;
+    int lattice_size = 5, time_size, iterations = 10000;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
-    double acceptance = 0, rejection = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-    // print_matrix(lattice, "intialised lattice", file);
     generate_lattice(lattice_size, time_size, lattice);
-    print_matrix(lattice, "lattice", file);
     /* sweep the lattice */
-    sweep_lattice_f(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection, file);
+    sweep_lattice_f(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations);
 }
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
@@ -1657,5 +1715,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_concatenate_strings();
+    test_sweep_f();
 }
