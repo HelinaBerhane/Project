@@ -94,7 +94,7 @@ void print_matrix(const LaGenMatComplex& matrix){
 void print_matrix(const LaGenMatComplex& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }
-void print_matrix(const LaGenMatComplex& matrix, const string name, const string file){
+void print_matrix_f(const LaGenMatComplex& matrix, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -750,6 +750,10 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     detODN = matrix_determinant(lattice_size, ODN);
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
+    /* output double occupancy */
+    double beta = delta_tau * (double) time_size;
+    string file = generate_file_name(U, beta, iterations, "occupancy");
+    measure_double_occcupancy_ij(OUP, lattice_size, file);
 }
 void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight){
     /* initialise everything */
@@ -1079,6 +1083,20 @@ int accept(const double probability){
             return 0;
         }
     }
+}
+void measure_execution_time(const int iterations, const int start_s, const int stop_s, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    double execution_time = (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000;
+    /* log stuff */
+    myfile << "iterations = " << iterations << " - ";
+    myfile << "execution time = " << execution_time << endl;
+    cout << "iterations = " << iterations << " - ";
+    cout << "execution time = " << execution_time << endl;
+    /* close the file */
+    myfile.close();
 }
 void measure_weight(const int count, const double probability, const COMPLEX weightBefore, const COMPLEX weightAfter, const string file){
     /* open the file */
@@ -1591,14 +1609,37 @@ void measure_stuff(const int stuff, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
+    /* initialise stuff */
     /* log stuff */
     myfile << stuff << endl;
     /* close the file */
     myfile.close();
 }
 
-void measure_double_occcupancy(const string file){
-    //
+void measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise stuff */
+    LaGenMatComplex double_occcupancy = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    /* process stuff */
+    matrix_inverse(O, lattice_size, double_occcupancy);
+    /* log stuff */
+    print_matrix_f(double_occcupancy, file);
+    /* close the file */
+    myfile.close();
+}
+void measure_double_occcupancy_ij(const int i, const int j, const LaGenMatComplex& O, const int lattice_size, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise stuff */
+    LaGenMatComplex double_occcupancy = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    /* log stuff */
+    print_scalar(double_occcupancy(i,j).r, file);
+    print_space(file);
+    /* close the file */
+    myfile.close();
 }
 
 void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int iterations){
@@ -1656,6 +1697,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
     print_space(rf);
     measure_final_acceptance(acceptance, rejection, total_count, rf);
 }
+
 void test_sweep_f(){
     /* initialise everything */
     int start_s = clock();
@@ -1670,18 +1712,6 @@ void test_sweep_f(){
     sweep_lattice_f(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     int stop_s = clock();
     cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
-}
-void measure_execution_time(const int iterations, const int start_s, const int stop_s, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* initialise everything */
-    double execution_time = (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000;
-    /* log stuff */
-    myfile << "iterations = " << iterations << " - ";
-    myfile << "execution time = " << execution_time << endl;
-    /* close the file */
-    myfile.close();
 }
 void test_sweep_f_by_time(){
     /* initialise everything */
@@ -1703,6 +1733,7 @@ void test_sweep_f_by_time(){
         measure_execution_time(iterations, start_s, stop_s, file);
     }
 }
+
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
 
