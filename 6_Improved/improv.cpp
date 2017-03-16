@@ -1647,10 +1647,11 @@ void measure_double_occcupancy_ii(const int i, const LaGenMatComplex& O, const i
     /* close the file */
     myfile.close();
 }
-void weight_calculation_d(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const int i, const string file){
+void weight_calculation_d(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, LaGenMatComplex& OUT, COMPLEX& weight){
     /* initialise everything */
     LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
     LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex OUT = LaGenMatComplex::zeros(lattice_size,lattice_size);
     COMPLEX detOUP;
     COMPLEX detODN;
     clear_scalar(weight);
@@ -1659,6 +1660,7 @@ void weight_calculation_d(const LaGenMatComplex& lattice, const int lattice_size
     /* calculate O */
     O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP);
     O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
+    OUT = OUP.copy;
     /* calculate det(O) */
     detOUP = matrix_determinant(lattice_size, OUP);
     detODN = matrix_determinant(lattice_size, ODN);
@@ -1695,7 +1697,7 @@ void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int
                 count++;
 
                 /* calculate the weight before the flip */
-                weight_calculation_d(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore, 2, df);
+                weight_calculation_d(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, O, weightBefore);
 
                 /* propose the flip */
                 flip_spin(lattice, t, l);
