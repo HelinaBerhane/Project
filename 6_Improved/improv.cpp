@@ -223,13 +223,6 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
 }
 // Calculation
 // - generic
-string generate_file_name(const double U, const double beta, const int iterations, const string test){
-    string UU =  "U" + to_string(U);
-    string BB = "_B" + to_string(beta);
-    string i  = "_i" + to_string(iterations);
-    string t  = "_"  + test;
-    return UU + BB + i + t + ".txt";
-}
 double check_size(const double number){
     return floor(log10(number));
 }
@@ -1506,18 +1499,22 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-void judge_acceptance(const double probability, string result, int acceptance, int rejection){
+string generate_file_name(const double U, const double beta, const int iterations, const string test){
+    string UU =  "U" + to_string(U);
+    string BB = "_B" + to_string(beta);
+    string i  = "_i" + to_string(iterations);
+    string t  = "_"  + test;
+    return UU.substr(0,6)+ BB.substr(0,7) + i + t + ".txt";
+}
+int accept(const double probability){
     double ran = random_double();
     if(abs(probability) >= 1){
-        result = "accepted";
-        acceptance++;
+        return 1;
     }else{
         if(probability > ran){
-            result = "accepted";
-            acceptance++;
+            return 1;
         }else{
-            result = "rejected";
-            rejection++;
+            return 0;
         }
     }
 }
@@ -1548,6 +1545,8 @@ void measure_spin(const LaGenMatComplex& lattice, const int time_size, const int
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    double lattice_volume = (double) time_size * (double) lattice_size;
     /* calculate total spin */
     double total_spin = 0;
     for(int t = 0; t < time_size; t++){
@@ -1555,7 +1554,8 @@ void measure_spin(const LaGenMatComplex& lattice, const int time_size, const int
             total_spin += lattice(t,l).r;
         }
     }
-    double average_spin = total_spin / (time_size * lattice_size);
+    double average_spin = total_spin / lattice_volume;
+    cout << average_spin << endl;
     /* log stuff */
     myfile << average_spin << endl;
     /* close the file */
@@ -1566,8 +1566,8 @@ void measure_final_acceptance(const int acceptance, const int rejection, const i
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
     /* calculate stuff */
-    double acceptance_ratio = acceptance / rejection;
-    double percentage_acceptance = acceptance / total_count;
+    double acceptance_ratio = (double) acceptance / (double) rejection;
+    double percentage_acceptance = (double) acceptance / (double) total_count;
     /* log stuff */
     myfile << "["<< acceptance << "/" << rejection << "] - ";
     myfile << "acceptance ratio = " << acceptance_ratio << " - ";
@@ -1621,9 +1621,11 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
                 probability = weightAfter.r / weightBefore.r;
 
                 /* accept or reject the flip */
-                judge_acceptance(probability, result, acceptance, rejection);
-                if(result == "rejected"){
+                if(accept(probability) == 1){
+                    rejection++;
+                }else{
                     flip_spin(lattice, t, l);
+                    acceptance++;
                 }
 
                 /* output results */
