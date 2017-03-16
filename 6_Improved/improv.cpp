@@ -1067,7 +1067,7 @@ void test_concatenate_strings(){
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
-    cout << generate_file_name(lattice_size, time_size, iterations, test) << endl;
+    cout << generate_file_name(U, beta, iterations, test) << endl;
 }
 void test_output_to_file(const string file){
     /* open the file */
@@ -1537,7 +1537,10 @@ void measure_result(const int count, const int acceptance, const int rejection, 
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
     /* log results */
-    myfile << " (" << count <<") " << "[" << acceptance << "/" << rejection << "] " << result << " - probability: " << probability;
+    myfile << " (" << count <<") ";
+    myfile << "[" << acceptance << "/" << rejection << "] " << result;
+    myfile << " - probability: " << probability;
+    myfile << endl;
     /* close the file */
     myfile.close();
 }
@@ -1589,14 +1592,13 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
     string result;
     int count = 0, acceptance = 0, rejection = 0;
     int total_count = lattice_size * time_size * iterations;
-    string rf = generate_file_name(lattice_size, time_size, iterations, "results");
-    string wf = generate_file_name(lattice_size, time_size, iterations, "weights");
-    string sf = generate_file_name(lattice_size, time_size, iterations, "spins");
+    string rf = generate_file_name(U, beta, iterations, "results");
+    string wf = generate_file_name(U, beta, iterations, "weights");
+    string sf = generate_file_name(U, beta, iterations, "spins");
 
     /* output initial conditions */
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, rf);
     print_matrix(lattice, "lattice", rf);
-    print_space(rf);
 
     /* sweep through the lattice */
     for(int i = 0; i < iterations; i++){
@@ -1626,6 +1628,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
 
                 /* output results */
                 if(count % (total_count / 100) == 0){
+                    cout << result;
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
                     measure_spin(lattice, time_size, lattice_size, sf);
@@ -1638,7 +1641,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
 }
 void test_sweep_f(){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 10000;
+    int lattice_size = 5, time_size, iterations = 1000;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
