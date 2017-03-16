@@ -1671,7 +1671,7 @@ void test_sweep_f(){
     int stop_s = clock();
     cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
 }
-void measure_execution_time(const int start_s, const int stop_s, const string file){
+void measure_execution_time(const int iterations, const int start_s, const int stop_s, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -1687,7 +1687,7 @@ void test_sweep_f_by_time(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 0;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
-    string file = generate_file_name(U, beta, iterations, "time");
+    string file = generate_file_name(U, beta, iterations, "weight-time");
     /* do stuff */
     for(int i = 1; i < 4; i++){
         /* generate initial conditions */
@@ -1700,7 +1700,7 @@ void test_sweep_f_by_time(){
         sweep_lattice_f(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
         /* output results */
         int stop_s = clock();
-        measure_execution_time(start_s, stop_s, file);
+        measure_execution_time(iterations, start_s, stop_s, file);
     }
 }
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
