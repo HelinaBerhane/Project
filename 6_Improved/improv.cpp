@@ -1689,7 +1689,7 @@ void test_sweep_f_by_time(){
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     string file = generate_file_name(U, beta, iterations, "weight-time");
     /* do stuff */
-    for(int i = 0; i < 4; i++){
+    for(int i = 1; i <= 4; i++){
         /* generate initial conditions */
         iterations = pow(10.0, i);
         initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
