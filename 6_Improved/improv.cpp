@@ -1498,7 +1498,7 @@ string generate_file_name(const int lattice_size, const int time_size, const int
     string d  = "_d" + to_string(delta);
     string m  = "_m" + to_string(mu);
     string t  = "_"  + test;
-    return UU.substr(0,6) + BB.substr(0,7) + LL + TT + l.substr(0,7) + d.substr(0,7) + m.substr(0,7) + t + ".txt";
+    return UU.substr(0,6) + BB.substr(0,7) /* + LL + TT + l.substr(0,7) + d.substr(0,7) + m.substr(0,7) */ + t + ".txt";
 }
 void test_concatenate_strings(){
     /* initialise everything */
