@@ -1490,15 +1490,15 @@ void test_increasing_U(){
 /* ------ TO TEST ------ */
 string generate_file_name(const int lattice_size, const int time_size, const int iterations, const double U, const double beta, const double lambda, const double delta, const double mu, const string test){
 
-    string UU =  "U" + to_string(round(U*10)/10);
-    string BB = "_B" + to_string(round(beta*10)/10);
+    string UU =  "U" + to_string(U);
+    string BB = "_B" + to_string(beta);
     string LL = "_L" + to_string(lattice_size);
     string TT = "_T" + to_string(time_size);
-    string l  = "_l" + to_string(round(lambda*10)/10);
-    string d  = "_d" + to_string(round(delta*10)/10);
-    string m  = "_m" + to_string(round(mu*10)/10);
+    string l  = "_l" + to_string(lambda);
+    string d  = "_d" + to_string(delta);
+    string m  = "_m" + to_string(mu);
     string t  = "_"  + test;
-    return UU + BB + LL + TT + l + d + m + t + ".txt";
+    return UU.substr(0,5) + BB.substr(0,5) + LL + TT + l.substr(0,5) + d.substr(0,5) + m.substr(0,5) + t + ".txt";
 }
 void test_concatenate_strings(){
     /* initialise everything */
