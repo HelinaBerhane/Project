@@ -223,7 +223,7 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
 }
 // Calculation
 // - generic
-string generate_file_name(const int lattice_size, const int time_size, const int iterations, const string test){
+string generate_file_name(const double U, const double beta, const int iterations, const string test){
     string UU =  "U" + to_string(U);
     string BB = "_B" + to_string(beta);
     string i  = "_i" + to_string(iterations);
