@@ -94,11 +94,19 @@ void print_matrix(const LaGenMatComplex& matrix){
 void print_matrix(const LaGenMatComplex& matrix, const string name){
 	cout << name << ":" << endl << matrix << endl;
 }
+void print_matrix(const LaGenMatComplex& matrix, const string name, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* print the matrix */
+	myfile << name << ":" << endl << matrix << endl;
+    /* close the file */
+    myfile.close();
+}
 void print_matrix_f(const LaGenMatComplex& matrix, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
-
     /* print the matrix */
 	myfile << name << ":" << endl << matrix << endl;
     /* close the file */
