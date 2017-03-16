@@ -1651,7 +1651,7 @@ void weight_calculation_d(const LaGenMatComplex& lattice, const int lattice_size
     /* initialise everything */
     LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
     LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex OUT = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    OUT = 0;
     COMPLEX detOUP;
     COMPLEX detODN;
     clear_scalar(weight);
@@ -1660,14 +1660,12 @@ void weight_calculation_d(const LaGenMatComplex& lattice, const int lattice_size
     /* calculate O */
     O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP);
     O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
-    OUT = OUP.copy;
+    OUT = OUP.copy();
     /* calculate det(O) */
     detOUP = matrix_determinant(lattice_size, OUP);
     detODN = matrix_determinant(lattice_size, ODN);
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
-    /* output double occupancy */
-    measure_double_occcupancy_ii(i, OUP, lattice_size, file);
 }
 
 void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int occupant, const int iterations){
