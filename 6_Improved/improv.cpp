@@ -1117,7 +1117,7 @@ void measure_spin(const LaGenMatComplex& lattice, const int time_size, const int
         }
     }
     double average_spin = total_spin / lattice_volume;
-    cout << average_spin << endl;
+    // cout << average_spin << endl;
     /* log stuff */
     myfile << average_spin << endl;
     /* close the file */
@@ -1587,10 +1587,20 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
+void measure_stuff(const int stuff, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* log stuff */
+    myfile << stuff << endl;
+    /* close the file */
+    myfile.close();
+}
 
 void measure_double_occcupancy(const string file){
     //
 }
+
 void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int iterations){
     /* initialise everything */
     COMPLEX weightBefore, weightAfter;
@@ -1636,7 +1646,6 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
 
                 /* output results */
                 if(count % (total_count / 100) == 0){
-                    cout << result;
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
                     measure_spin(lattice, time_size, lattice_size, sf);
@@ -1661,6 +1670,38 @@ void test_sweep_f(){
     sweep_lattice_f(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     int stop_s = clock();
     cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
+}
+void measure_execution_time(const int start_s, const int stop_s, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    double execution_time = (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000;
+    /* log stuff */
+    myfile << "iterations = " << iterations << " - ";
+    myfile << "execution time = " << execution_time << endl;
+    /* close the file */
+    myfile.close();
+}
+void test_sweep_f_by_time(){
+    /* initialise everything */
+    int lattice_size = 5, time_size, iterations = 0;
+    double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
+    string file = generate_file_name(U, beta, iterations, "time");
+    /* do stuff */
+    for(int i = 1; i < 4; i++){
+        /* generate initial conditions */
+        iterations = pow(10.0, i);
+        initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+        int start_s = clock();
+        /* generate lattice */
+        LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
+        generate_lattice(lattice_size, time_size, lattice);/* sweep the lattice */
+        sweep_lattice_f(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+        /* output results */
+        int stop_s = clock();
+        measure_execution_time(start_s, stop_s, file);
+    }
 }
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
@@ -1728,5 +1769,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep_f();
+    test_sweep_f_by_time();
 }
