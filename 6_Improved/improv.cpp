@@ -1646,9 +1646,8 @@ void measure_double_occcupancy_ij(const int i, const int j, const LaGenMatComple
     /* process stuff */
     matrix_inverse(O, lattice_size, double_occcupancy);
     /* log stuff */
-    cout << double_occcupancy(i,j) << " - " << double_occcupancy(i,j).r;
+    // cout << double_occcupancy(i,j) << " - " << double_occcupancy(i,j).r << endl;
     print_scalar_f(double_occcupancy(i,j).r, file);
-    print_space(file);
     /* close the file */
     myfile.close();
 }
