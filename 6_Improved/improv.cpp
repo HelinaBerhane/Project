@@ -1697,11 +1697,10 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
     print_space(rf);
     measure_final_acceptance(acceptance, rejection, total_count, rf);
 }
-
 void test_sweep_f(){
     /* initialise everything */
     int start_s = clock();
-    int lattice_size = 5, time_size, iterations = 10;
+    int lattice_size = 5, time_size, iterations = 100;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
@@ -1800,5 +1799,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep_f_by_time();
+    test_sweep_f();
 }
