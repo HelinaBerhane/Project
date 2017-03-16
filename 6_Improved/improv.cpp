@@ -1507,8 +1507,8 @@ void test_concatenate_strings(){
     string test = "test";
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-    cout << generate_file_name(lattice_size, time_size, iterations, U, beta, lambda, delta, mu, test);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    cout << generate_file_name(lattice_size, time_size, iterations, U, beta, lambda, delta_tau, mu, test);
 }
 void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
     /* open the file */
