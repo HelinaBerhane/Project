@@ -37,6 +37,15 @@ void print_scalar(const COMPLEX scalar, const string name, const string file){
     /* close the file */
     myfile.close();
 }
+void print_scalar_f(const double scalar, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* print the scalar */
+    myfile << scalar << endl;
+    /* close the file */
+    myfile.close();
+}
 void print_scalar(const double scalar, const string name, const string file){
     /* open the file */
     ofstream myfile;
@@ -779,15 +788,12 @@ void weight_calculation_vv(const LaGenMatComplex& lattice, const int lattice_siz
     detODN = matrix_determinant(lattice_size, ODN);
     print_scalar(detOUP, "det(O UP)", file);
     print_scalar(detODN, "det(O DN)", file);
-    myfile << "eigen determinants:" << endl;
-    matrix_determinant_e(lattice_size, OUP, detOUP_e);
-    matrix_determinant_e(lattice_size, ODN, detODN_e);
-    print_scalar(detOUP_e, "det(O UP) (e)", file);
-    print_scalar(detODN_e, "det(O DN) (e)", file);
+    // myfile << "eigen determinants:" << endl;
+    // matrix_determinant_e(lattice_size, OUP, detOUP_e);
+    // matrix_determinant_e(lattice_size, ODN, detODN_e);
+    // print_scalar(detOUP_e, "det(O UP) (e)", file);
+    // print_scalar(detODN_e, "det(O DN) (e)", file);
     myfile << endl;
-
-    // figure out what to do about O being too big !!!
-        // det(O) should be ~ 10^44
 
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
@@ -1482,6 +1488,28 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
+string generate_file_name(const int lattice_size, const int time_size, const int iterations, const double U, const double beta, const double lambda, const double delta, const double mu, const string test){
+    string UU =  "U" + to_string(U);
+    string BB = "_B" + to_string(beta);
+    string LL = "_L" + to_string(lattice_size);
+    string TT = "_T" + to_string(time_size);
+    string l  = "_l" + to_string(lambda);
+    string d  = "_d" + to_string(delta);
+    string m  = "_m" + to_string(mu);
+    string t  = "_"  + test;
+    return UU + BB + LL + TT + l + d + m + t + ".txt";
+}
+void test_concatenate_strings(){
+    /* initialise everything */
+    int lattice_size = 5, time_size, iterations = 100;
+    double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
+    double acceptance = 0, rejection = 0;
+    string test = "test";
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    cout << generate_file_name(lattice_size, time_size, iterations, U, beta, lambda, delta, mu, test);
+}
 void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
     /* open the file */
     ofstream myfile;
@@ -1628,5 +1656,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep("test.txt");
+    test_concatenate_strings();
 }
