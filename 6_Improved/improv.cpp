@@ -108,7 +108,7 @@ void print_matrix_f(const LaGenMatComplex& matrix, const string file){
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
     /* print the matrix */
-	myfile << name << ":" << endl << matrix << endl;
+	myfile << matrix << endl;
     /* close the file */
     myfile.close();
 }
@@ -760,8 +760,8 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     weight = scalar_multiple(detOUP, detODN);
     /* output double occupancy */
     double beta = delta_tau * (double) time_size;
-    string file = generate_file_name(U, beta, iterations, "occupancy");
-    measure_double_occcupancy_ij(OUP, lattice_size, file);
+    string file = generate_file_name(U, beta, 0, "occupancy");
+    measure_double_occcupancy(OUP, lattice_size, file);
 }
 void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight){
     /* initialise everything */
