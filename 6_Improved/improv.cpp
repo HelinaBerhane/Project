@@ -8,6 +8,7 @@
 #include <random>   //random_device, mt19937
 #include <cstdlib>	//rand, srand
 #include <math.h>
+#include <ctime>
 
 using namespace std;
 
@@ -19,6 +20,15 @@ using namespace std;
 
 /* ------ WORKING ------ */
 /* -- Output -- */
+void print_space(const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* log stuff */
+    myfile << endl;
+    /* close the file */
+    myfile.close();
+}
 void print_scalar(const COMPLEX scalar){
     cout << scalar << endl;
 }
@@ -94,7 +104,7 @@ void print_matrix(const LaGenMatComplex& matrix, const string name, const string
     /* close the file */
     myfile.close();
 }
-void print_initial_parameters(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size){
+void print_initial_parameters(const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int time_size, const int lattice_size, const int iterations){
 	cout << "no of lattice points = " << lattice_size << endl;
 	cout << "no of time slices = " << time_size << endl;
 	cout << "U = " << U << endl;
@@ -102,8 +112,9 @@ void print_initial_parameters(double U, double beta, double lambda, double delta
 	cout << "lambda = " << lambda << endl;
 	cout << "delta tau = " << delta_tau << endl;
     cout << "mu = " << mu << endl;
+    cout << "iterations = " << iterations << endl;
 }
-void print_initial_parameters(double U, double beta, double lambda, double delta_tau, double mu, int time_size, int lattice_size, const string file){
+void print_initial_parameters(const double U, const double beta, const double lambda, double delta_tau, const double mu, const int time_size, const int lattice_size, const int iterations, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -115,6 +126,7 @@ void print_initial_parameters(double U, double beta, double lambda, double delta
 	myfile << "lambda = " << lambda << endl;
 	myfile << "delta tau = " << delta_tau << endl;
     myfile << "mu = " << mu << endl;
+    myfile << "iterations = " << iterations << endl;
     myfile << endl;
     /* close the file */
     myfile.close();
@@ -1056,6 +1068,75 @@ void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, c
     /* close the file */
     myfile.close();
 }
+int accept(const double probability){
+    double ran = random_double();
+    if(abs(probability) >= 1){
+        return 1;
+    }else{
+        if(probability > ran){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+}
+void measure_weight(const int count, const double probability, const COMPLEX weightBefore, const COMPLEX weightAfter, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* log results */
+    myfile << " (" << count << ") - probability = " << probability << " - ";
+    myfile << "weightBefore = " << weightBefore << " - ";
+    myfile << "weightAfter = "  << weightAfter  << endl;
+    /* close the file */
+    myfile.close();
+}
+void measure_result(const int count, const int acceptance, const int rejection, const string result, const double probability, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* log results */
+    myfile << " (" << count <<") ";
+    myfile << "[" << acceptance << "/" << rejection << "] " << result;
+    myfile << " - probability: " << probability;
+    myfile << endl;
+    /* close the file */
+    myfile.close();
+}
+void measure_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise everything */
+    double lattice_volume = (double) time_size * (double) lattice_size;
+    /* calculate total spin */
+    double total_spin = 0;
+    for(int t = 0; t < time_size; t++){
+        for(int l = 0; l < lattice_size; l++){
+            total_spin += lattice(t,l).r;
+        }
+    }
+    double average_spin = total_spin / lattice_volume;
+    cout << average_spin << endl;
+    /* log stuff */
+    myfile << average_spin << endl;
+    /* close the file */
+    myfile.close();
+}
+void measure_final_acceptance(const int acceptance, const int rejection, const int total_count, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* calculate stuff */
+    double acceptance_ratio = (double) acceptance / (double) rejection;
+    double percentage_acceptance = (double) acceptance / (double) total_count;
+    /* log stuff */
+    myfile << "["<< acceptance << "/" << rejection << "] - ";
+    myfile << "acceptance ratio = " << acceptance_ratio << " - ";
+    myfile << "percentage acceptance = " << percentage_acceptance << endl << endl;
+    /* close the file */
+    myfile.close();
+}
 /* -- Testing -- */
 // - generic
 void test_concatenate_strings(){
@@ -1066,7 +1147,7 @@ void test_concatenate_strings(){
     string test = "test";
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
     cout << generate_file_name(U, beta, iterations, test) << endl;
 }
 void test_output_to_file(const string file){
@@ -1268,13 +1349,13 @@ void test_initial_parameters(){
     double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     int lattice_size = 5, time_size;
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
 }
 void test_initial_parameters(const string file){
     double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
     int lattice_size = 5, time_size;
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
 }
 void test_generate_lattice(){
     int lattice_size = 5, time_size = 17;
@@ -1321,7 +1402,7 @@ void test_V(){
 
     /* calculate initial parameters */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
     cout << endl;
 
     /* generate the lattice */
@@ -1340,7 +1421,7 @@ void test_B_calculation(){
     COMPLEX slice[lattice_size];
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
     /* generate time slice */
     generate_slice(lattice_size, slice);
     /* calculate B */
@@ -1363,7 +1444,7 @@ void test_B_calculation(const string file){
     COMPLEX slice[lattice_size];
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
     /* generate time slice */
     generate_slice(lattice_size, slice);
     /* calculate B */
@@ -1385,7 +1466,7 @@ void test_O(){
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
     /* generate lattice */
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice");
@@ -1401,7 +1482,7 @@ void test_O(const string file){
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
     /* generate lattice */
     generate_lattice(lattice_size, time_size, lattice);
     print_matrix(lattice, "lattice", file);
@@ -1418,7 +1499,7 @@ void test_weight(){
     weight.i = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
@@ -1436,7 +1517,7 @@ void test_weight(const string file){
     weight.i = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
@@ -1453,8 +1534,8 @@ void test_imaginary_weight(const string file){
 
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, "weight_i.txt");
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, "weight_i.txt");
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
 
     for(int i = 0; i < 10; i++){
@@ -1477,7 +1558,7 @@ void test_sweep(){
     double acceptance = 0, rejection = 0;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
     // print_matrix(lattice, "intialised lattice");
@@ -1496,7 +1577,7 @@ void test_increasing_U(){
         /* generate initial conditions */
         U = i;
         initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
+        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
         /* generate a lattice of spins */
         LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);
@@ -1506,85 +1587,10 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-int accept(const double probability){
-    double ran = random_double();
-    if(abs(probability) >= 1){
-        return 1;
-    }else{
-        if(probability > ran){
-            return 1;
-        }else{
-            return 0;
-        }
-    }
-}
-void measure_weight(const int count, const double probability, const COMPLEX weightBefore, const COMPLEX weightAfter, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* log results */
-    myfile << " (" << count << ") - probability = " << probability << " - ";
-    myfile << "weightBefore = " << weightBefore << " - ";
-    myfile << "weightAfter = "  << weightAfter  << endl;
-    /* close the file */
-    myfile.close();
-}
-void measure_result(const int count, const int acceptance, const int rejection, const string result, const double probability, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* log results */
-    myfile << " (" << count <<") ";
-    myfile << "[" << acceptance << "/" << rejection << "] " << result;
-    myfile << " - probability: " << probability;
-    myfile << endl;
-    /* close the file */
-    myfile.close();
-}
-void measure_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* initialise everything */
-    double lattice_volume = (double) time_size * (double) lattice_size;
-    /* calculate total spin */
-    double total_spin = 0;
-    for(int t = 0; t < time_size; t++){
-        for(int l = 0; l < lattice_size; l++){
-            total_spin += lattice(t,l).r;
-        }
-    }
-    double average_spin = total_spin / lattice_volume;
-    cout << average_spin << endl;
-    /* log stuff */
-    myfile << average_spin << endl;
-    /* close the file */
-    myfile.close();
-}
-void measure_final_acceptance(const int acceptance, const int rejection, const int total_count, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* calculate stuff */
-    double acceptance_ratio = (double) acceptance / (double) rejection;
-    double percentage_acceptance = (double) acceptance / (double) total_count;
-    /* log stuff */
-    myfile << "["<< acceptance << "/" << rejection << "] - ";
-    myfile << "acceptance ratio = " << acceptance_ratio << " - ";
-    myfile << "percentage acceptance = " << percentage_acceptance << endl << endl;
-    /* close the file */
-    myfile.close();
-}
-void print_space(const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* log stuff */
-    myfile << endl;
-    /* close the file */
-    myfile.close();
-}
 
+void measure_double_occcupancy(, const string file){
+    //
+}
 void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int iterations){
     /* initialise everything */
     COMPLEX weightBefore, weightAfter;
@@ -1597,7 +1603,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
     string sf = generate_file_name(U, beta, iterations, "spins");
 
     /* output initial conditions */
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, rf);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, rf);
     print_matrix(lattice, "lattice", rf);
 
     /* sweep through the lattice */
@@ -1643,7 +1649,8 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
 }
 void test_sweep_f(){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 1000;
+    int start_s = clock();
+    int lattice_size = 5, time_size, iterations = 10;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
@@ -1652,6 +1659,8 @@ void test_sweep_f(){
     generate_lattice(lattice_size, time_size, lattice);
     /* sweep the lattice */
     sweep_lattice_f(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    int stop_s = clock();
+    cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
 }
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
@@ -1701,7 +1710,7 @@ void test_increasing_mu(const string file){
     double U = 1, beta = 10, lambda, delta_tau, mu;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
     /* generate lattice */
     LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
     generate_lattice(lattice_size, time_size, lattice);
@@ -1710,7 +1719,7 @@ void test_increasing_mu(const string file){
     for(double i = 0; i < iterations; i++){
         mu = i * U / 8;
         /* generate initial conditions */
-        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, file);
+        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
         /* sweep across the lattice */
         /* calculate average spin */
         calculate_total_spin_f(lattice, time_size, lattice_size);
