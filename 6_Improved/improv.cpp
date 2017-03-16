@@ -758,10 +758,6 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     detODN = matrix_determinant(lattice_size, ODN);
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
-    /* output double occupancy */
-    double beta = delta_tau * (double) time_size;
-    string file = generate_file_name(U, beta, 0, "occupancy");
-    measure_double_occcupancy_ij(2,2,OUP, lattice_size, file);
 }
 void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight){
     /* initialise everything */
@@ -1637,7 +1633,7 @@ void measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size,
     /* close the file */
     myfile.close();
 }
-void measure_double_occcupancy_ij(const int i, const int j, const LaGenMatComplex& O, const int lattice_size, const string file){
+void measure_double_occcupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -1647,12 +1643,32 @@ void measure_double_occcupancy_ij(const int i, const int j, const LaGenMatComple
     matrix_inverse(O, lattice_size, double_occcupancy);
     /* log stuff */
     // cout << double_occcupancy(i,j) << " - " << double_occcupancy(i,j).r << endl;
-    print_scalar_f(double_occcupancy(i,j).r, file);
+    print_scalar_f(double_occcupancy(i,i).r, file);
     /* close the file */
     myfile.close();
 }
+void weight_calculation_d(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const int i, const string file){
+    /* initialise everything */
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    COMPLEX detOUP;
+    COMPLEX detODN;
+    clear_scalar(weight);
+    clear_scalar(detOUP);
+    clear_scalar(detODN);
+    /* calculate O */
+    O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP);
+    O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
+    /* calculate det(O) */
+    detOUP = matrix_determinant(lattice_size, OUP);
+    detODN = matrix_determinant(lattice_size, ODN);
+    /* calculate weight */
+    weight = scalar_multiple(detOUP, detODN);
+    /* output double occupancy */
+    measure_double_occcupancy_ii(i, OUP, lattice_size, file);
+}
 
-void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int iterations){
+void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int occupant, const int iterations){
     /* initialise everything */
     COMPLEX weightBefore, weightAfter;
     double probability = 0;
@@ -1662,9 +1678,12 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
     string rf = generate_file_name(U, beta, iterations, "results");
     string wf = generate_file_name(U, beta, iterations, "weights");
     string sf = generate_file_name(U, beta, iterations, "spins");
+    string df = generate_file_name(U, beta, iterations, "occupancy");
+    LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
 
     /* output initial conditions */
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, rf);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, df);
     print_matrix(lattice, "lattice", rf);
 
     /* sweep through the lattice */
@@ -1676,7 +1695,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
                 count++;
 
                 /* calculate the weight before the flip */
-                weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore);
+                weight_calculation_d(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightBefore, 2, df);
 
                 /* propose the flip */
                 flip_spin(lattice, t, l);
@@ -1700,6 +1719,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
                     measure_spin(lattice, time_size, lattice_size, sf);
+                    measure_double_occcupancy_ii(occupant, O, lattice_size, df);
                 }
             }
         }
@@ -1710,7 +1730,7 @@ void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int
 void test_sweep_f(){
     /* initialise everything */
     int start_s = clock();
-    int lattice_size = 5, time_size, iterations = 100;
+    int lattice_size = 5, time_size, iterations = 10000, occupant = 2;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
@@ -1718,7 +1738,8 @@ void test_sweep_f(){
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
     generate_lattice(lattice_size, time_size, lattice);
     /* sweep the lattice */
-    sweep_lattice_f(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    /* check time */
     int stop_s = clock();
     cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
 }
@@ -1736,7 +1757,7 @@ void test_sweep_f_by_time(){
         /* generate lattice */
         LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);/* sweep the lattice */
-        sweep_lattice_f(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+        sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
         /* output results */
         int stop_s = clock();
         measure_execution_time(iterations, start_s, stop_s, file);
