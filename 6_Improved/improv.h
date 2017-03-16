@@ -63,7 +63,7 @@ void weight_calculation_v(const LaGenMatComplex& lattice, const int lattice_size
 void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection);
 void sweep_lattice_v(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection);
 
-measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size, const string file);
-void measure_double_occcupancy_ij(const int i, const int j, const LaGenMatComplex& O, const int lattice_size, const string file);
+measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size, const std::string file);
+void measure_double_occcupancy_ij(const int i, const int j, const LaGenMatComplex& O, const int lattice_size, const std::string file);
 
 #endif
