@@ -1489,13 +1489,14 @@ void test_increasing_U(){
 
 /* ------ TO TEST ------ */
 string generate_file_name(const int lattice_size, const int time_size, const int iterations, const double U, const double beta, const double lambda, const double delta, const double mu, const string test){
-    string UU =  "U" + to_string(U);
-    string BB = "_B" + to_string(beta);
+
+    string UU =  "U" + to_string(round(U*10)/10);
+    string BB = "_B" + to_string(round(beta*10)/10);
     string LL = "_L" + to_string(lattice_size);
     string TT = "_T" + to_string(time_size);
-    string l  = "_l" + to_string(lambda);
-    string d  = "_d" + to_string(delta);
-    string m  = "_m" + to_string(mu);
+    string l  = "_l" + to_string(round(lambda*10)/10);
+    string d  = "_d" + to_string(round(delta*10)/10);
+    string m  = "_m" + to_string(round(mu*10)/10);
     string t  = "_"  + test;
     return UU + BB + LL + TT + l + d + m + t + ".txt";
 }
@@ -1508,7 +1509,7 @@ void test_concatenate_strings(){
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size);
-    cout << generate_file_name(lattice_size, time_size, iterations, U, beta, lambda, delta_tau, mu, test);
+    cout << generate_file_name(lattice_size, time_size, iterations, U, beta, lambda, delta_tau, mu, test) << endl;
 }
 void sweep_lattice_f(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, const int iterations, double& acceptance, double& rejection, const string file){
     /* open the file */
