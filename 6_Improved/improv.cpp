@@ -1643,8 +1643,10 @@ void measure_double_occcupancy_ij(const int i, const int j, const LaGenMatComple
     myfile.open(file, std::ios_base::app);
     /* initialise stuff */
     LaGenMatComplex double_occcupancy = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    /* process stuff */
+    matrix_inverse(O, lattice_size, double_occcupancy);
     /* log stuff */
-    print_scalar(double_occcupancy(i,j).r, file);
+    print_scalar_f(double_occcupancy(i,j).r, file);
     print_space(file);
     /* close the file */
     myfile.close();
