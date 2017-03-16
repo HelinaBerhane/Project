@@ -1730,7 +1730,7 @@ void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int
 void test_sweep_f(){
     /* initialise everything */
     int start_s = clock();
-    int lattice_size = 5, time_size, iterations = 10000, occupant = 2;
+    int lattice_size = 5, time_size, iterations = 10000;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
@@ -1738,7 +1738,7 @@ void test_sweep_f(){
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
     generate_lattice(lattice_size, time_size, lattice);
     /* sweep the lattice */
-    sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, 2, iterations);
     /* check time */
     int stop_s = clock();
     cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
@@ -1757,7 +1757,7 @@ void test_sweep_f_by_time(){
         /* generate lattice */
         LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);/* sweep the lattice */
-        sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+        sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, 2, iterations);
         /* output results */
         int stop_s = clock();
         measure_execution_time(iterations, start_s, stop_s, file);
