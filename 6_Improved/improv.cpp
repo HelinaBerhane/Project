@@ -221,6 +221,13 @@ void generate_lattice(const int lattice_size, const int time_size, LaGenMatCompl
     }
     lattice = LaGenMatComplex(elements, time_size, lattice_size, false);
 }
+string generate_file_name(const double U, const double beta, const int iterations, const string test){
+    string UU =  "U" + to_string(U);
+    string BB = "_B" + to_string(beta);
+    string i  = "_i" + to_string(iterations);
+    string t  = "_"  + test;
+    return UU.substr(0,6)+ BB.substr(0,7) + i + t + ".txt";
+}
 // Calculation
 // - generic
 double check_size(const double number){
@@ -1499,13 +1506,6 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-string generate_file_name(const double U, const double beta, const int iterations, const string test){
-    string UU =  "U" + to_string(U);
-    string BB = "_B" + to_string(beta);
-    string i  = "_i" + to_string(iterations);
-    string t  = "_"  + test;
-    return UU.substr(0,6)+ BB.substr(0,7) + i + t + ".txt";
-}
 int accept(const double probability){
     double ran = random_double();
     if(abs(probability) >= 1){
