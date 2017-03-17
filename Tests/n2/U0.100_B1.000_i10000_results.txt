@@ -1,0 +1,34 @@
+no of lattice points = 5
+no of time slices = 3
+U = 0.1
+beta = 1
+lambda = 0.337494
+delta tau = 0.333333
+mu = 0.05
+iterations = 10000
+
+lattice:
+(1,0)  (1,0)  (1,0)  (-1,0)  (1,0)
+(1,0)  (-1,0)  (-1,0)  (1,0)  (-1,0)
+(-1,0)  (-1,0)  (-1,0)  (-1,0)  (-1,0)
+
+
+[6606/143394] - acceptance ratio = 0.0460689 - percentage acceptance = 0.04404
+
+no of lattice points = 5
+no of time slices = 3
+U = 0.1
+beta = 1
+lambda = 0.337494
+delta tau = 0.333333
+mu = 0.05
+iterations = 10000
+
+lattice:
+(-1,0)  (-1,0)  (1,0)  (-1,0)  (-1,0)
+(-1,0)  (-1,0)  (-1,0)  (1,0)  (-1,0)
+(-1,0)  (-1,0)  (-1,0)  (1,0)  (1,0)
+
+
+[6452/143548] - acceptance ratio = 0.0449466 - percentage acceptance = 0.0430133
+
