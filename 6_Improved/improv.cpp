@@ -1859,5 +1859,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep_f();
+    test_sweep_d();
 }
