@@ -293,7 +293,7 @@ void scalar_sum(COMPLEX& result, const COMPLEX addition){
 }
 void scalar_exponential(const COMPLEX& number, COMPLEX& result){
     /* initialise everything */
-    int iterations = 100;
+    int iterations = 6;
     COMPLEX division, total_division;
     /* reset everything */
     result.r = 1;
