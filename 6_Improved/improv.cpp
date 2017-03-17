@@ -1723,7 +1723,7 @@ void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int
                 count++;
 
                 /* calculate the weight before the flip */
-                weight_calculation_d(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, O, weightBefore);
+                weight_calculation_O(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, O, weightBefore);
 
                 /* propose the flip */
                 flip_spin(lattice, t, l);
@@ -1859,5 +1859,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep_f();
+    test_sweep_d();
 }
