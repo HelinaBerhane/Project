@@ -1647,7 +1647,34 @@ void measure_double_occcupancy_ii(const int i, const LaGenMatComplex& O, const i
     /* close the file */
     myfile.close();
 }
-void weight_calculation_d(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, LaGenMatComplex& OUT, COMPLEX& weight){
+void print(const string message, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* log stuff */
+    myfile << message << endl;
+    /* close the file */
+    myfile.close();
+}
+void measure_n(const LaGenMatComplex& O, const int lattice_size, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* initialise stuff */
+    LaGenMatComplex double_occcupancy = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    double n = 0;
+    /* process stuff */
+    matrix_inverse(O, lattice_size, double_occcupancy);
+    /* log stuff */
+    for(int i = 0; i < lattice_size; i++){
+        n += double_occcupancy(i,i).r;
+    }
+    print_scalar_f(n, file);
+    /* close the file */
+    myfile.close();
+}
+
+void weight_calculation_O(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, LaGenMatComplex& OUT, COMPLEX& weight){
     /* initialise everything */
     LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
     LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
@@ -1679,6 +1706,7 @@ void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int
     string wf = generate_file_name(U, beta, iterations, "weights");
     string sf = generate_file_name(U, beta, iterations, "spins");
     string df = generate_file_name(U, beta, iterations, "occupancy");
+    string nf = generate_file_name(U, beta, iterations, "n");
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
 
     /* output initial conditions */
@@ -1716,10 +1744,11 @@ void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int
 
                 /* output results */
                 if(count % (total_count / 100) == 0){
-                    measure_result(count, acceptance, rejection, result, probability, rf);
-                    measure_weight(count, probability, weightBefore, weightAfter, wf);
-                    measure_spin(lattice, time_size, lattice_size, sf);
-                    measure_double_occcupancy_ii(occupant, O, lattice_size, df);
+                    // measure_result(count, acceptance, rejection, result, probability, rf);
+                    // measure_weight(count, probability, weightBefore, weightAfter, wf);
+                    // measure_spin(lattice, time_size, lattice_size, sf);
+                    // measure_double_occcupancy_ii(occupant, O, lattice_size, df);
+                    measure_n(O, lattice_size, nf);
                 }
             }
         }
@@ -1727,7 +1756,7 @@ void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int
     print_space(rf);
     measure_final_acceptance(acceptance, rejection, total_count, rf);
 }
-void test_sweep_f(){
+void test_sweep_d(){
     /* initialise everything */
     int start_s = clock();
     int lattice_size = 5, time_size, iterations = 10000;
