@@ -234,7 +234,7 @@ string generate_file_name(const double U, const double beta, const int iteration
 // Calculation
 // - generic
 // -- scalar operations
-double check_size(const double scalar){
+int check_size(const double scalar){
     return floor(log10(scalar));
 }
 void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
@@ -408,6 +408,8 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
         }
     }
 }
+
+// !!!
 COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
     /* initialise everything */
     LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -418,8 +420,8 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     cout << endl;
     print_matrix(matrix, "matrix");
     /* test size of elements */
-    double scale = check_size(matrix(0,0).r);
-    cout << "scale = " << scale << endl;
+    int scale = check_size(matrix(0,0).r);
+    cout << "scale = " << scale.r << endl;
     /* scale matrix */
     matrix_multiple(matrix, matrix_size, 1 / pow(10.0,scale), scaled_matrix);
     print_matrix(scaled_matrix, "scaled_matrix");
@@ -436,6 +438,9 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
             /* determine the coefficient */
             coefficient = determinant_coefficient(matrix, i);
+            if(coefficient == 0){
+                return 0;
+            }
             /* calculate the cofactor */
             generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
             /* finish calculation */
@@ -453,7 +458,7 @@ COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matri
     COMPLEX coefficient;
     cofactorMatrix = 0;
     /* test size of elements */
-    double scale = check_size(matrix(0,0).r);
+    int scale = check_size(matrix(0,0).r);
     // if(scale > )
 
     /* scale matrix */
@@ -484,6 +489,7 @@ COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matri
         return determinant;
     }
 }
+// !!!
 
 // QMC
 // - initial parameters
@@ -1072,6 +1078,13 @@ void test_cofactor_matrix(){
         print_matrix(cofactor, "cofactor matrix");
     }
 }
+void test_scale(){
+    for(int i = 1; i < 10; i++){
+        double number = random_double() * pow(10,i);
+        cout << "number = " << number << endl;
+        cout << "scale = " << check_size(number) << endl << endl;
+    }
+}
 void test_matrix_determinant(){
     /* initialise everything */
     double matrix_size = 4, scale = 8;
@@ -1364,5 +1377,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_determinant();
+    test_scale();
 }
