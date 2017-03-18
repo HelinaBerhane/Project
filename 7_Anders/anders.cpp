@@ -420,6 +420,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     cout << "scale = " << scale << endl;
     /* scale matrix */
     matrix_multiple(matrix, matrix_size, 1 / pow(10.0,scale), scaled_matrix);
+    print_matrix(scaled_matrix, "scaled_matrix");
     /* do stuff */
     if(matrix_size == 2){
         return simple_matrix_determinant(matrix);
