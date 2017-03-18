@@ -441,7 +441,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             if(coefficient.r == 0 && coefficient.i == 0){
                 COMPLEX z;
                 z.r = 0;
-                z.i = 0
+                z.i = 0;
                 return z;
             }
             /* calculate the cofactor */
