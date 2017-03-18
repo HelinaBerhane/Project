@@ -417,8 +417,9 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     cofactorMatrix = 0;
     /* test size of elements */
     double scale = check_size(matrix(0,0).r);
+    cout << "scale = " << scale << endl;
     /* scale matrix */
-    matrix_multiple(matrix, matrix_size, 1 / scale, scaled_matrix);
+    matrix_multiple(matrix, matrix_size, 1 / pow(10.0,scale), scaled_matrix);
     /* do stuff */
     if(matrix_size == 2){
         return simple_matrix_determinant(matrix);
