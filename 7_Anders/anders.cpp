@@ -421,7 +421,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     print_matrix(matrix, "matrix");
     /* test size of elements */
     int scale = check_size(matrix(0,0).r);
-    cout << "scale = " << scale.r << endl;
+    cout << "scale = " << scale << endl;
     /* scale matrix */
     matrix_multiple(matrix, matrix_size, 1 / pow(10.0,scale), scaled_matrix);
     print_matrix(scaled_matrix, "scaled_matrix");
@@ -438,8 +438,11 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
             /* determine the coefficient */
             coefficient = determinant_coefficient(matrix, i);
-            if(coefficient == 0){
-                return 0;
+            if(coefficient.r == 0 && coefficient.i == 0){
+                COMPLEX z;
+                z.r = 0;
+                z.i = 0
+                return z;
             }
             /* calculate the cofactor */
             generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);

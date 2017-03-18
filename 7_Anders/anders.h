@@ -36,7 +36,7 @@ int generate_spins();
 void generate_slice(const int lattice_size, COMPLEX slice[]);
 void generate_lattice(const int lattice_size, const int time_size, LaGenMatComplex& lattice);
 std::string generate_file_name(const double U, const double beta, const int iterations, const std::string test);
-double check_size(const double scalar);
+int check_size(const double scalar);
 void scalar_division(const COMPLEX& A, const int B, COMPLEX& result);
 void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result);
 COMPLEX scalar_multiple(COMPLEX& A, const COMPLEX& B);
