@@ -1609,6 +1609,34 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
+void V_calculation_A(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& V){
+    V = 0;
+    V(0,0).r += (mu - U / 2);
+    for(int i = 0; i < lattice_size; i++){
+        V(i,i).r += lambda * sigma * slice[i].r / delta_tau;
+    }
+}
+void test_V_A(){
+    /* initialise everything */
+    int lattice_size = 5, time_size;
+    LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    COMPLEX slice[lattice_size];
+    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
+
+    /* calculate initial parameters */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, 1);
+    cout << endl;
+
+    /* generate the lattice */
+    generate_slice(lattice_size, slice);
+    print_array(slice, lattice_size, "slice");
+
+    /* calculate V */
+    V_calculation_A(slice, lattice_size, U, lambda, 1, delta_tau, mu, V);
+    print_matrix(V, "V");
+}
+
 void measure_stuff(const int stuff, const string file){
     /* open the file */
     ofstream myfile;
@@ -1695,7 +1723,7 @@ void weight_calculation_O(const LaGenMatComplex& lattice, const int lattice_size
     weight = scalar_multiple(detOUP, detODN);
 }
 
-void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int occupant, const int iterations){
+void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int iterations){
     /* initialise everything */
     COMPLEX weightBefore, weightAfter;
     double probability = 0;
@@ -1744,10 +1772,10 @@ void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int
 
                 /* output results */
                 if(count % (total_count / 100) == 0){
-                    // measure_result(count, acceptance, rejection, result, probability, rf);
-                    // measure_weight(count, probability, weightBefore, weightAfter, wf);
-                    // measure_spin(lattice, time_size, lattice_size, sf);
-                    // measure_double_occcupancy_ii(occupant, O, lattice_size, df);
+                    measure_result(count, acceptance, rejection, result, probability, rf);
+                    measure_weight(count, probability, weightBefore, weightAfter, wf);
+                    measure_spin(lattice, time_size, lattice_size, sf);
+                    measure_double_occcupancy_ii(occupant, O, lattice_size, df);
                     measure_n(O, lattice_size, nf);
                 }
             }
@@ -1767,7 +1795,7 @@ void test_sweep_d(){
     LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
     generate_lattice(lattice_size, time_size, lattice);
     /* sweep the lattice */
-    sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, 2, iterations);
+    sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     /* check time */
     int stop_s = clock();
     cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
@@ -1786,7 +1814,7 @@ void test_sweep_f_by_time(){
         /* generate lattice */
         LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);/* sweep the lattice */
-        sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, 2, iterations);
+        sweep_lattice_d(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
         /* output results */
         int stop_s = clock();
         measure_execution_time(iterations, start_s, stop_s, file);
@@ -1859,5 +1887,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep_d();
+    test_V_A();
 }
