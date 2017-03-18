@@ -521,36 +521,7 @@ void V_calculation(const COMPLEX slice[], const int lattice_size, const double U
         V(i,i).r += lambda * sigma * slice[i].r / delta_tau;
     }
 }
-void V_calculation_v(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& V){
-    /* reset V */
-    V = 0;
 
-    /* calculate V */
-    V(0,0).r += (mu - U / 2);
-    cout << V(0,0).r << endl;
-    for(int i = 0; i < lattice_size; i++){
-        V(i,i).r += lambda * sigma * slice[i].r / delta_tau;
-    }
-    cout << V(0,0).r << endl;
-}
-void V_calculation_f(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& V, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-
-    /* reset V */
-    V = 0;
-
-    /* calculate V */
-    V(0,0).r += (mu - U / 2);
-    for(int i = 0; i < lattice_size; i++){
-        V(i,i).r += lambda * sigma * slice[i].r / delta_tau;
-    }
-    myfile << V(0,0).r << endl;
-
-    /* close the file */
-    myfile.close();
-}
 // - B
 void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& B){
     /* initialise everything */
@@ -1203,7 +1174,7 @@ void test_V(){
     print_array(slice, lattice_size, "slice");
 
     /* calculate V */
-    V_calculation_A(slice, lattice_size, U, lambda, 1, delta_tau, mu, V);
+    V_calculation(slice, lattice_size, U, lambda, 1, delta_tau, mu, V);
     print_matrix(V, "V");
 
     /* stop timing */
