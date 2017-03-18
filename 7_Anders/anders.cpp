@@ -1079,7 +1079,15 @@ void test_matrix_determinant(){
     /* scale the matrix */
     matrix_multiple(matrix, matrix_size, pow(10.0,scale), scaled_matrix);
     print_matrix(scaled_matrix, "scaled matrix");
-    print_scalar(matrix_determinant(4, scaled_matrix), "my determinant");
+    print_scalar(matrix_determinant(4, scaled_matrix), "scaled determinant");
+    /* check for real matrices */
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            scaled_matrix(i,j).i = 0;
+        }
+    }
+    print_matrix(scaled_matrix, "real scaled matrix");
+    print_scalar(matrix_determinant(4, scaled_matrix), "real scaled determinant");
 }
 // - qmc
 void test_H(){
