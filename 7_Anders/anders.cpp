@@ -454,7 +454,7 @@ COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matri
     cofactorMatrix = 0;
     /* test size of elements */
     double scale = check_size(matrix(0,0).r);
-    if(scale > )
+    // if(scale > )
 
     /* scale matrix */
     matrix_multiple(matrix, matrix_size, 1 / scale, scaled_matrix);
