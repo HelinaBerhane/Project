@@ -1621,7 +1621,7 @@ void test_V_A(){
     int lattice_size = 5, time_size;
     LaGenMatComplex V = LaGenMatComplex::zeros(lattice_size, lattice_size);
     COMPLEX slice[lattice_size];
-    double U = 1, beta = 10, lambda, delta_tau, mu = U / 2;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U;
 
     /* calculate initial parameters */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
@@ -1788,7 +1788,7 @@ void test_sweep_d(){
     /* initialise everything */
     int start_s = clock();
     int lattice_size = 5, time_size, iterations = 10000;
-    double U = .1, beta = 1, lambda, delta_tau, mu = U;
+    double U = .1, beta = 1, lambda, delta_tau, mu = U/2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     /* generate lattice */
