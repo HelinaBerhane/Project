@@ -1788,7 +1788,7 @@ void test_sweep_d(){
     /* initialise everything */
     int start_s = clock();
     int lattice_size = 5, time_size, iterations = 10000;
-    double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
+    double U = .1, beta = 1, lambda, delta_tau, mu = U;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     /* generate lattice */
