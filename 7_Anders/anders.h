@@ -35,7 +35,7 @@ void flip_spin(LaGenMatComplex& lattice, const int t, const int l);
 int generate_spins();
 void generate_slice(const int lattice_size, COMPLEX slice[]);
 void generate_lattice(const int lattice_size, const int time_size, LaGenMatComplex& lattice);
-string generate_file_name(const double U, const double beta, const int iterations, const std::string test);
+std::string generate_file_name(const double U, const double beta, const int iterations, const std::string test);
 double check_size(const double scalar);
 void scalar_division(const COMPLEX& A, const int B, COMPLEX& result);
 void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result);
@@ -84,9 +84,9 @@ void measure_spin(const LaGenMatComplex& lattice, const int time_size, const int
 void measure_weight(const int count, const double probability, const COMPLEX weightBefore, const COMPLEX weightAfter, const std::string file);
 void measure_av_weight();
 void measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size, const std::string file);
-COMPLEX double_occupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size);
+double double_occupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size);
 void measure_double_occcupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size, const std::string file);
-complex n(const LaGenMatComplex& O, const int lattice_size);
+double n(const LaGenMatComplex& O, const int lattice_size);
 void measure_n(const LaGenMatComplex& O, const int lattice_size, const std::string file);
 
 #endif
