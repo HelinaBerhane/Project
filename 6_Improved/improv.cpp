@@ -1775,7 +1775,7 @@ void sweep_lattice_d(LaGenMatComplex& lattice, const int lattice_size, const int
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
                     measure_spin(lattice, time_size, lattice_size, sf);
-                    measure_double_occcupancy_ii(occupant, O, lattice_size, df);
+                    measure_double_occcupancy_ii(2, O, lattice_size, df);
                     measure_n(O, lattice_size, nf);
                 }
             }
