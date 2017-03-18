@@ -454,6 +454,8 @@ COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matri
     cofactorMatrix = 0;
     /* test size of elements */
     double scale = check_size(matrix(0,0).r);
+    if(scale > )
+
     /* scale matrix */
     matrix_multiple(matrix, matrix_size, 1 / scale, scaled_matrix);
     print_matrix(scaled_matrix, "scaled matrix");
@@ -1073,25 +1075,26 @@ void test_cofactor_matrix(){
 void test_matrix_determinant(){
     /* initialise everything */
     double matrix_size = 4, scale = 8;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,4);
+    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size,matrix_size,0,4);
     LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
     COMPLEX result;
-    clear_scalar(result);
-    /* calculate determinant */
-    print_matrix(matrix, "initial matrix");
-    print_scalar(matrix_determinant(4, matrix), "matrix determinant");
-    /* scale the matrix */
-    matrix_multiple(matrix, matrix_size, pow(10.0,scale), scaled_matrix);
-    print_matrix(scaled_matrix, "scaled matrix");
-    print_scalar(matrix_determinant(4, scaled_matrix), "scaled determinant");
+    // clear_scalar(result);
+    // /* calculate determinant */
+    // print_matrix(matrix, "initial matrix");
+    // print_scalar(matrix_determinant(matrix_size, matrix), "matrix determinant");
+    // /* scale the matrix */
+    // matrix_multiple(matrix, matrix_size, pow(10.0,scale), scaled_matrix);
+    // print_matrix(scaled_matrix, "scaled matrix");
+    // print_scalar(matrix_determinant(4, scaled_matrix), "scaled determinant");
     /* check for real matrices */
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
-            scaled_matrix(i,j).i = 0;
+            matrix(i,j).r = (i + j) * pow(10, scale);
+            matrix(i,j).i = 0;
         }
     }
-    print_matrix(scaled_matrix, "real scaled matrix");
-    print_scalar(matrix_determinant(4, scaled_matrix), "real scaled determinant");
+    print_matrix(matrix, "matrix");
+    print_scalar(matrix_determinant(matrix_size, matrix), "determinant");
 }
 // - qmc
 void test_H(){
