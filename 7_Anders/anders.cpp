@@ -410,11 +410,16 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
 }
 COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){
     /* initialise everything */
-    COMPLEX determinant;
+    LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaGenMatComplex cofactorMatrix;
+    COMPLEX determinant;
     COMPLEX coefficient;
     cofactorMatrix = 0;
-    /* calculate determinant */
+    /* test size of elements */
+    double scale = check_size(matrix(0,0).r);
+    /* scale matrix */
+    matrix_multiple(matrix, matrix_size, 1 / scale, scaled_matrix);
+    /* do stuff */
     if(matrix_size == 2){
         return simple_matrix_determinant(matrix);
     }else{
@@ -432,6 +437,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             /* finish calculation */
             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
         }
+        scalar_product(determinant, pow (10, scale * matrix_size));
         return determinant;
     }
 }
@@ -557,7 +563,7 @@ void B_calculation(const COMPLEX slice[], const int lattice_size, const double U
     LaGenMatComplex exponential = LaGenMatComplex::zeros(lattice_size, lattice_size);
 
     /* calculate H and V */
-    H_generation(lattice_size, H);
+    H_calculation(lattice_size, H);
     V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, V);
 
     /* calculate H + V */
@@ -584,7 +590,7 @@ void B_calculation_v(const COMPLEX slice[], const int lattice_size, const double
     LaGenMatComplex exponential = LaGenMatComplex::zeros(lattice_size, lattice_size);
 
     /* calculate H and V */
-    H_generation(lattice_size, H);
+    H_calculation(lattice_size, H);
     V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, V);
     print_matrix(sum, "H");
     print_matrix(V, "V");
@@ -620,7 +626,7 @@ void B_calculation_f(const COMPLEX slice[], const int lattice_size, const double
     LaGenMatComplex exponential = LaGenMatComplex::zeros(lattice_size, lattice_size);
 
     /* calculate H and V */
-    H_generation(lattice_size, H);
+    H_calculation(lattice_size, H);
     V_calculation(slice, lattice_size, U, lambda, sigma, delta_tau, mu, V);
     print_matrix(H, "H", file);
     print_matrix(V, "V", file);
@@ -794,7 +800,7 @@ void weight_calculation_f(const LaGenMatComplex& lattice, const int lattice_size
 }
 void weight_calculation_O(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, LaGenMatComplex& OUP, COMPLEX& weight){
     /* initialise everything */
-    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    OUP = LaGenMatComplex::zeros(lattice_size, lattice_size);
     LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
     COMPLEX detOUP;
     COMPLEX detODN;
@@ -887,7 +893,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
         }
     }
     print_space(rf);
-    measure_final_acceptance(acceptance, rejection, total_count, rf);
+    measure_acceptance(acceptance, rejection, total_count, rf);
 }
 // - measurements
 // -- execution time
@@ -1018,7 +1024,7 @@ void measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size,
     /* close the file */
     myfile.close();
 }
-COMPLEX double_occupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size){
+double double_occupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size){
     /* initialise stuff */
     LaGenMatComplex double_occcupancy = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* calculate double occcupancy */
@@ -1039,7 +1045,7 @@ void measure_double_occcupancy_ii(const int i, const LaGenMatComplex& O, const i
     /* close the file */
     myfile.close();
 }
-complex n(const LaGenMatComplex& O, const int lattice_size){
+double n(const LaGenMatComplex& O, const int lattice_size){
     /* initialise stuff */
     double n = 0;
     LaGenMatComplex double_occcupancy = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -1113,7 +1119,6 @@ void test_simple_matrix_determinant(){
     LaGenMatComplex matrix = LaGenMatComplex::rand(2,2,0,5);
     print_matrix(matrix, "matrix");
     /* calculate determinant */
-    simple_matrix_determinant(matrix);
     print_scalar(simple_matrix_determinant(matrix), "det(M)");
 }
 void test_determinant_coefficient(){
@@ -1140,22 +1145,17 @@ void test_cofactor_matrix(){
 void test_matrix_determinant(){
     /* initialise everything */
     double matrix_size = 4, scale = 8;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
+    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,4);
     LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
     COMPLEX result;
     clear_scalar(result);
-    /* scale the matrix */
-    matrix_multiple(matrix, matrix_size, scale, scaled_matrix);
-    print_matrix(matrix, "initial matrix");
-    print_matrix(scaled_matrix, "scaled matrix");
     /* calculate determinant */
-    print_scalar(matrix_determinant_v(4, matrix), "my determinant");
-    matrix_determinant_e(4, matrix, result);
-    print_scalar(result, "eigenvalue determinant");
-
-    print_scalar(matrix_determinant_v(4, scaled_matrix), "my determinant");
-    matrix_determinant_e(4, scaled_matrix, result);
-    print_scalar(result, "eigenvalue determinant");
+    print_matrix(matrix, "initial matrix");
+    print_scalar(matrix_determinant(4, matrix), "matrix determinant");
+    /* scale the matrix */
+    matrix_multiple(matrix, matrix_size, pow(10.0,scale), scaled_matrix);
+    print_matrix(scaled_matrix, "scaled matrix");
+    print_scalar(matrix_determinant(4, scaled_matrix), "my determinant");
 }
 // - qmc
 void test_H(){
@@ -1166,11 +1166,11 @@ void test_H(){
     LaVectorComplex eigenvalues = LaVectorComplex(lattice_size);
     LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* generate matrix */
-    H_generation(lattice_size, H);
+    H_calculation(lattice_size, H);
     print_matrix(H);
     /* check time */
     int stop_s = clock();
-    measure_execution_time(iterations, start_s, stop_s, file);
+    measure_execution_time(1, start_s, stop_s, file);
     /* calculate eigenstuff */
     LaEigSolve(H, eigenvalues, eigenvectors);
     print_vector(eigenvalues, "eigenvalues");
@@ -1389,10 +1389,10 @@ void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice
     print_matrix(ODN, "O DN", file);
 
     /* calculate det(O) */
-    matrix_determinant_e(lattice_size, OUP, detOUP);
-    matrix_determinant_e(lattice_size, ODN, detODN);
+    detOUP = matrix_determinant(lattice_size, OUP);
+    detODN = matrix_determinant(lattice_size, ODN);
     print_scalar(detOUP, "det(O UP)", file);
-    print_scalar(detODN, "det(O DN)", file);
+    print_scalar(, "det(O DN)", file);
     myfile << endl;
 
     /* calculate O^-1 */
@@ -1431,5 +1431,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_H();
+    test_matrix_determinant();
 }
