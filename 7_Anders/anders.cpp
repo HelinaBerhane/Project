@@ -319,7 +319,15 @@ void matrix_negative(const int matrix_size, LaGenMatComplex& matrix){
     }
     matrix = result.copy();
 }
-void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGenMatComplex&
+void matrix_negative(const int matrix_size, const LaGenMatComplex& matrix, LaGenMatComplex& result){
+    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            result(i, j).r -= matrix(i, j).r;
+            result(i, j).i -= matrix(i, j).i;
+        }
+    }
+}
 // --- inverse
 void matrix_inverse(const LaGenMatComplex& matrix, int matrix_size, LaGenMatComplex& result){
     result = matrix.copy();
@@ -339,14 +347,6 @@ void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eig
     matrix_product(result, eigenvectors);
     matrix_product(result, eigenvalueMatrix);
     matrix_product(result, inverseEigenvectors);
-} result){
-    result = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    for(int i = 0; i < matrix_size; i++){
-        for(int j = 0; j < matrix_size; j++){
-            result(i, j).r -= matrix(i, j).r;
-            result(i, j).i -= matrix(i, j).i;
-        }
-    }
 }
 // --- exponentials
 void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result){
