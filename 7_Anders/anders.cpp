@@ -415,6 +415,8 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     COMPLEX determinant;
     COMPLEX coefficient;
     cofactorMatrix = 0;
+    cout << endl;
+    print_matrix(matrix, "matrix");
     /* test size of elements */
     double scale = check_size(matrix(0,0).r);
     cout << "scale = " << scale << endl;
