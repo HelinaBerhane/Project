@@ -8,13 +8,13 @@ CXX = g++
 # CXXFLAGS = -llapackpp -Wall -g
 CXXFLAGS = -llapackpp -O1
 
-all: improv
+all: anders
 
-improv: improv.o improv.h pull
-	$(CXX) improv.o -I$(Inc) -L$(Lib) $(CXXFLAGS) -o improv
+anders: anders.o anders.h pull
+	$(CXX) anders.o -I$(Inc) -L$(Lib) $(CXXFLAGS) -o anders
 
-improv.o: improv.cpp improv.h pull
-	$(CXX) -I$(Inc) -L$(Lib) $(CXXFLAGS) -c improv.cpp
+anders.o: anders.cpp anders.h pull
+	$(CXX) -I$(Inc) -L$(Lib) $(CXXFLAGS) -c anders.cpp
 
 pull:
 	git pull origin master
