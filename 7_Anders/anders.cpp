@@ -453,7 +453,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             /* finish calculation */
             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
         }
-        cout << endl << "--------------------------" << endl
+        cout << endl << "--------------------------" << endl;
         return determinant;
     }
 }
