@@ -462,6 +462,7 @@ void test_triangulate_matrix(){
     /* initialise everything */
     double matrix_size = 4, scale = 8;
     LaGenMatComplex matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    LaGenMatComplex triangle = LaGenMatComplex::zeros(matrix_size, matrix_size);
     /* generate matrix */
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
