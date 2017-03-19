@@ -437,26 +437,26 @@ void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix
 //     }
 // }
 void triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& triangle){
-    print_matrix(matrix "initial matrix");
+    print_matrix(matrix, "initial matrix");
 
     /* initialise everything */
     triangle = matrix.copy();
 
     // for every row but the first
-    for(int i = 1; i < matrix_size, i++){
+    for(int i = 1; i < matrix_size; i++){
 
-        COMPLEX multiple = scalar_division(matrix(i, i-1), matrix(i-1, i-1));
+        COMPLEX multiple = scalar_division(triangle(i, i-1), triangle(i-1, i-1));
 
         for(int row = i; row < matrix_size; row++){
             for(int column = 0; column < matrix_size; column++){
-                COMPLEX subtraction = scalar_multiple(matrix(0, column), multiple);
+                COMPLEX subtraction = scalar_multiple(triangle(0, column), multiple);
                 triangle(row, column).r -= subtraction.r;
                 triangle(row, column).i -= subtraction.i;
             }
         }
     }
 
-    print_matrix(triangle "triangle matrix");
+    print_matrix(triangle, "triangle matrix");
 }
 void test_triangulate_matrix(){
     /* initialise everything */
@@ -470,7 +470,7 @@ void test_triangulate_matrix(){
         }
     }
     /* calculate triangle matrix */
-    triangle_matrix_v(matrix, matrix_size, triangle)
+    triangle_matrix_v(matrix, matrix_size, triangle);
 }
 
 COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, int depth){//, const int scale){
