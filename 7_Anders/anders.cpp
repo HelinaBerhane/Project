@@ -451,7 +451,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
             /* finish calculation */
             COMPLEX simple_determinant = matrix_determinant(cofactor_size, cofactorMatrix);
-            COMPLEX part_determinant = scalar_multiple(coefficient, next_determinant);
+            COMPLEX part_determinant = scalar_multiple(coefficient, simple_determinant);
             cout << "part det(" << i << ") = " << part_determinant << endl;
             scalar_sum(determinant, part_determinant);
         }
