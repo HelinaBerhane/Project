@@ -265,7 +265,7 @@ void scalar_sum(COMPLEX& result, const COMPLEX addition){
     result.r += addition.r;
     result.i += addition.i;
 }
-COMPLEX scalar_sum(COMPLEX& A, COMPLEX& B){
+COMPLEX scalar_addition(COMPLEX& A, COMPLEX& B){
     COMPLEX result;
     result.r = A.r + B.r;
     result.i = A.i + B.i;
@@ -461,7 +461,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             cout << "(" << coefficient << " * " << initial_det << ")";
             COMPLEX mult_det = scalar_multiple(coefficient, initial_det);
             cout << " = " << determinant << " + " << mult_det;
-            COMPLEX sum_det = scalar_sum(determinant, mult_det);
+            COMPLEX sum_det = scalar_addition(determinant, mult_det);
             cout << " = " << sum_det;
         }
         cout << endl << "--------------------------" << endl;
