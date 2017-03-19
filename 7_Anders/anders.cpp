@@ -376,21 +376,19 @@ void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix
     }
 }
 // --- determinants !!!
-COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix, const int scale){
+int check_size(const double scalar){
+    return floor(log10(scalar));
+}
+COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
     /* initialise everything */
-    COMPLEX AD;
-    COMPLEX BC;
-    COMPLEX scaled_determinant;
-    COMPLEX determinant;
-    int max_size = 1000000;
+    COMPLEX AD, BC, determinant;
     /* multiply opposite corners */
     scalar_multiplication(matrix(0,0), matrix(1,1), AD);
     scalar_multiplication(matrix(0,1), matrix(1,0), BC);
     /* - B */
-    scaled_determinant.r = AD.r - BC.r;
-    scaled_determinant.i = AD.i - BC.i;
-    scalar_multiplication(scaled_determinant, pow(10, scale), determinant);
-    return det;
+    determinant.r = AD.r - BC.r;
+    determinant.i = AD.i - BC.i;
+    return determinant;
 }
 COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
     COMPLEX coefficient;
@@ -415,28 +413,28 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
         }
     }
 }
-int check_size(const double scalar){
-    return floor(log10(scalar));
-}
 COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, const int scale){
     /* initialise everything */
     LaGenMatComplex cofactorMatrix;
     COMPLEX determinant;
     COMPLEX coefficient;
     cofactorMatrix = 0;
+    if(initial)
     /* print matrix */
     cout << endl;
     print_matrix(matrix, "matrix");
     /* scale matrix */
-    if(check_size(matrix(0,0).r) > 0){
-        scale += check_size(matrix(0,0).r);
-        cout << "scale = " << scale << endl;
-        matrix_product(matrix, 1/(pow(10,scale), matrix_size)
-        print_matrix(matrix, "scaled_matrix");
-    }
+    // if(check_size(matrix(0,0).r) > 0){
+    //     scale += check_size(matrix(0,0).r);
+    //     cout << "scale = " << scale << endl;
+    //     matrix_product(matrix, 1/(pow(10,scale), matrix_size)
+    //     print_matrix(matrix, "scaled_matrix");
+    // }
     /* do stuff */
     if(matrix_size == 2){
-        return simple_matrix_determinant(matrix, scale);
+        result = simple_matrix_determinant(matrix);
+        print_scalar(result, "result");
+        return result;
     }else{
         clear_scalar(determinant);
         clear_scalar(coefficient);
@@ -463,18 +461,18 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix,
 }
 COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matrix){
     /* initialise everything */
-    LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    // LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
     LaGenMatComplex cofactorMatrix;
     COMPLEX determinant;
     COMPLEX coefficient;
     cofactorMatrix = 0;
     /* test size of elements */
-    int scale = check_size(matrix(0,0).r);
+    // int scale = check_size(matrix(0,0).r);
     // if(scale > )
 
-    /* scale matrix */
-    matrix_multiple(matrix, matrix_size, 1 / scale, scaled_matrix);
-    print_matrix(scaled_matrix, "scaled matrix");
+    // /* scale matrix */
+    // matrix_multiple(matrix, matrix_size, 1 / scale, scaled_matrix);
+    // print_matrix(scaled_matrix, "scaled matrix");
     /* do stuff */
     if(matrix_size == 2){
         return simple_matrix_determinant(matrix);
@@ -495,8 +493,8 @@ COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matri
             /* finish calculation */
             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
         }
-        cout << pow (10, scale * matrix_size) << endl;
-        scalar_product(determinant, pow (10, scale * matrix_size));
+        // cout << pow (10, scale * matrix_size) << endl;
+        // scalar_product(determinant, pow (10, scale * matrix_size));
         return determinant;
     }
 }
@@ -1388,5 +1386,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_scale();
+    test_matrix_determinant();
 }
