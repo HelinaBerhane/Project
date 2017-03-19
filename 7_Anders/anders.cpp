@@ -1066,7 +1066,7 @@ void test_triangle_matrix(){
     /* generate matrix */
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
-            matrix(i,j).r = (1 + i + 2 * j) * pow(10, scale);
+            matrix(i,j).r = random_int(5) * pow(10, scale);
             matrix(i,j).i = 0;
         }
     }
