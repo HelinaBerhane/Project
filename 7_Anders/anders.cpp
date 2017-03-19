@@ -450,6 +450,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
             /* finish calculation */
             scalar_sum(determinant, scalar_multiple(coefficient, matrix_determinant(cofactor_size, cofactorMatrix)));
+            print_scalar(determinant, "partial determinant");
         }
         return determinant;
     }
