@@ -466,7 +466,7 @@ void triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaG
 
             for(int column = 0; column < matrix_size; column++){
                 COMPLEX subtraction = scalar_multiple(triangle(i-1, column), multiple);
-                cout << subtraction;
+                // cout << subtraction;
                 triangle(row, column).r -= subtraction.r;
                 triangle(row, column).i -= subtraction.i;
             }
