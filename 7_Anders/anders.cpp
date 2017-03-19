@@ -519,6 +519,8 @@ COMPLEX matrix_determinant_e(const int matrix_size, const LaGenMatComplex& matri
     result.i = 0;
     /* calculate eigenvectors */
     LaEigSolve(matrix, eigenvalues, eigenvectors);
+    print_vector(eigenvalues, matrix_size, "eigenvalues");
+    print_matrix(eigenvectors, "eigenvectors");
     /* calculate determinant */
     for(int i = 0; i < matrix_size; i++){
         scalar_product(result, eigenvalues(i));
@@ -1143,7 +1145,7 @@ void test_matrix_determinant(){
     }
     print_matrix(matrix, "matrix");
     print_scalar(matrix_determinant(matrix_size, matrix), "determinant");
-    print_scalar(matrix_determinant_e(matrix_size, matrix), "determinant");
+    print_scalar(matrix_determinant_e(matrix_size, matrix), "determinant_e");
 
 }
 // - qmc
