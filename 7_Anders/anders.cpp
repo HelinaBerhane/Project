@@ -427,7 +427,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix,
     cofactorMatrix = 0;
     // if(initial)
     /* print matrix */
-    cout << endl << "depth = " << depth;
+    cout << endl << "depth = " << depth << endl;
     print_matrix(matrix, "current matrix");
     cout << "matrix size = " << matrix_size << endl;
     /* scale matrix */
