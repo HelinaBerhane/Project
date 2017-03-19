@@ -53,7 +53,7 @@ void matrix_inverse(const LaGenMatComplex& matrix, int matrix_size, LaGenMatComp
 void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result);
 void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result);
 void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result);
-triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& triangle);
+void triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& triangle);
 void triangle_matrix(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& triangle);
 COMPLEX matrix_determinant(const LaGenMatComplex& matrix, const int matrix_size);
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size);
