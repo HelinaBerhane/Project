@@ -519,7 +519,7 @@ COMPLEX matrix_determinant_e(const int matrix_size, const LaGenMatComplex& matri
     result.i = 0;
     /* calculate eigenvectors */
     LaEigSolve(matrix, eigenvalues, eigenvectors);
-    print_vector(eigenvalues, matrix_size, "eigenvalues");
+    print_vector(eigenvalues, "eigenvalues");
     print_matrix(eigenvectors, "eigenvectors");
     /* calculate determinant */
     for(int i = 0; i < matrix_size; i++){
