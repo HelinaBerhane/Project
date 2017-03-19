@@ -459,6 +459,7 @@ void triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaG
                 triangle(row, column).r -= subtraction.r;
                 triangle(row, column).i -= subtraction.i;
             }
+            cout << endl << endl;
         }
     }
 
