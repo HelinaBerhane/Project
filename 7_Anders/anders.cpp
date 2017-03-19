@@ -238,6 +238,23 @@ void scalar_division(const COMPLEX& A, const int B, COMPLEX& result){
     result.r = A.r / (double) B;
     result.i = A.i / (double) B;
 }
+void scalar_division(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
+    la::complex<double> laA = la::complex<double>(A); //convert to la::complex<double>
+    la::complex<double> laB = la::complex<double>(B);
+    la::complex<double> laResult = la::complex<double>(result);
+    laResult = laA / laB;
+    result = laResult.toCOMPLEX();
+}
+COMPLEX scalar_division(const COMPLEX& A, const COMPLEX& B){
+    COMPLEX result;
+    //convert to la::complex<double>
+    la::complex<double> laA = la::complex<double>(A);
+    la::complex<double> laB = la::complex<double>(B);
+    la::complex<double> laResult = la::complex<double>(result);
+    laResult = laA / laB;
+    result = laResult.toCOMPLEX();
+    return result;
+}
 void scalar_multiplication(const COMPLEX& A, const COMPLEX& B, COMPLEX& result){
     la::complex<double> laA = la::complex<double>(A);
     la::complex<double> laB = la::complex<double>(B);
@@ -382,43 +399,80 @@ void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix
     }
 }
 // --- determinants !!!
-int check_size(const double scalar){
-    return floor(log10(scalar));
-}
-COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
+// int check_size(const double scalar){
+//     return floor(log10(scalar));
+// }
+// COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
+//     /* initialise everything */
+//     COMPLEX AD, BC, determinant;
+//     /* multiply opposite corners */
+//     scalar_multiplication(matrix(0,0), matrix(1,1), AD);
+//     scalar_multiplication(matrix(0,1), matrix(1,0), BC);
+//     /* - B */
+//     determinant.r = AD.r - BC.r;
+//     determinant.i = AD.i - BC.i;
+//     return determinant;
+// }
+// COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
+//     COMPLEX coefficient;
+//     if(i % 2 == 1){
+//         coefficient.r = - matrix(0, i).r;
+//         coefficient.i = - matrix(0, i).i;
+//     }else{
+//         coefficient.r = matrix(0, i).r;
+//         coefficient.i = matrix(0, i).i;
+//     }
+//     return coefficient;
+// }
+// void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int i, LaGenMatComplex& cofactorMatrix){
+//     for(int r = 1; r < matrix_size; r++){
+//         int newC = 0;
+//         for(int c = 0; c < matrix_size; c++){
+//             if(c != i){
+//                 cofactorMatrix(r - 1, newC).r = matrix(r, c).r;
+//                 cofactorMatrix(r - 1, newC).i = matrix(r, c).i;
+//                 newC++;
+//             }
+//         }
+//     }
+// }
+void triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& triangle){
+    print_matrix(matrix "initial matrix");
+
     /* initialise everything */
-    COMPLEX AD, BC, determinant;
-    /* multiply opposite corners */
-    scalar_multiplication(matrix(0,0), matrix(1,1), AD);
-    scalar_multiplication(matrix(0,1), matrix(1,0), BC);
-    /* - B */
-    determinant.r = AD.r - BC.r;
-    determinant.i = AD.i - BC.i;
-    return determinant;
-}
-COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
-    COMPLEX coefficient;
-    if(i % 2 == 1){
-        coefficient.r = - matrix(0, i).r;
-        coefficient.i = - matrix(0, i).i;
-    }else{
-        coefficient.r = matrix(0, i).r;
-        coefficient.i = matrix(0, i).i;
-    }
-    return coefficient;
-}
-void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int i, LaGenMatComplex& cofactorMatrix){
-    for(int r = 1; r < matrix_size; r++){
-        int newC = 0;
-        for(int c = 0; c < matrix_size; c++){
-            if(c != i){
-                cofactorMatrix(r - 1, newC).r = matrix(r, c).r;
-                cofactorMatrix(r - 1, newC).i = matrix(r, c).i;
-                newC++;
+    triangle = matrix.copy();
+
+    // for every row but the first
+    for(int i = 1; i < matrix_size, i++){
+
+        COMPLEX multiple = scalar_division(matrix(i, i-1), matrix(i-1, i-1));
+
+        for(int row = i; row < matrix_size; row++){
+            for(int column = 0; column < matrix_size; column++){
+                COMPLEX subtraction = scalar_multiple(matrix(0, column), multiple);
+                triangle(row, column).r -= subtraction.r;
+                triangle(row, column).i -= subtraction.i;
             }
         }
     }
+
+    print_matrix(triangle "triangle matrix");
 }
+void test_triangulate_matrix(){
+    /* initialise everything */
+    double matrix_size = 4, scale = 8;
+    LaGenMatComplex matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    /* generate matrix */
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            matrix(i,j).r = (1 + i + j);// * pow(10, scale);
+            matrix(i,j).i = 0;
+        }
+    }
+    /* calculate triangle matrix */
+    triangle_matrix_v(matrix, matrix_size, triangle)
+}
+
 COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, int depth){//, const int scale){
     /* initialise everything */
     LaGenMatComplex cofactorMatrix;
@@ -1380,5 +1434,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_determinant();
+    test_triangulate_matrix();
 }
