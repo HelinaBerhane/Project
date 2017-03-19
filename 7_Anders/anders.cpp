@@ -434,7 +434,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     /* do stuff */
     if(matrix_size == 2){
         COMPLEX result = simple_matrix_determinant(matrix);
-        print_scalar(result, "result");
+        print_scalar(result, "simple determinant");
         return result;
     }else{
         clear_scalar(determinant);
