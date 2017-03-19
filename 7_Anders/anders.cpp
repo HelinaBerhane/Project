@@ -413,7 +413,7 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
         }
     }
 }
-COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, const int scale){
+COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){//, const int scale){
     /* initialise everything */
     LaGenMatComplex cofactorMatrix;
     COMPLEX determinant;
