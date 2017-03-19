@@ -1138,32 +1138,30 @@ void test_triangulate_matrix(){
     print_matrix(triangle, "triangle matrix");
 }
 
-void test_matrix_determinant(){
-    /* initialise everything */
-    double matrix_size = 4, scale = 8;
-    LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size,matrix_size,0,4);
-    LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    // COMPLEX result;
-    // clear_scalar(result);
-    // /* calculate determinant */
-    // print_matrix(matrix, "initial matrix");
-    // print_scalar(matrix_determinant(matrix_size, matrix, 0), "matrix determinant");
-    // /* scale the matrix */
-    // matrix_multiple(matrix, matrix_size, pow(10.0,scale), scaled_matrix);
-    // print_matrix(scaled_matrix, "scaled matrix");
-    // print_scalar(matrix_determinant(4, scaled_matrix, 0), "scaled determinant");
-    /* check for real matrices */
-    for(int i = 0; i < matrix_size; i++){
-        for(int j = 0; j < matrix_size; j++){
-            matrix(i,j).r = (1 + i + j) * pow(10, scale);
-            matrix(i,j).i = 0;
-        }
-    }
-    print_matrix(matrix, "matrix");
-    print_scalar(matrix_determinant(matrix_size, matrix, 0), "determinant");
-    print_scalar(matrix_determinant_e(matrix_size, matrix), "determinant_e");
-
-}
+// void test_matrix_determinant(){
+//     /* initialise everything */
+//     double matrix_size = 4, scale = 8;
+//     LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size,matrix_size,0,4);
+//     LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+//     // COMPLEX result;
+//     // clear_scalar(result);
+//     // /* calculate determinant */
+//     // print_matrix(matrix, "initial matrix");
+//     // print_scalar(matrix_determinant(matrix_size, matrix, 0), "matrix determinant");
+//     // /* scale the matrix */
+//     // matrix_multiple(matrix, matrix_size, pow(10.0,scale), scaled_matrix);
+//     // print_matrix(scaled_matrix, "scaled matrix");
+//     // print_scalar(matrix_determinant(4, scaled_matrix, 0), "scaled determinant");
+//     /* check for real matrices */
+//     for(int i = 0; i < matrix_size; i++){
+//         for(int j = 0; j < matrix_size; j++){
+//             matrix(i,j).r = (1 + i + j) * pow(10, scale);
+//             matrix(i,j).i = 0;
+//         }
+//     }
+//     print_matrix(matrix, "matrix");
+//     print_scalar(matrix_determinant(matrix_size, matrix, 0), "determinant");
+// }
 
 // - qmc
 void test_H(){
