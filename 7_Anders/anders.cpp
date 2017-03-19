@@ -445,6 +445,7 @@ void triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaG
     // for every row but the first
     for(int i = 1; i < matrix_size; i++){
 
+        cout << "i = " << i << endl;
         cout << triangle(i, i-1) << " / " << triangle(i-1, i-1) << " = ";
         COMPLEX multiple = scalar_division(triangle(i, i-1), triangle(i-1, i-1));
         cout << multiple << endl;
@@ -452,12 +453,27 @@ void triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaG
         for(int row = i; row < matrix_size; row++){
 
             cout << "initial row = ";
+            for(int column = 0; column < matrix_size; column++){
+                cout << triangle(row, column);
+            }
+            cout << endl << endl;
+
+            cout << "subtraction = ";
+            for(int column = 0; column < matrix_size; column++){
+                cout << multiple << " * " << triangle(i-1, column);
+            }
+            cout << endl << endl;
 
             for(int column = 0; column < matrix_size; column++){
                 COMPLEX subtraction = scalar_multiple(triangle(i-1, column), multiple);
                 cout << subtraction;
                 triangle(row, column).r -= subtraction.r;
                 triangle(row, column).i -= subtraction.i;
+            }
+
+            cout << "new row = ";
+            for(int column = 0; column < matrix_size; column++){
+                cout << triangle(row, column);
             }
             cout << endl << endl;
         }
