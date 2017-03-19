@@ -1077,30 +1077,41 @@ void test_triangle_matrix(){
     print_matrix(triangle, "triangle matrix");
 }
 
-// void test_matrix_determinant(){
-//     /* initialise everything */
-//     double matrix_size = 4, scale = 8;
-//     LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size,matrix_size,0,4);
-//     LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
-//     // COMPLEX result;
-//     // clear_scalar(result);
-//     // /* calculate determinant */
-//     // print_matrix(matrix, "initial matrix");
-//     // print_scalar(matrix_determinant(matrix, matrix_size), "matrix determinant");
-//     // /* scale the matrix */
-//     // matrix_multiple(matrix, matrix_size, pow(10.0,scale), scaled_matrix);
-//     // print_matrix(scaled_matrix, "scaled matrix");
-//     // print_scalar(matrix_determinant(scaled_matrix, 4), "scaled determinant");
-//     /* check for real matrices */
-//     for(int i = 0; i < matrix_size; i++){
-//         for(int j = 0; j < matrix_size; j++){
-//             matrix(i,j).r = (1 + i + j) * pow(10, scale);
-//             matrix(i,j).i = 0;
-//         }
-//     }
-//     print_matrix(matrix, "matrix");
-//     print_scalar(matrix_determinant(matrix, matrix_size), "determinant");
-// }
+void test_matrix_determinant(){
+    /* initialise everything */
+    double matrix_size = 4, scale = 8;
+    LaGenMatComplex matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    /* generate matrix */
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            matrix(i,j).r = random_int(5);
+            matrix(i,j).i = 0;
+        }
+    }
+    print_matrix(matrix, "initial matrix");
+    /* calculate determinant */
+    print_scalar(matrix_determinant(matrix, matrix_size), "determinant");
+    /* generate matrix */
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            matrix(i,j).r = random_int(5) * pow(10, scale);
+            matrix(i,j).i = 0;
+        }
+    }
+    print_matrix(matrix, "initial matrix");
+    /* calculate determinant */
+    print_scalar(matrix_determinant(matrix, matrix_size), "large determinant");
+    /* generate matrix */
+    for(int i = 0; i < matrix_size; i++){
+        for(int j = 0; j < matrix_size; j++){
+            matrix(i,j).r = random_double() * pow(10, scale);
+            matrix(i,j).i = 0;
+        }
+    }
+    print_matrix(matrix, "random matrix");
+    /* calculate determinant */
+    print_scalar(matrix_determinant(matrix, matrix_size), "random determinant");
+}
 
 // - qmc
 void test_H(){
@@ -1370,5 +1381,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_triangle_matrix();
+    test_matrix_determinant();
 }
