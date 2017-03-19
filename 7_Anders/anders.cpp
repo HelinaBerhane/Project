@@ -449,33 +449,39 @@ void triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaG
 
         for(int row = i; row < matrix_size; row++){
 
-            COMPLEX multiple = scalar_division(triangle(row, i-1), triangle(i-1, i-1));
-            cout << "multiple = " << triangle(row, i-1) << " / " << triangle(i-1, i-1) << " = " << multiple << endl;
+            if(triangle(i-1, i-1) != 0){
 
-            cout << "initial row = ";
-            for(int column = 0; column < matrix_size; column++){
-                cout << triangle(row, column);
-            }
-            cout << endl << endl;
+                COMPLEX multiple = scalar_division(triangle(row, i-1), triangle(i-1, i-1));
+                cout << "multiple = " << triangle(row, i-1) << " / " << triangle(i-1, i-1) << " = " << multiple << endl;
 
-            cout << "subtraction = " << endl;
-            for(int column = 0; column < matrix_size; column++){
-                cout << multiple << " * " << triangle(i-1, column) << endl;
-            }
-            cout << endl;
+                cout << "initial row = ";
+                for(int column = 0; column < matrix_size; column++){
+                    cout << triangle(row, column);
+                }
+                cout << endl << endl;
 
-            for(int column = 0; column < matrix_size; column++){
-                COMPLEX subtraction = scalar_multiple(triangle(i-1, column), multiple);
-                // cout << subtraction;
-                triangle(row, column).r -= subtraction.r;
-                triangle(row, column).i -= subtraction.i;
-            }
+                cout << "subtraction = " << endl;
+                for(int column = 0; column < matrix_size; column++){
+                    cout << multiple << " * " << triangle(i-1, column) << endl;
+                }
+                cout << endl;
 
-            cout << "new row = ";
-            for(int column = 0; column < matrix_size; column++){
-                cout << triangle(row, column);
+                for(int column = 0; column < matrix_size; column++){
+                    COMPLEX subtraction = scalar_multiple(triangle(i-1, column), multiple);
+                    // cout << subtraction;
+                    triangle(row, column).r -= subtraction.r;
+                    triangle(row, column).i -= subtraction.i;
+                }
+
+                cout << "new row = ";
+                for(int column = 0; column < matrix_size; column++){
+                    cout << triangle(row, column);
+                }
+                cout << endl << endl;
+
+            }else{
+                cout << "n / a" << endl;
             }
-            cout << endl << endl;
         }
     }
 
