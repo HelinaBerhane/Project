@@ -419,7 +419,7 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
         }
     }
 }
-COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix){//, const int scale){
+COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, int depth){//, const int scale){
     /* initialise everything */
     LaGenMatComplex cofactorMatrix;
     COMPLEX determinant;
@@ -427,7 +427,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
     cofactorMatrix = 0;
     // if(initial)
     /* print matrix */
-    cout << endl;
+    cout << endl << "depth = " << depth;
     print_matrix(matrix, "current matrix");
     cout << "matrix size = " << matrix_size << endl;
     /* scale matrix */
@@ -456,7 +456,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             /* calculate the cofactor */
             generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
             /* finish calculation */
-            COMPLEX initial_det = matrix_determinant(cofactor_size, cofactorMatrix);
+            COMPLEX initial_det = matrix_determinant(cofactor_size, cofactorMatrix, depth + 1);
             COMPLEX mult_det = scalar_multiple(coefficient, initial_det);
             cout << "partial det(" << i << ") = " << determinant << " + ";
             COMPLEX sum_det = scalar_addition(determinant, mult_det);
