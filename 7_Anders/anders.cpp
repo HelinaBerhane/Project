@@ -510,6 +510,21 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
 //     }
 // }
 // !!!
+COMPLEX matrix_determinant_e(const int matrix_size, const LaGenMatComplex& matrix){
+    /* initialise everything */
+    COMPLEX result;
+    LaVectorComplex eigenvalues = LaVectorComplex(matrix_size);
+    LaGenMatComplex eigenvectors = LaGenMatComplex::zeros(matrix_size, matrix_size);
+    result.r = 1;
+    result.i = 0;
+    /* calculate eigenvectors */
+    LaEigSolve(matrix, eigenvalues, eigenvectors);
+    /* calculate determinant */
+    for(int i = 0; i < matrix_size; i++){
+        scalar_product(result, eigenvalues(i));
+    }
+    return result;
+}
 
 // QMC
 // - initial parameters
@@ -1110,7 +1125,7 @@ void test_matrix_determinant(){
     double matrix_size = 4, scale = 8;
     LaGenMatComplex matrix = LaGenMatComplex::rand(matrix_size,matrix_size,0,4);
     LaGenMatComplex scaled_matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
-    COMPLEX result;
+    // COMPLEX result;
     // clear_scalar(result);
     // /* calculate determinant */
     // print_matrix(matrix, "initial matrix");
@@ -1127,8 +1142,9 @@ void test_matrix_determinant(){
         }
     }
     print_matrix(matrix, "matrix");
-    result = matrix_determinant(matrix_size, matrix);
-    print_scalar(result, "determinant");
+    print_scalar(matrix_determinant(matrix_size, matrix), "determinant");
+    print_scalar(matrix_determinant_e(matrix_size, matrix), "determinant");
+
 }
 // - qmc
 void test_H(){
