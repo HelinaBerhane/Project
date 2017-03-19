@@ -53,11 +53,9 @@ void matrix_inverse(const LaGenMatComplex& matrix, int matrix_size, LaGenMatComp
 void recombine_diagonalised_matrices(const int matrix_size, LaGenMatComplex& eigenvectors, const LaVectorComplex& eigenvalues, LaGenMatComplex& result);
 void matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result);
 void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& result);
-COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix);
-COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i);
-void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matrix, const int i, LaGenMatComplex& cofactorMatrix);
-COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix);
-COMPLEX matrix_determinant_v(const int matrix_size, const LaGenMatComplex& matrix);
+triangle_matrix_v(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& triangle);
+void triangle_matrix(const LaGenMatComplex& matrix, const int matrix_size, LaGenMatComplex& triangle);
+COMPLEX matrix_determinant(const LaGenMatComplex& matrix, const int matrix_size);
 void initial_parameter_calculation(const double U, const double beta, double& lambda, double& delta_tau, int& time_size);
 void H_calculation(const int lattice_size, LaGenMatComplex& H);
 void V_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& V);
