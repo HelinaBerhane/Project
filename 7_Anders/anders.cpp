@@ -1058,7 +1058,7 @@ void test_diagonal_exponential(){
     print_matrix(test, "test");
     print_matrix(result);
 }
-void test_triangulate_matrix(){
+void test_triangle_matrix(){
     /* initialise everything */
     double matrix_size = 4, scale = 8;
     LaGenMatComplex matrix = LaGenMatComplex::zeros(matrix_size, matrix_size);
@@ -1066,7 +1066,7 @@ void test_triangulate_matrix(){
     /* generate matrix */
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
-            matrix(i,j).r = (1 + i + j); * pow(10, scale);
+            matrix(i,j).r = (1 + i + j) * pow(10, scale);
             matrix(i,j).i = 0;
         }
     }
@@ -1370,5 +1370,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_triangulate_matrix();
+    test_triangle_matrix();
 }
