@@ -1101,7 +1101,7 @@ void test_triangulate_matrix(){
     /* generate matrix */
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
-            matrix(i,j).r = (1 + i + j);// * pow(10, scale);
+            matrix(i,j).r = (1 + i + j); * pow(10, scale);
             matrix(i,j).i = 0;
         }
     }
