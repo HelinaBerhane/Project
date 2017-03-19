@@ -306,7 +306,7 @@ void matrix_product(LaGenMatComplex& product, const LaGenMatComplex& matrix){
     Blas_Mat_Mat_Mult(product, matrix, result);
     product = result.copy();
 }
-void matrix_product(LaGenMatComplex& matrix, const int matrix_size, const double number){
+void matrix_product(LaGenMatComplex& matrix, const double number, const int matrix_size){
     for(int i = 0; i < matrix_size; i++){
         for(int j = 0; j < matrix_size; j++){
             matrix(i, j).r *= number;
@@ -375,19 +375,21 @@ void diagonal_matrix_exponential(const LaGenMatComplex& matrix, const int matrix
         scalar_exponential(matrix(i,i), result(i,i));
     }
 }
-// --- determinants
-COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix){
+// --- determinants !!!
+COMPLEX simple_matrix_determinant(const LaGenMatComplex& matrix, const int scale){
     /* initialise everything */
     COMPLEX AD;
     COMPLEX BC;
-    COMPLEX det;
+    COMPLEX scaled_determinant;
+    COMPLEX determinant;
     int max_size = 1000000;
     /* multiply opposite corners */
     scalar_multiplication(matrix(0,0), matrix(1,1), AD);
     scalar_multiplication(matrix(0,1), matrix(1,0), BC);
     /* - B */
-    det.r = AD.r - BC.r;
-    det.i = AD.i - BC.i;
+    scaled_determinant.r = AD.r - BC.r;
+    scaled_determinant.i = AD.i - BC.i;
+    scalar_multiplication(scaled_determinant, pow(10, scale), determinant);
     return det;
 }
 COMPLEX determinant_coefficient(const LaGenMatComplex& matrix, const int i){
@@ -413,12 +415,10 @@ void generate_cofactor_matrix(const int matrix_size, const LaGenMatComplex& matr
         }
     }
 }
-
-// !!!
 int check_size(const double scalar){
     return floor(log10(scalar));
 }
-COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, const int& scale){
+COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix, const int scale){
     /* initialise everything */
     LaGenMatComplex cofactorMatrix;
     COMPLEX determinant;
@@ -430,13 +430,13 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix,
     /* scale matrix */
     if(check_size(matrix(0,0).r) > 0){
         scale += check_size(matrix(0,0).r);
-        cout << "scale = " << check_size(matrix(0,0).r) << endl;
-        matrix_product(matrix, matrix_size, number)
+        cout << "scale = " << scale << endl;
+        matrix_product(matrix, 1/(pow(10,scale), matrix_size)
         print_matrix(matrix, "scaled_matrix");
     }
     /* do stuff */
     if(matrix_size == 2){
-        return simple_matrix_determinant(matrix) * ;
+        return simple_matrix_determinant(matrix, scale);
     }else{
         clear_scalar(determinant);
         clear_scalar(coefficient);
