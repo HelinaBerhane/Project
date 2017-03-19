@@ -1111,7 +1111,7 @@ void test_matrix_determinant(){
         }
     }
     print_matrix(matrix, "matrix");
-    COMPLEX result = matrix_determinant(matrix_size, matrix);
+    result = matrix_determinant(matrix_size, matrix);
     print_scalar(result, "determinant");
 }
 // - qmc
