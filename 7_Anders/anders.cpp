@@ -484,7 +484,7 @@ COMPLEX matrix_determinant_v(const LaGenMatComplex& matrix, const int matrix_siz
     print_scalar(product, "determinant");
     return product;
 }
-COMPLEX matrix_determinant_v(const LaGenMatComplex& matrix, const int matrix_size){
+COMPLEX matrix_determinant(const LaGenMatComplex& matrix, const int matrix_size){
     /* initialise everything */
     LaGenMatComplex triangle = LaGenMatComplex::zeros(matrix_size, matrix_size);
     COMPLEX product;
@@ -703,8 +703,8 @@ void weight_calculation(const LaGenMatComplex& lattice, const int lattice_size, 
     O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP);
     O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
     /* calculate det(O) */
-    detOUP = matrix_determinant(lattice_size, OUP, 0);
-    detODN = matrix_determinant(lattice_size, ODN, 0);
+    detOUP = matrix_determinant(OUP, lattice_size);
+    detODN = matrix_determinant(ODN, lattice_size);
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
 }
@@ -729,8 +729,8 @@ void weight_calculation_f(const LaGenMatComplex& lattice, const int lattice_size
     print_matrix(ODN, "O DN", file);
 
     /* calculate det(O) */
-    detOUP = matrix_determinant(lattice_size, OUP, 0);
-    detODN = matrix_determinant(lattice_size, ODN, 0);
+    detOUP = matrix_determinant(OUP, lattice_size);
+    detODN = matrix_determinant(ODN, lattice_size);
     print_scalar(detOUP, "det(O UP)", file);
     print_scalar(detODN, "det(O DN)", file);
     myfile << endl;
@@ -755,8 +755,8 @@ void weight_calculation_O(const LaGenMatComplex& lattice, const int lattice_size
     O_calculation(lattice, lattice_size, time_size, U, lambda,  1, delta_tau, mu, OUP);
     O_calculation(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN);
     /* calculate det(O) */
-    detOUP = matrix_determinant(lattice_size, OUP, 0);
-    detODN = matrix_determinant(lattice_size, ODN, 0);
+    detOUP = matrix_determinant(OUP, lattice_size);
+    detODN = matrix_determinant(ODN, lattice_size);
     /* calculate weight */
     weight = scalar_multiple(detOUP, detODN);
 }
@@ -1058,41 +1058,6 @@ void test_diagonal_exponential(){
     print_matrix(test, "test");
     print_matrix(result);
 }
-void test_simple_matrix_determinant(){
-    /* initialise everything */
-    LaGenMatComplex matrix = LaGenMatComplex::rand(2,2,0,5);
-    print_matrix(matrix, "matrix");
-    /* calculate determinant */
-    print_scalar(simple_matrix_determinant(matrix), "det(M)");
-}
-void test_determinant_coefficient(){
-    /* initialise everything */
-    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
-    print_matrix(matrix, "matrix");
-    /* calculate coefficients */
-    for(int i = 0; i < 4; i++){
-        cout << determinant_coefficient(matrix, i) << endl;
-    }
-    cout << endl;
-}
-void test_cofactor_matrix(){
-    /* initialise everything */
-    LaGenMatComplex matrix = LaGenMatComplex::rand(4,4,0,5);
-    LaGenMatComplex cofactor = LaGenMatComplex::zeros(3,3);
-    print_matrix(matrix, "matrix");
-    /* calculate reduced matrix */
-    for(int i = 0; i < 4; i++){
-        generate_cofactor_matrix(4, matrix, i, cofactor);
-        print_matrix(cofactor, "cofactor matrix");
-    }
-}
-void test_scale(){
-    for(int i = 1; i < 10; i++){
-        double number = random_double() * pow(10,i);
-        cout << "number = " << number << endl;
-        cout << "scale = " << check_size(number) << endl << endl;
-    }
-}
 void test_triangulate_matrix(){
     /* initialise everything */
     double matrix_size = 4, scale = 8;
@@ -1121,11 +1086,11 @@ void test_triangulate_matrix(){
 //     // clear_scalar(result);
 //     // /* calculate determinant */
 //     // print_matrix(matrix, "initial matrix");
-//     // print_scalar(matrix_determinant(matrix_size, matrix, 0), "matrix determinant");
+//     // print_scalar(matrix_determinant(matrix, matrix_size), "matrix determinant");
 //     // /* scale the matrix */
 //     // matrix_multiple(matrix, matrix_size, pow(10.0,scale), scaled_matrix);
 //     // print_matrix(scaled_matrix, "scaled matrix");
-//     // print_scalar(matrix_determinant(4, scaled_matrix, 0), "scaled determinant");
+//     // print_scalar(matrix_determinant(scaled_matrix, 4), "scaled determinant");
 //     /* check for real matrices */
 //     for(int i = 0; i < matrix_size; i++){
 //         for(int j = 0; j < matrix_size; j++){
@@ -1134,7 +1099,7 @@ void test_triangulate_matrix(){
 //         }
 //     }
 //     print_matrix(matrix, "matrix");
-//     print_scalar(matrix_determinant(matrix_size, matrix, 0), "determinant");
+//     print_scalar(matrix_determinant(matrix, matrix_size), "determinant");
 // }
 
 // - qmc
@@ -1363,8 +1328,8 @@ void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice
     print_matrix(ODN, "O DN", file);
 
     /* calculate det(O) */
-    detOUP = matrix_determinant(lattice_size, OUP, 0);
-    detODN = matrix_determinant(lattice_size, ODN, 0);
+    detOUP = matrix_determinant(OUP, lattice_size);
+    detODN = matrix_determinant(ODN, lattice_size);
     print_scalar(detOUP, "det(O UP)", file);
     print_scalar(detODN, "det(O DN)", file);
     myfile << endl;
