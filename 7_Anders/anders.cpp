@@ -443,7 +443,6 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
         //for each i in the first row
         for(int i = 0; i < matrix_size; i++){
             /* initialise everything */
-
             int cofactor_size = matrix_size - 1;
             cofactorMatrix = LaGenMatComplex::zeros(cofactor_size, cofactor_size);
             /* determine the coefficient */
@@ -452,7 +451,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix)
             generate_cofactor_matrix(matrix_size, matrix, i, cofactorMatrix);
             /* finish calculation */
             COMPLEX next_determinant = matrix_determinant(cofactor_size, cofactorMatrix);
-            print_scalar(next_determinant, "next determinant");
+            cout << "det(" << i << ") = " << next_determinant << endl;
             scalar_sum(determinant, scalar_multiple(coefficient, next_determinant));
         }
         cout << endl << "--------------------------" << endl;
