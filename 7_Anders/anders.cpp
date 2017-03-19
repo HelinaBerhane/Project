@@ -419,7 +419,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix,
     COMPLEX determinant;
     COMPLEX coefficient;
     cofactorMatrix = 0;
-    if(initial)
+    // if(initial)
     /* print matrix */
     cout << endl;
     print_matrix(matrix, "matrix");
@@ -432,7 +432,7 @@ COMPLEX matrix_determinant(const int matrix_size, const LaGenMatComplex& matrix,
     // }
     /* do stuff */
     if(matrix_size == 2){
-        result = simple_matrix_determinant(matrix);
+        COMPLEX result = simple_matrix_determinant(matrix);
         print_scalar(result, "result");
         return result;
     }else{
