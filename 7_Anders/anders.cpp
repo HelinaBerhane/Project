@@ -266,6 +266,7 @@ void scalar_sum(COMPLEX& result, const COMPLEX addition){
     result.i += addition.i;
 }
 COMPLEX scalar_sum(COMPLEX A, const COMPLEX B){
+    COMPLEX result;
     result.r = A.r + B.r;
     result.i = A.i + B.i;
     return result;
