@@ -575,6 +575,15 @@ void V_calculation(const COMPLEX slice[], const int lattice_size, const double U
     /* plot to diagonal */
     array_to_diag(V_ii, lattice_size, V);
 }
+void V_calculation_A(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& V){
+    V = 0;
+    V(0,0).r += (mu - U / 2);
+    cout << V(0,0).r << endl;
+    for(int i = 0; i < lattice_size; i++){
+        V(i,i).r += lambda * sigma * slice[i].r / delta_tau;
+    }
+     cout << V(0,0).r << endl;
+}
 void B_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& B){
     /* initialise everything */
     B = 0;
@@ -1609,15 +1618,7 @@ void test_increasing_U(){
 }
 
 /* ------ TO TEST ------ */
-void V_calculation_A(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& V){
-    V = 0;
-    V(0,0).r += (mu - U / 2);
-    cout << V(0,0).r << endl;
-    for(int i = 0; i < lattice_size; i++){
-        V(i,i).r += lambda * sigma * slice[i].r / delta_tau;
-    }
-     cout << V(0,0).r << endl;
-}
+
 void test_V_A(){
     /* initialise everything */
     int lattice_size = 5, time_size;

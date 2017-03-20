@@ -1255,13 +1255,13 @@ void test_sweep_t(){
 }
 void test_increasing_U(){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 1000;
+    int lattice_size = 5, time_size, iterations = 10000;
     double U, beta = 10.0, lambda, delta_tau, mu;;
     LaGenMatComplex lattice;
     /* test U = 0 to 10 */
-    for(int i = 1; i <= 10; i++){
+    for(int i = 1; i <= 5; i++){
         /* generate initial conditions */
-        U = i, mu = U / 2;
+        U = 2*i, mu = U / 2;
         int start_s = clock();
         initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
         print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
@@ -1277,13 +1277,13 @@ void test_increasing_U(){
 }
 void test_increasing_mu(){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 900;
-    double U = 1., beta = 1, lambda, delta_tau, mu;
+    int lattice_size = 5, time_size, iterations = 10000;
+    double U = .1, beta = 1, lambda, delta_tau, mu;
     string asf = "average_spin";
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     /* plot mu */
-    for(double i = 0; i < iterations; i++){
+    for(double i = 0; i < 10; i++){
         LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
         generate_lattice(lattice_size, time_size, lattice);
         mu = i * U / 8;
@@ -1353,5 +1353,5 @@ void update_greens_function(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_increasing_mu();
+    test_increasing_U();
 }
