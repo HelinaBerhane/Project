@@ -1351,5 +1351,5 @@ void update_greens_function(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep();
+    test_increasing_mu();
 }
