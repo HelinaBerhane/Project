@@ -1282,7 +1282,6 @@ void test_increasing_mu(){
     string asf = "average_spin";
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
     /* generate lattice */
     print_matrix(lattice, "lattice", file);
     /* plot mu */
@@ -1291,7 +1290,6 @@ void test_increasing_mu(){
         generate_lattice(lattice_size, time_size, lattice);
         mu = i * U / 8;
         /* generate initial conditions */
-        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
         /* sweep across the lattice */
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     }
