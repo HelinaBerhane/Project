@@ -848,10 +848,10 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                         cout << "counting - ";
                         av_spin += average_spin(lattice, time_size, lattice_size);
                         tot++;
+                        cout << "tot spin = " << av_spin << " - ";
+                        cout << "tot count = " << tot << endl;
                     }
                 }
-                cout << "tot spin = " << av_spin << " - ";
-                cout << "tot count = " << tot << endl;
             }
         }
     }
