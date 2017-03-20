@@ -1275,7 +1275,7 @@ void test_increasing_U(){
         lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);
         /* sweep the lattice */
-        sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations);
+        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     }
 }
 
@@ -1356,7 +1356,6 @@ void test_increasing_mu(const string file){
         print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
         /* sweep across the lattice */
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
-        /* calculate average spin */
     }
 }
 
