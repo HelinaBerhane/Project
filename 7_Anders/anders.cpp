@@ -1287,7 +1287,6 @@ void test_increasing_mu(){
         LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
         generate_lattice(lattice_size, time_size, lattice);
         mu = i * U / 8;
-        /* generate initial conditions */
         /* sweep across the lattice */
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     }
@@ -1354,5 +1353,5 @@ void update_greens_function(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_increasing_U();
+    test_increasing_mu();
 }
