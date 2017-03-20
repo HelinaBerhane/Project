@@ -808,15 +808,17 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
     for(int i = 0; i < iterations; i++){
         for(int t = 0; t < time_size; t++){
             for(int l = 0; l < lattice_size; l++){
-                clear_scalar(weightBefore);
-                clear_scalar(weightAfter);
+            //     clear_scalar(weightBefore);
+            //     clear_scalar(weightAfter);
                 count++;
+                cout << "count = " << count << endl;
 
                 /* calculate the weight before the flip */
                 if(count == 1){
                     weight_calculation_O(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, O, weightBefore);
                 }else{
-                    weightBefore = weightAfter;
+                    weightBefore.r = weightAfter.r;
+                    weightBefore.i = weightAfter.i;
                 }
 
                 /* propose the flip */
