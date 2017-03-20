@@ -808,16 +808,18 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
         for(int t = 0; t < time_size; t++){
             for(int l = 0; l < lattice_size; l++){
                 count++;
+                clear_scalar(weightBefore);
+                clear_scalar(weightAfter);
 
                 /* calculate the weight before the flip */
-                if(count == 1){
-                    cout << "count = " << count << endl;
-                    weight_calculation_O(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, O, weightBefore);
-                }else{
-                    weightBefore.r = weightAfter.r;
-                    weightBefore.i = weightAfter.i;
-                    clear_scalar(weightAfter);
-                }
+                // if(count == 1){
+                    // cout << "recalculating" << count << endl;
+                weight_calculation_O(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, O, weightBefore);
+                // }else{
+                //     weightBefore.r = weightAfter.r;
+                //     weightBefore.i = weightAfter.i;
+                //     clear_scalar(weightAfter);
+                // }
 
                 /* propose the flip */
                 flip_spin(lattice, t, l);
@@ -839,9 +841,9 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                     result = "accepted";
                 }else{
                     flip_spin(lattice, t, l);
-                    weightAfter.r = weightBefore.r;
-                    weightAfter.i = weightBefore.i;
-                    clear_scalar(weightBefore);
+                    // weightAfter.r = weightBefore.r;
+                    // weightAfter.i = weightBefore.i;
+                    // clear_scalar(weightBefore);
                     rejection++;
                 }
 
@@ -1214,8 +1216,8 @@ void test_weight(){
 void test_sweep(){
     /* initialise everything */
     int start_s = clock();
-    int lattice_size = 5, time_size, iterations = 10000;
-    double U = 2, beta = 10, lambda, delta_tau, mu = U/2;
+    int lattice_size = 5, time_size, iterations = 5000;
+    double U = 0.25, beta = 3.38, lambda, delta_tau, mu = U/2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     /* generate lattice */
@@ -1349,5 +1351,5 @@ void update_greens_function(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_increasing_mu();
+    test_sweep();
 }
