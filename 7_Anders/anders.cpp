@@ -847,7 +847,6 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
 
                 /* output results */
                 if(count % (total_count / 300) == 0){
-                    cout << result << " - ";
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     print_double(average_spin(lattice, time_size, lattice_size), sf);
                     measure_double_occcupancy_ii(2, O, lattice_size, df);
@@ -1273,15 +1272,17 @@ void test_increasing_U(){
 void test_increasing_mu(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 10000;
-    double U = .75, beta = 1, lambda, delta_tau, mu;
+    double U = 1.5, beta = 3.5, lambda, delta_tau, mu;
     string asf = "average_spin";
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
     /* plot mu */
     for(double i = 0; i < 10; i++){
         LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
         generate_lattice(lattice_size, time_size, lattice);
         mu = i * U / 8;
+        cout << "mu = " << mu << endl;
         /* sweep across the lattice */
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     }
