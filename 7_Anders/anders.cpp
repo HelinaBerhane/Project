@@ -836,7 +836,8 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 }
 
                 /* output results */
-                double average_spin = 0;
+                double av_spin = 0;
+                double tot = 0;
                 if(count % (total_count / 300) == 0){
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
@@ -844,12 +845,18 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                     measure_double_occcupancy_ii(2, O, lattice_size, df);
                     measure_n(O, lattice_size, nf);
                     if(count > (total_count / 30)){
-                        print("U", sf);
-                        print(U, sf);
-                        print("av_spin", sf);
-                        print(average_spin(lattice, time_size, lattice_size), sf);
+                        av_spin += average_spin(lattice, time_size, lattice_size);
+                        tot++;
                     }
                 }
+                cout << "tot spin = " << av_spin << endl;
+                cout << "tot count = " << tot << endl;
+                av_spin /= tot;
+                cout << "av spin = " << av_spin << endl;
+                print("U", asf);
+                print(U, asf);
+                print("av_spin", asf);
+                print(average_spin(lattice, time_size, lattice_size), asf);
             }
         }
     }
