@@ -846,7 +846,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 /* output results */
                 if(count % (total_count / 300) == 0){
                     cout << result << " - ";
-                    measure_result(count, result, acceptance, rejection, result, probability, rf);
+                    measure_result(count, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
                     print_double(average_spin(lattice, time_size, lattice_size), sf);
                     measure_double_occcupancy_ii(2, O, lattice_size, df);
