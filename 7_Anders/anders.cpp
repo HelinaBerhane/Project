@@ -803,6 +803,8 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
     print_matrix(lattice, "lattice", rf);
 
     /* sweep through the lattice */
+    double av_spin = 0;
+    double tot = 0;
     for(int i = 0; i < iterations; i++){
         for(int t = 0; t < time_size; t++){
             for(int l = 0; l < lattice_size; l++){
@@ -836,8 +838,6 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 }
 
                 /* output results */
-                double av_spin = 0;
-                double tot = 0;
                 if(count % (total_count / 300) == 0){
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
@@ -853,14 +853,14 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 cout << "tot spin = " << av_spin << " - ";
                 cout << "tot count = " << tot << endl;
             }
-            av_spin /= tot;
-            cout << "av spin = " << av_spin << endl;
-            print_text("U", asf);
-            print_double(U, asf);
-            print_text("av_spin", asf);
-            print_double(average_spin(lattice, time_size, lattice_size), asf);
         }
     }
+    av_spin /= tot;
+    cout << "av spin = " << av_spin << endl;
+    print_text("U", asf);
+    print_double(U, asf);
+    print_text("av_spin", asf);
+    print_double(average_spin(lattice, time_size, lattice_size), asf);
     print_space(rf);
     measure_acceptance(acceptance, rejection, total_count, rf);
 }
