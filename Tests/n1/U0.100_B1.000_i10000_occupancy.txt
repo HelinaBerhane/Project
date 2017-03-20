@@ -1,0 +1,9 @@
+no of lattice points = 5
+no of time slices = 3
+U = 0.1
+beta = 1
+lambda = 0.337494
+delta tau = 0.333333
+mu = 0.05
+iterations = 10000
+
