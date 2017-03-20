@@ -38,6 +38,15 @@ void print_text(const string text, const string file){
     /* close the file */
     myfile.close();
 }
+void print_double(const double number, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* log stuff */
+    myfile << number << endl;
+    /* close the file */
+    myfile.close();
+}
 void print_scalar(const COMPLEX scalar){
     cout << scalar << endl;
 }
@@ -783,6 +792,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
     string rf = generate_file_name(U, beta, iterations, "results");
     string wf = generate_file_name(U, beta, iterations, "weights");
     string sf = generate_file_name(U, beta, iterations, "spins");
+    string asf = generate_file_name(U, beta, iterations, "average_spin");
     string df = generate_file_name(U, beta, iterations, "occupancy");
     string nf = generate_file_name(U, beta, iterations, "n");
     LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
@@ -826,12 +836,19 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 }
 
                 /* output results */
+                double average_spin = 0;
                 if(count % (total_count / 300) == 0){
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
-                    measure_spin(lattice, time_size, lattice_size, sf);
+                    print(average_spin(lattice, time_size, lattice_size), sf);
                     measure_double_occcupancy_ii(2, O, lattice_size, df);
                     measure_n(O, lattice_size, nf);
+                    if(count > (total_count / 30)){
+                        print("U", sf);
+                        print(U, sf);
+                        print("av_spin", sf);
+                        print(average_spin(lattice, time_size, lattice_size), sf);
+                    }
                 }
             }
         }
@@ -883,61 +900,16 @@ void measure_acceptance(const int acceptance, const int rejection, const int tot
     myfile.close();
 }
 // -- spin
-void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
-    /* open the file */
-    ofstream myfile;
-    myfile.open("spin.txt", std::ios_base::app);
+double average_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
     /* calculate total spin */
     double total_spin = 0;
-    for(int t = 0; t < time_size; t++){
-        for(int l = 0; l < lattice_size; l++){
-            total_spin += lattice(t,l).r;
-            myfile << total_spin << endl;
-        }
-    }
-    myfile << endl;
-    double average_spin = total_spin / (time_size * lattice_size);
-    print_scalar(average_spin, "", "av_spin.txt");
-    // myfile << average_spin << endl << endl;
-    /* close the file */
-    myfile.close();
-}
-void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* calculate total spin */
-    double total_spin = 0;
-    for(int t = 0; t < time_size; t++){
-        for(int l = 0; l < lattice_size; l++){
-            total_spin += lattice(t,l).r;
-        }
-    }
-    myfile << total_spin << endl;
-    double average_spin = total_spin / (time_size * lattice_size);
-    myfile << average_spin << endl << endl;
-    /* close the file */
-    myfile.close();
-}
-void measure_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* initialise everything */
     double lattice_volume = (double) time_size * (double) lattice_size;
-    /* calculate total spin */
-    double total_spin = 0;
     for(int t = 0; t < time_size; t++){
         for(int l = 0; l < lattice_size; l++){
             total_spin += lattice(t,l).r;
         }
     }
-    double average_spin = total_spin / lattice_volume;
-    // cout << average_spin << endl;
-    /* log stuff */
-    myfile << average_spin << endl;
-    /* close the file */
-    myfile.close();
+    return total_spin / lattice_volume;
 }
 // -- weight
 void measure_weight(const int count, const double probability, const COMPLEX weightBefore, const COMPLEX weightAfter, const string file){
@@ -1315,6 +1287,25 @@ void measure_stuff(const int stuff, const string file){
 // - qmc
 
 /* ------ TO IMPLEMENT ------ */
+void test_increasing_U(){
+    /* initialise everything */
+    int lattice_size = 5, time_size, iterations = 10000;
+    double U, beta = 10.0, lambda, delta_tau, mu = U / 2;
+    LaGenMatComplex lattice;
+    /* test U = 0 to 10 */
+    for(int i = 1; i <= 10; i++){
+        /* generate initial conditions */
+        U = i;
+        double acceptance = 0.0, rejection = 0.0;
+        initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
+        /* generate a lattice of spins */
+        lattice = LaGenMatComplex::zeros(time_size, lattice_size);
+        generate_lattice(lattice_size, time_size, lattice);
+        /* sweep the lattice */
+        sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection);
+    }
+}
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
 
@@ -1375,11 +1366,11 @@ void test_increasing_mu(const string file){
         print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
         /* sweep across the lattice */
         /* calculate average spin */
-        calculate_total_spin_f(lattice, time_size, lattice_size);
+        calculate_average_spin(lattice, time_size, lattice_size);
     }
 }
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_matrix_determinant();
+    test_V();
 }
