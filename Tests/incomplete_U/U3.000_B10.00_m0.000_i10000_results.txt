@@ -1,0 +1,123 @@
+no of lattice points = 5
+no of time slices = 13
+U = 3
+beta = 10
+lambda = 0.82302
+delta tau = 0.769231
+mu = 0
+iterations = 10000
+
+lattice:
+(1,0)  (1,0)  (-1,0)  (1,0)  (1,0)
+(1,0)  (1,0)  (1,0)  (1,0)  (-1,0)
+(-1,0)  (-1,0)  (1,0)  (-1,0)  (-1,0)
+(-1,0)  (1,0)  (1,0)  (-1,0)  (-1,0)
+(-1,0)  (1,0)  (1,0)  (1,0)  (-1,0)
+(-1,0)  (1,0)  (-1,0)  (1,0)  (-1,0)
+(1,0)  (1,0)  (-1,0)  (1,0)  (-1,0)
+(-1,0)  (1,0)  (1,0)  (-1,0)  (-1,0)
+(1,0)  (1,0)  (-1,0)  (1,0)  (1,0)
+(-1,0)  (-1,0)  (-1,0)  (1,0)  (-1,0)
+(1,0)  (-1,0)  (-1,0)  (-1,0)  (-1,0)
+(1,0)  (1,0)  (1,0)  (-1,0)  (1,0)
+(-1,0)  (-1,0)  (-1,0)  (1,0)  (1,0)
+
+ (2166) accepted - [1925/241] accepted - probability: 1.1451
+ (4332) accepted - [3870/462] accepted - probability: 0.958148
+ (6498) accepted - [5787/711] accepted - probability: 0.92699
+ (8664) accepted - [7693/971] accepted - probability: 1.10836
+ (10830) accepted - [9573/1257] accepted - probability: 0.541682
+ (12996) accepted - [11505/1491] accepted - probability: 1.0566
+ (15162) accepted - [13428/1734] accepted - probability: 0.536702
+ (17328) accepted - [15317/2011] accepted - probability: 0.608123
+ (19494) accepted - [17221/2273] accepted - probability: 0.983873
+ (21660) accepted - [19126/2534] accepted - probability: 1.07065
+ (23826) accepted - [21014/2812] accepted - probability: 1.07344
+ (25992) accepted - [22912/3080] accepted - probability: 1.57673
+ (28158) accepted - [24807/3351] accepted - probability: 0.97741
+ (30324) accepted - [26701/3623] accepted - probability: 1.34416
+ (32490) accepted - [28606/3884] accepted - probability: 1.45286
+ (34656) accepted - [30496/4160] accepted - probability: 1.08069
+ (36822) accepted - [32396/4426] accepted - probability: 0.645823
+ (38988) accepted - [34309/4679] accepted - probability: 0.601264
+ (41154) accepted - [36182/4972] accepted - probability: 0.805218
+ (43320) accepted - [38106/5214] accepted - probability: 0.703498
+ (45486) accepted - [40020/5466] accepted - probability: 0.916236
+ (47652) accepted - [41938/5714] accepted - probability: 0.659398
+ (49818) accepted - [43860/5958] accepted - probability: 1.78315
+ (51984) accepted - [45705/6279] accepted - probability: 1.26641
+ (54150) accepted - [47577/6573] accepted - probability: 1.36555
+ (56316) accepted - [49492/6824] accepted - probability: 0.815383
+ (58482) accepted - [51373/7109] accepted - probability: 0.56984
+ (60648) accepted - [53287/7361] accepted - probability: 0.756326
+ (62814) accepted - [55216/7598] accepted - probability: 0.918355
+ (64980) accepted - [57109/7871] accepted - probability: 0.71869
+ (67146) accepted - [59024/8122] accepted - probability: 1.02158
+ (69312) accepted - [60939/8373] accepted - probability: 0.723358
+ (71478) accepted - [62845/8633] accepted - probability: 0.737564
+ (73644) accepted - [64766/8878] accepted - probability: 0.978692
+ (75810) accepted - [66653/9157] accepted - probability: 0.537608
+ (77976) accepted - [68566/9410] accepted - probability: 0.955008
+ (80142) accepted - [70464/9678] accepted - probability: 0.798637
+ (82308) accepted - [72354/9954] accepted - probability: 0.570659
+ (84474) accepted - [74217/10257] accepted - probability: 0.87095
+ (86640) accepted - [76105/10535] accepted - probability: 0.597353
+ (88806) accepted - [78010/10796] accepted - probability: 1.02702
+ (90972) accepted - [79915/11057] accepted - probability: 0.675938
+ (93138) accepted - [81832/11306] accepted - probability: 0.854646
+ (95304) accepted - [83718/11586] accepted - probability: 0.590371
+ (97470) accepted - [85643/11827] accepted - probability: 0.980701
+ (99636) accepted - [87538/12098] accepted - probability: 0.910885
+ (101802) accepted - [89430/12372] accepted - probability: 0.65347
+ (103968) accepted - [91349/12619] accepted - probability: 0.999666
+ (106134) accepted - [93271/12863] accepted - probability: 0.689855
+ (108300) accepted - [95188/13112] accepted - probability: 1.24838
+ (110466) accepted - [97091/13375] accepted - probability: 0.81628
+ (112632) accepted - [98980/13652] accepted - probability: 0.822572
+ (114798) accepted - [100897/13901] accepted - probability: 0.961163
+ (116964) accepted - [102782/14182] accepted - probability: 0.732322
+ (119130) accepted - [104688/14442] accepted - probability: 1.5499
+ (121296) accepted - [106611/14685] accepted - probability: 1.22404
+ (123462) accepted - [108481/14981] accepted - probability: 0.581203
+ (125628) accepted - [110400/15228] accepted - probability: 0.677943
+ (127794) accepted - [112329/15465] accepted - probability: 1.04187
+ (129960) accepted - [114248/15712] accepted - probability: 0.729717
+ (132126) accepted - [116138/15988] accepted - probability: 1.08877
+ (134292) accepted - [118054/16238] accepted - probability: 1.0926
+ (136458) accepted - [119957/16501] accepted - probability: 0.968582
+ (138624) accepted - [121836/16788] accepted - probability: 0.63953
+ (140790) accepted - [123737/17053] accepted - probability: 0.885435
+ (142956) accepted - [125651/17305] accepted - probability: 0.777974
+ (145122) accepted - [127582/17540] accepted - probability: 1.19244
+ (147288) accepted - [129482/17806] accepted - probability: 0.547818
+ (149454) accepted - [131382/18072] accepted - probability: 0.656864
+ (151620) accepted - [133269/18351] accepted - probability: 1.3648
+ (153786) accepted - [135204/18582] accepted - probability: 1.03687
+ (155952) accepted - [137081/18871] accepted - probability: 0.819636
+ (158118) accepted - [138961/19157] accepted - probability: 1.46898
+ (160284) accepted - [140854/19430] accepted - probability: 0.503516
+ (162450) accepted - [142791/19659] accepted - probability: 1.38383
+ (164616) accepted - [144707/19909] accepted - probability: 0.872081
+ (166782) accepted - [146603/20179] accepted - probability: 0.697355
+ (168948) accepted - [148491/20457] accepted - probability: 1.09464
+ (171114) accepted - [150391/20723] accepted - probability: 0.593542
+ (173280) accepted - [152292/20988] accepted - probability: 1.47158
+ (175446) accepted - [154142/21304] accepted - probability: 1.19029
+ (177612) accepted - [156023/21589] accepted - probability: 1.0616
+ (179778) accepted - [157918/21860] accepted - probability: 1.40657
+ (181944) accepted - [159819/22125] accepted - probability: 0.850756
+ (184110) accepted - [161722/22388] accepted - probability: 0.803293
+ (186276) accepted - [163606/22670] accepted - probability: 1.15007
+ (188442) accepted - [165523/22919] accepted - probability: 1.05523
+ (190608) accepted - [167414/23194] accepted - probability: 1.02655
+ (192774) accepted - [169332/23442] accepted - probability: 1.32446
+ (194940) accepted - [171229/23711] accepted - probability: 0.627925
+ (197106) accepted - [173138/23968] accepted - probability: 1.28281
+ (199272) accepted - [175043/24229] accepted - probability: 0.956291
+ (201438) accepted - [176936/24502] accepted - probability: 0.735713
+ (203604) accepted - [178789/24815] accepted - probability: 1.84179
+ (205770) accepted - [180665/25105] accepted - probability: 2.16503
+ (207936) accepted - [182567/25369] accepted - probability: 1.08232
+ (210102) accepted - [184505/25597] accepted - probability: 1.2407
+ (212268) accepted - [186429/25839] accepted - probability: 1.44944
+ (214434) accepted - [188314/26120] accepted - probability: 0.742886
