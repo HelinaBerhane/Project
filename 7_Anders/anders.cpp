@@ -809,8 +809,6 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
     for(int i = 0; i < iterations; i++){
         for(int t = 0; t < time_size; t++){
             for(int l = 0; l < lattice_size; l++){
-            //     clear_scalar(weightBefore);
-            //     clear_scalar(weightAfter);
                 count++;
 
                 /* calculate the weight before the flip */
@@ -820,6 +818,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 }else{
                     weightBefore.r = weightAfter.r;
                     weightBefore.i = weightAfter.i;
+                    clear_scalar(weightAfter);
                 }
 
                 /* propose the flip */
@@ -828,6 +827,11 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 /* calculate the weight after the flip */
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
 
+
+                if(count % (total_count / 300) == 0){
+                    measure_weight(count, probability, weightBefore, weightAfter, wf);
+                }
+
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
 
@@ -835,19 +839,18 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 if(judge_acceptance(probability) == 1){
                     acceptance++;
                     result = "accepted";
-                    cout << result << " - ";
                 }else{
                     flip_spin(lattice, t, l);
-                    weightAfter = weightBefore;
+                    weightAfter.r = weightBefore.r;
+                    weightAfter.i = weightBefore.i;
+                    clear_scalar(weightBefore);
                     rejection++;
-                    result = "rejected";
                 }
 
                 /* output results */
                 if(count % (total_count / 300) == 0){
                     cout << result << " - ";
                     measure_result(count, acceptance, rejection, result, probability, rf);
-                    measure_weight(count, probability, weightBefore, weightAfter, wf);
                     print_double(average_spin(lattice, time_size, lattice_size), sf);
                     measure_double_occcupancy_ii(2, O, lattice_size, df);
                     measure_n(O, lattice_size, nf);
@@ -1259,7 +1262,7 @@ void test_increasing_U(){
     for(int i = 1; i <= 10; i++){
         /* generate initial conditions */
         U = i;
-        double acceptance = 0.0, rejection = 0.0;
+        int start_s = clock();
         initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
         print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
         /* generate a lattice of spins */
@@ -1267,6 +1270,9 @@ void test_increasing_U(){
         generate_lattice(lattice_size, time_size, lattice);
         /* sweep the lattice */
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+        /* check time */
+        int stop_s = clock();
+        cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
     }
 }
 
@@ -1352,5 +1358,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep();
+    test_increasing_U();
 }
