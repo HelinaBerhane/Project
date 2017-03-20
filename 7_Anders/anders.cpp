@@ -853,11 +853,8 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                     measure_double_occcupancy_ii(2, O, lattice_size, df);
                     measure_n(O, lattice_size, nf);
                     if(count > (total_count / 30)){
-                        cout << "counting - ";
-                        av_spin += average_spin(lattice, time_size, lattice_size);
+                        av_spin += average_spin(lattice, timvie_size, lattice_size);
                         tot++;
-                        cout << "tot spin = " << av_spin << " - ";
-                        cout << "tot count = " << tot << endl;
                     }
                 }
             }
