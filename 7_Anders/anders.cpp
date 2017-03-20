@@ -1361,5 +1361,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_O();
+    test_weight();
 }
