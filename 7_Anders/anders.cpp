@@ -1276,7 +1276,7 @@ void test_increasing_U(){
 void test_increasing_mu(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 10000;
-    double U = .25, beta = 1, lambda, delta_tau, mu;
+    double U = .75, beta = 1, lambda, delta_tau, mu;
     string asf = "average_spin";
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
