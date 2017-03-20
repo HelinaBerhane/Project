@@ -1282,8 +1282,6 @@ void test_increasing_mu(){
     string asf = "average_spin";
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    /* generate lattice */
-    print_matrix(lattice, "lattice", file);
     /* plot mu */
     for(double i = 0; i < iterations; i++){
         LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
