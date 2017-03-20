@@ -1208,23 +1208,6 @@ void test_weight(){
 }
 void test_sweep(){
     /* initialise everything */
-    string file = "test_sweep.txt";
-    int lattice_size = 5, time_size, iterations = 1000;// = 10000;
-    double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
-    double acceptance = 0, rejection = 0;
-    /* generate initial conditions */
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
-    /* generate lattice */
-    LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-    // print_matrix(lattice, "intialised lattice");
-    generate_lattice(lattice_size, time_size, lattice);
-    print_matrix(lattice, "lattice");
-    /* sweep the lattice */
-    sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
-}
-void test_sweep_d(){
-    /* initialise everything */
     int start_s = clock();
     int lattice_size = 5, time_size, iterations = 10000;
     double U = .1, beta = 1, lambda, delta_tau, mu = U/2;
@@ -1361,5 +1344,5 @@ void test_increasing_mu(const string file){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_weight();
+    test_sweep();
 }
