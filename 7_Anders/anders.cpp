@@ -1271,17 +1271,17 @@ void test_increasing_U(){
 }
 void test_increasing_mu(){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 2000;
-    double U = 3.5, beta = 3.5, lambda, delta_tau, mu;
+    int lattice_size = 5, time_size, iterations = 5000;
+    double U = 5, beta = 8, lambda, delta_tau, mu;
     string asf = "average_spin";
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
     /* plot mu */
-    for(double i = 0; i < 16; i++){
+    for(double i = 0; i < 48; i++){
         LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
         generate_lattice(lattice_size, time_size, lattice);
-        mu = i * U / 8;
+        mu = i * U / 16;
         cout << "mu = " << mu << endl;
         /* sweep across the lattice */
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
