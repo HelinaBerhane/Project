@@ -841,7 +841,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 if(count % (total_count / 300) == 0){
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
-                    print(average_spin(lattice, time_size, lattice_size), sf);
+                    print_double(average_spin(lattice, time_size, lattice_size), sf);
                     measure_double_occcupancy_ii(2, O, lattice_size, df);
                     measure_n(O, lattice_size, nf);
                     if(count > (total_count / 30)){
@@ -853,10 +853,10 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 cout << "tot count = " << tot << endl;
                 av_spin /= tot;
                 cout << "av spin = " << av_spin << endl;
-                print("U", asf);
-                print(U, asf);
-                print("av_spin", asf);
-                print(average_spin(lattice, time_size, lattice_size), asf);
+                print_text("U", asf);
+                print_double(U, asf);
+                print_text("av_spin", asf);
+                print_double(average_spin(lattice, time_size, lattice_size), asf);
             }
         }
     }
@@ -1239,7 +1239,7 @@ void test_sweep_d(){
     int stop_s = clock();
     cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
 }
-void test_sweep_f_t(){
+void test_sweep_t(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 0;
     double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
@@ -1261,20 +1261,21 @@ void test_sweep_f_t(){
 }
 void test_increasing_U(){
     /* initialise everything */
-    int lattice_size = 5, time_size = 0, iterations = 120;
-    double U, beta = 5.0, lambda = 1.0, delta_tau, mu = U / 2;
-    double acceptance = 0.0, rejection = 0.0;
+    int lattice_size = 5, time_size, iterations = 10000;
+    double U, beta = 10.0, lambda, delta_tau, mu = U / 2;
+    LaGenMatComplex lattice;
     /* test U = 0 to 10 */
     for(int i = 1; i <= 10; i++){
         /* generate initial conditions */
         U = i;
+        double acceptance = 0.0, rejection = 0.0;
         initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
         print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
         /* generate a lattice of spins */
-        LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
+        lattice = LaGenMatComplex::zeros(time_size, lattice_size);
         generate_lattice(lattice_size, time_size, lattice);
         /* sweep the lattice */
-        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+        sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations);
     }
 }
 
@@ -1294,25 +1295,6 @@ void measure_stuff(const int stuff, const string file){
 // - qmc
 
 /* ------ TO IMPLEMENT ------ */
-void test_increasing_U(){
-    /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 10000;
-    double U, beta = 10.0, lambda, delta_tau, mu = U / 2;
-    LaGenMatComplex lattice;
-    /* test U = 0 to 10 */
-    for(int i = 1; i <= 10; i++){
-        /* generate initial conditions */
-        U = i;
-        double acceptance = 0.0, rejection = 0.0;
-        initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-        print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
-        /* generate a lattice of spins */
-        lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-        generate_lattice(lattice_size, time_size, lattice);
-        /* sweep the lattice */
-        sweep_lattice(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, iterations, acceptance, rejection);
-    }
-}
 void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
     // calculates the single particle Green’s function
 
@@ -1357,8 +1339,9 @@ void update_greens_function(){
 }
 void test_increasing_mu(const string file){
     /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 40;
+    int lattice_size = 5, time_size, iterations = 900;
     double U = 1, beta = 10, lambda, delta_tau, mu;
+    string asf = "average_spin";
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
@@ -1372,8 +1355,8 @@ void test_increasing_mu(const string file){
         /* generate initial conditions */
         print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, file);
         /* sweep across the lattice */
+        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
         /* calculate average spin */
-        calculate_average_spin(lattice, time_size, lattice_size);
     }
 }
 

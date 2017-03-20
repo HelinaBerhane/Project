@@ -76,9 +76,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
 void measure_execution_time(const int iterations, const int start_s, const int stop_s, const std::string file);
 void measure_result(const int count, const int acceptance, const int rejection, const std::string result, const double probability, const std::string file);
 void measure_acceptance(const int acceptance, const int rejection, const int total_count, const std::string file);
-void calculate_total_spin_f(const LaGenMatComplex& lattice, const int time_size, const int lattice_size);
-void calculate_total_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const std::string file);
-void measure_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const std::string file);
+double average_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size);
 void measure_weight(const int count, const double probability, const COMPLEX weightBefore, const COMPLEX weightAfter, const std::string file);
 void measure_av_weight();
 void measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size, const std::string file);
