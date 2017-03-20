@@ -1218,8 +1218,8 @@ void test_weight(){
 void test_sweep(){
     /* initialise everything */
     int start_s = clock();
-    int lattice_size = 5, time_size, iterations = 1000;
-    double U = 1, beta = 10, lambda, delta_tau, mu = U/2;
+    int lattice_size = 5, time_size, iterations = 10000;
+    double U = 2, beta = 10, lambda, delta_tau, mu = U/2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     /* generate lattice */
@@ -1351,5 +1351,5 @@ void update_greens_function(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_increasing_U();
+    test_sweep();
 }
