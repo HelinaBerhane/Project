@@ -544,11 +544,9 @@ void H_calculation(const int lattice_size, LaGenMatComplex& H){
 void V_calculation(const COMPLEX slice[], const int lattice_size, const double U, const double lambda, const double sigma, const double delta_tau, const double mu, LaGenMatComplex& V){
     /* reset V */
     V = 0;
-
     /* calculate V */
-    V(0,0).r += (mu - U / 2);
     for(int i = 0; i < lattice_size; i++){
-        V(i,i).r += lambda * sigma * slice[i].r / delta_tau;
+        V(i,i).r += lambda * sigma * slice[i].r / delta_tau + (mu - U / 2);
     }
 }
 
