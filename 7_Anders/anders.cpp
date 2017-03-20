@@ -811,10 +811,10 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
             //     clear_scalar(weightBefore);
             //     clear_scalar(weightAfter);
                 count++;
-                cout << "count = " << count << endl;
 
                 /* calculate the weight before the flip */
                 if(count == 1){
+                    cout << "count = " << count << endl;
                     weight_calculation_O(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, O, weightBefore);
                 }else{
                     weightBefore.r = weightAfter.r;
@@ -833,15 +833,17 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 /* accept or reject the flip */
                 if(judge_acceptance(probability) == 1){
                     acceptance++;
+                    result = "accepted";
                 }else{
                     flip_spin(lattice, t, l);
                     weightAfter = weightBefore;
                     rejection++;
+                    result = "rejected";
                 }
 
                 /* output results */
                 if(count % (total_count / 300) == 0){
-                    measure_result(count, acceptance, rejection, result, probability, rf);
+                    measure_result(count, result, acceptance, rejection, result, probability, rf);
                     measure_weight(count, probability, weightBefore, weightAfter, wf);
                     print_double(average_spin(lattice, time_size, lattice_size), sf);
                     measure_double_occcupancy_ii(2, O, lattice_size, df);
@@ -883,12 +885,12 @@ void measure_execution_time(const int iterations, const int start_s, const int s
     myfile.close();
 }
 // -- acceptance
-void measure_result(const int count, const int acceptance, const int rejection, const string result, const double probability, const string file){
+void measure_result(const int count, const string result, const int acceptance, const int rejection, const string result, const double probability, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
     /* log results */
-    myfile << " (" << count <<") ";
+    myfile << " (" << count <<") " << result << " - ";
     myfile << "[" << acceptance << "/" << rejection << "] " << result;
     myfile << " - probability: " << probability;
     myfile << endl;
@@ -1212,8 +1214,8 @@ void test_weight(){
 void test_sweep(){
     /* initialise everything */
     int start_s = clock();
-    int lattice_size = 5, time_size, iterations = 10000;
-    double U = .1, beta = 1, lambda, delta_tau, mu = U/2;
+    int lattice_size = 5, time_size, iterations = 1000;
+    double U = 1, beta = 10, lambda, delta_tau, mu = U/2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     /* generate lattice */
