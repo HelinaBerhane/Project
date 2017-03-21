@@ -1224,7 +1224,7 @@ void test_sweep(){
     /* initialise everything */
     int start_s = clock();
     int lattice_size = 5, time_size, iterations = 5000;
-    double U = 0.25, beta = 3.38, lambda, delta_tau, mu = U/2;
+    double U = 0.1, beta = 1, lambda, delta_tau, mu = U/2;
     /* generate initial conditions */
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     /* generate lattice */
@@ -1235,26 +1235,6 @@ void test_sweep(){
     /* check time */
     int stop_s = clock();
     cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
-}
-void test_sweep_t(){
-    /* initialise everything */
-    int lattice_size = 5, time_size, iterations = 0;
-    double U = .1, beta = 1, lambda, delta_tau, mu = U / 2;
-    string file = generate_file_name(U, beta, mu, iterations, "weight-time");
-    /* do stuff */
-    for(int i = 1; i <= 4; i++){
-        /* generate initial conditions */
-        iterations = pow(10.0, i);
-        initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-        int start_s = clock();
-        /* generate lattice */
-        LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
-        generate_lattice(lattice_size, time_size, lattice);/* sweep the lattice */
-        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
-        /* output results */
-        int stop_s = clock();
-        measure_execution_time(iterations, start_s, stop_s, file);
-    }
 }
 void test_increasing_U(){
     /* initialise everything */
@@ -1442,5 +1422,5 @@ void update_greens_function(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep_t();
+    test_sweep();
 }
