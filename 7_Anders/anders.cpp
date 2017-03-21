@@ -921,7 +921,7 @@ void measure_acceptance(const int acceptance, const int rejection, const int tot
     myfile.close();
 }
 // -- spin
-double average_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size, const int sign){
+double average_spin(const LaGenMatComplex& lattice, const int time_size, const int lattice_size){
     /* calculate total spin */
     double total_spin = 0;
     double lattice_volume = (double) time_size * (double) lattice_size;
