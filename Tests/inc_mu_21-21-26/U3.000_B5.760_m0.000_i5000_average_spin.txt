@@ -1,0 +1,6 @@
+U
+3
+av spin
+0.0175369
+av spin sign
+0.258621
