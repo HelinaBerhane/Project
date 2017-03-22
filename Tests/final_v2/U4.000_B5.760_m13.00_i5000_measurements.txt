@@ -1,0 +1,8 @@
+U
+4
+beta
+5.76
+mu
+13
+iterations
+5000

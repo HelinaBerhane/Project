@@ -1,0 +1,6 @@
+U
+average spin
+average spin sign
+8
+0.0106122
+0.773469
