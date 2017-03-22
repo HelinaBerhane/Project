@@ -20,7 +20,71 @@ using namespace std;
 
 /* ------ WORKING ------ */
 /* -- Output -- */
+// - to terminal
+void print_scalar(const COMPLEX scalar){
+    cout << scalar << endl;
+}
+void print_scalar(const COMPLEX scalar, const string name){
+    cout << name << ": " << scalar << endl;
+}
+void print_scalar(const double scalar, const string name){
+    cout << name << ": " << scalar << endl;
+}
+void print_array(const COMPLEX array[], int array_size, const string name){
+	cout << name << ": ";
+    for(int i = 0; i < array_size; i++){
+        cout << array[i] << " ";
+    }
+    cout << endl;
+}
+void print_vector(const LaVectorComplex& vector, const string name){
+    cout << name << ":" << endl << vector << endl;
+}
+void print_matrix(const LaGenMatComplex& matrix){
+	cout << matrix << endl;
+}
+void print_matrix(const LaGenMatComplex& matrix, const string name){
+	cout << name << ":" << endl << matrix << endl;
+}
+void print_scalar_f(const double scalar, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* print the scalar */
+    myfile << scalar << endl;
+    /* close the file */
+    myfile.close();
+}
+void print_initial_parameters(const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int time_size, const int lattice_size, const int iterations){
+	cout << "no of lattice points = " << lattice_size << endl;
+	cout << "no of time slices = " << time_size << endl;
+	cout << "U = " << U << endl;
+	cout << "beta = " << beta << endl;
+	cout << "lambda = " << lambda << endl;
+	cout << "delta tau = " << delta_tau << endl;
+    cout << "mu = " << mu << endl;
+    cout << "iterations = " << iterations << endl;
+}
+// - to file
 void print_space(const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* log stuff */
+    myfile << " ";
+    /* close the file */
+    myfile.close();
+}
+void print_delimater(const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* log stuff */
+    myfile << endl;
+    /* close the file */
+    myfile.close();
+}
+void print_line(const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -47,30 +111,12 @@ void print_double(const double number, const string file){
     /* close the file */
     myfile.close();
 }
-void print_scalar(const COMPLEX scalar){
-    cout << scalar << endl;
-}
-void print_scalar(const COMPLEX scalar, const string name){
-    cout << name << ": " << scalar << endl;
-}
-void print_scalar(const double scalar, const string name){
-    cout << name << ": " << scalar << endl;
-}
 void print_scalar(const COMPLEX scalar, const string name, const string file){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
     /* print the scalar */
     myfile << name << ": " << scalar << endl;
-    /* close the file */
-    myfile.close();
-}
-void print_scalar_f(const double scalar, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* print the scalar */
-    myfile << scalar << endl;
     /* close the file */
     myfile.close();
 }
@@ -82,13 +128,6 @@ void print_scalar(const double scalar, const string name, const string file){
     myfile << name << ": " << scalar << endl;
     /* close the file */
     myfile.close();
-}
-void print_array(const COMPLEX array[], int array_size, const string name){
-	cout << name << ": ";
-    for(int i = 0; i < array_size; i++){
-        cout << array[i] << " ";
-    }
-    cout << endl;
 }
 void print_array(const COMPLEX array[], int array_size, const string name, const string file){
     /* open the file */
@@ -102,15 +141,6 @@ void print_array(const COMPLEX array[], int array_size, const string name, const
     myfile << endl;
     /* close the file */
     myfile.close();
-}
-void print_vector(const LaVectorComplex& vector, const string name){
-    cout << name << ":" << endl << vector << endl;
-}
-void print_matrix(const LaGenMatComplex& matrix){
-	cout << matrix << endl;
-}
-void print_matrix(const LaGenMatComplex& matrix, const string name){
-	cout << name << ":" << endl << matrix << endl;
 }
 void print_matrix(const LaGenMatComplex& matrix, const string name, const string file){
     /* open the file */
@@ -129,16 +159,6 @@ void print_matrix_f(const LaGenMatComplex& matrix, const string file){
 	myfile << matrix << endl;
     /* close the file */
     myfile.close();
-}
-void print_initial_parameters(const double U, const double beta, const double lambda, const double delta_tau, const double mu, const int time_size, const int lattice_size, const int iterations){
-	cout << "no of lattice points = " << lattice_size << endl;
-	cout << "no of time slices = " << time_size << endl;
-	cout << "U = " << U << endl;
-	cout << "beta = " << beta << endl;
-	cout << "lambda = " << lambda << endl;
-	cout << "delta tau = " << delta_tau << endl;
-    cout << "mu = " << mu << endl;
-    cout << "iterations = " << iterations << endl;
 }
 void print_initial_parameters(const double U, const double beta, const double lambda, double delta_tau, const double mu, const int time_size, const int lattice_size, const int iterations, const string file){
     /* open the file */
@@ -901,7 +921,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
     print_double(av_spin_sign, file);
     print_double(av_spin_sign, asf);
     print_double(av_charge, file);
-    print_space(rf);
+    print_line(rf);
     measure_acceptance(acceptance, rejection, total_count, rf);
     measure_acceptance(acceptance, rejection, total_count, file);
 }
@@ -1336,67 +1356,82 @@ void test_increasing_mu(){
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     }
 }
-
-/* ------ TO TEST ------ */
-void measure_stuff(const int stuff, const string file){
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-    /* initialise stuff */
-    /* log stuff */
-    myfile << stuff << endl;
-    /* close the file */
-    myfile.close();
-}
-
-// Calculation
-// - qmc
-
-/* ------ TO IMPLEMENT ------ */
-void calculate_greens_function(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, COMPLEX& weight, const string file){
-    // calculates the single particle Green’s function
-
-    /* open the file */
-    ofstream myfile;
-    myfile.open(file, std::ios_base::app);
-
+void final_test(){
     /* initialise everything */
-    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex invUP = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    LaGenMatComplex invDN = LaGenMatComplex::zeros(lattice_size,lattice_size);
-    COMPLEX detOUP;
-    COMPLEX detODN;
-
-    /* calculate O */
-    myfile << "sigma = 1" << endl;
-    O_calculation(lattice, lattice_size, time_size, U, lambda, 1, delta_tau, mu, OUP);
-    print_matrix(OUP, "O UP", file);
-    myfile << "sigma = -1" << endl;
-    O_calculation_f(lattice, lattice_size, time_size, U, lambda, -1, delta_tau, mu, ODN, file);
-    print_matrix(ODN, "O DN", file);
-
-    /* calculate det(O) */
-    detOUP = matrix_determinant(OUP, lattice_size);
-    detODN = matrix_determinant(ODN, lattice_size);
-    print_scalar(detOUP, "det(O UP)", file);
-    print_scalar(detODN, "det(O DN)", file);
-    myfile << endl;
-
-    /* calculate O^-1 */
-    matrix_inverse(OUP, lattice_size, invUP);
-    matrix_inverse(ODN, lattice_size, invDN);
-    print_matrix(invUP, "(O DN)^-1", file);
-    print_matrix(invDN, "(O DN)^-1", file);
-
-    /* close the file */
-    myfile.close();
+    int lattice_size, time_size, iterations = 5000;
+    double U, beta = 1, lambda, delta_tau, mu;
+    /* 1 */
+    lattice_size = 2;
+    U = 1;
+    // test
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
+    for(double i = -1; i < 4; i++){
+        LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+        generate_lattice(lattice_size, time_size, lattice);
+        mu = i * U / 2;
+        cout << "mu = " << mu << endl;
+        /* sweep across the lattice */
+        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    }
+    /* 2 */
+    U = 8;
+    // test
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
+    for(double i = -1; i < 4; i++){
+        LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+        generate_lattice(lattice_size, time_size, lattice);
+        mu = i * U / 2;
+        cout << "mu = " << mu << endl;
+        /* sweep across the lattice */
+        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    }
+    /* 3 */
+    lattice_size = 5;
+    U = 1;
+    // test
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
+    for(double i = 0; i < 5; i++){
+        LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+        generate_lattice(lattice_size, time_size, lattice);
+        mu = i * U / 2;
+        cout << "mu = " << mu << endl;
+        /* sweep across the lattice */
+        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    }
+    /* 4 */
+    U = 8;
+    // test
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
+    for(double i = 0; i < 5; i++){
+        LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+        generate_lattice(lattice_size, time_size, lattice);
+        mu = i * U / 2;
+        cout << "mu = " << mu << endl;
+        /* sweep across the lattice */
+        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    }
+    /* 5 */
+    U = 1;
+    beta = 8
+    // test
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
+    for(double i = 0; i < 5; i++){
+        LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+        generate_lattice(lattice_size, time_size, lattice);
+        mu = i * U / 2;
+        cout << "mu = " << mu << endl;
+        /* sweep across the lattice */
+        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    }
 }
-void update_greens_function(){
-    //
-}
+
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep();
+    final_test();
 }
