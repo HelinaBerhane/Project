@@ -883,19 +883,21 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
     cout << endl;
     cout << "average spin = " << av_spin << endl;
     print_text("U", asf);
-    print_double(U, asf);
+    print_text("acceptance", file);
     print_text("average spin", file);
-    print_double(av_spin, file);
     print_text("average spin", asf);
-    print_double(av_spin, asf);
     print_text("average spin sign", file);
-    print_double(av_spin_sign, file);
     print_text("average spin sign", asf);
-    print_double(av_spin_sign, asf);
     print_text("average charge density", file);
+    print_double(U, asf);
+    print_double(av_spin, file);
+    print_double(av_spin, asf);
+    print_double(av_spin_sign, file);
+    print_double(av_spin_sign, asf);
     print_double(av_charge, file);
     print_space(rf);
     measure_acceptance(acceptance, rejection, total_count, rf);
+    measure_acceptance(acceptance, rejection, total_count, file);
 }
 // - measurements
 // -- execution time
@@ -1100,7 +1102,6 @@ void test_triangle_matrix(){
     triangle_matrix(matrix, matrix_size, triangle);
     print_matrix(triangle, "triangle matrix");
 }
-
 void test_matrix_determinant(){
     /* initialise everything */
     double matrix_size = 4, scale = 8;
@@ -1292,13 +1293,13 @@ void test_increasing_U(){
 void test_increasing_mu(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 5000;
-    double U, beta = 1, lambda, delta_tau, mu;
+    double U, beta, lambda, delta_tau, mu;
     /* plot mu */
     /* generate initial conditions */
-    U = .1;
+    U = 8, beta = 1;
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
-    for(double i = 0; i < 16; i++){
+    for(double i = 0; i < 32; i++){
         LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
         generate_lattice(lattice_size, time_size, lattice);
         mu = i * U / 8;
@@ -1306,10 +1307,10 @@ void test_increasing_mu(){
         /* sweep across the lattice */
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     }
-    U = 1;
+    U = 4, beta = 5.76;
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
-    for(double i = 0; i < 16; i++){
+    for(double i = 0; i < 32; i++){
         LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
         generate_lattice(lattice_size, time_size, lattice);
         mu = i * U / 8;
@@ -1317,18 +1318,7 @@ void test_increasing_mu(){
         /* sweep across the lattice */
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     }
-    U = .5;
-    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
-    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
-    for(double i = 0; i < 16; i++){
-        LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
-        generate_lattice(lattice_size, time_size, lattice);
-        mu = i * U / 8;
-        cout << "mu = " << mu << endl;
-        /* sweep across the lattice */
-        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
-    }
-    U = 2.;
+    U = 4, beta = 2;
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
     for(double i = 0; i < 16; i++){
