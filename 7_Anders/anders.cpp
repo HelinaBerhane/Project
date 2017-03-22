@@ -1416,7 +1416,7 @@ void final_test(){
     }
     /* 5 */
     U = 1;
-    beta = 8
+    beta = 8;
     // test
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
