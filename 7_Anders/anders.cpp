@@ -750,10 +750,10 @@ void weight_calculation_f(const LaGenMatComplex& lattice, const int lattice_size
     /* close the file */
     myfile.close();
 }
-void weight_calculation_O(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, LaGenMatComplex& OUP, COMPLEX& weight){
+void weight_calculation_O(const LaGenMatComplex& lattice, const int lattice_size, const int time_size, const double U, const double lambda, const double delta_tau, const double mu, LaGenMatComplex& OUP, LaGenMatComplex& ODN, COMPLEX& weight){
     /* initialise everything */
     OUP = LaGenMatComplex::zeros(lattice_size, lattice_size);
-    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
+    ODN = LaGenMatComplex::zeros(lattice_size,lattice_size);
     COMPLEX detOUP;
     COMPLEX detODN;
     clear_scalar(weight);
@@ -794,14 +794,26 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
     string asf = generate_file_name(U, beta, mu, iterations, "average_spin");
     string df = generate_file_name(U, beta, mu, iterations, "occupancy");
     string nf = generate_file_name(U, beta, mu, iterations, "n");
-    LaGenMatComplex O = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    string cf = generate_file_name(U, beta, mu, iterations, "charge_density");
+    string file = generate_file_name(U, beta, mu, iterations, "measurements");
+    LaGenMatComplex OUP = LaGenMatComplex::zeros(lattice_size, lattice_size);
+    LaGenMatComplex ODN = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* output initial conditions */
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, rf);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations, df);
+    print_text("U", file);
+    print_double(U, file);
+    print_text("beta", file);
+    print_double(beta, file);
+    print_text("mu", file);
+    print_double(mu, file);
+    print_text("iterations", file);
+    print_double(iterations, file);
+
     print_matrix(lattice, "lattice", rf);
 
     /* sweep through the lattice */
-    double av_spin = 0, spin_sign = 0;
+    double av_spin = 0, spin_sign = 0, av_charge = 0;
     double tot = 0;
     for(int i = 0; i < iterations; i++){
         for(int t = 0; t < time_size; t++){
@@ -813,7 +825,7 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 /* calculate the weight before the flip */
                 // if(count == 1){
                     // cout << "recalculating" << count << endl;
-                weight_calculation_O(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, O, weightBefore);
+                weight_calculation_O(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, OUP, ODN, weightBefore);
                 // }else{
                 //     weightBefore.r = weightAfter.r;
                 //     weightBefore.i = weightAfter.i;
@@ -827,9 +839,9 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 weight_calculation(lattice, lattice_size, time_size, U, lambda, delta_tau, mu, weightAfter);
 
 
-                if(count % (total_count / 300) == 0){
-                    measure_weight(count, probability, weightBefore, weightAfter, wf);
-                }
+                // if(count % (total_count / 500) == 0){
+                //     measure_weight(count, probability, weightBefore, weightAfter, wf);
+                // }
 
                 /* calculate the ratio of weights */
                 probability = weightAfter.r / weightBefore.r;
@@ -847,18 +859,19 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 }
 
                 /* output results */
-                if(count % (total_count / 300) == 0){
+                if(count % (total_count / 500) == 0){
                     cout << ".";
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     print_double(average_spin(lattice, time_size, lattice_size), sf);
                     measure_double_occcupancy_ii(2, O, lattice_size, df);
                     measure_n(O, lattice_size, nf);
-                    if(count > (total_count / 30)){
+                    if(count > (total_count / 50)){
                         av_spin += average_spin(lattice, time_size, lattice_size);
                         tot++;
                         if(av_spin < 0){
                             spin_sign++;
                         }
+                        av_charge += charge_density(OUP, ODN, lattice_size, cf);
                     }
                 }
             }
@@ -866,14 +879,21 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
     }
     av_spin /= tot;
     double av_spin_sign = spin_sign / tot;
+    av_charge /= tot;
     cout << endl;
-    cout << "av spin = " << av_spin << endl;
+    cout << "average spin = " << av_spin << endl;
     print_text("U", asf);
     print_double(U, asf);
-    print_text("av spin", asf);
+    print_text("average spin", file);
+    print_double(av_spin, file);
+    print_text("average spin", asf);
     print_double(av_spin, asf);
-    print_text("av spin sign", asf);
+    print_text("average spin sign", file);
+    print_double(av_spin_sign, file);
+    print_text("average spin sign", asf);
     print_double(av_spin_sign, asf);
+    print_text("average charge density", file);
+    print_double(av_charge, file);
     print_space(rf);
     measure_acceptance(acceptance, rejection, total_count, rf);
 }
@@ -992,6 +1012,17 @@ double n(const LaGenMatComplex& O, const int lattice_size){
         n += double_occcupancy(i,i).r;
     }
     return n;
+}
+double charge_density(const LaGenMatComplex& OUP, const LaGenMatComplex& ODN, const int lattice_size, const string file){
+    /* open the file */
+    ofstream myfile;
+    myfile.open(file, std::ios_base::app);
+    /* calculate charge density */
+    double charge_density = n(OUP, lattice_size) + n(ODN, lattice_size);
+    print_double(charge_density, file);
+    /* close the file */
+    myfile.close();
+    return charge_density;
 }
 void measure_n(const LaGenMatComplex& O, const int lattice_size, const string file){
     /* open the file */
@@ -1371,5 +1402,5 @@ void update_greens_function(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep();
+    test_increasing_mu();
 }
