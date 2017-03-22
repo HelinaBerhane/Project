@@ -1,0 +1,14 @@
+U
+2
+beta
+1
+mu
+1.5
+iterations
+5000
+average spin
+-0.00326531
+average spin sign
+0.955102
+average charge density
+5.70067
