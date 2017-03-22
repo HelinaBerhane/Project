@@ -83,7 +83,7 @@ void measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size,
 double double_occupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size);
 void measure_double_occcupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size, const std::string file);
 double n(const LaGenMatComplex& O, const int lattice_size);
-double charge_density(const LaGenMatComplex& OUP, const LaGenMatComplex& ODN, const int lattice_size, const string file);
+double charge_density(const LaGenMatComplex& OUP, const LaGenMatComplex& ODN, const int lattice_size, const std::string file);
 void measure_n(const LaGenMatComplex& O, const int lattice_size, const std::string file);
 
 #endif

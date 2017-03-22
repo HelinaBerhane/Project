@@ -863,8 +863,8 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                     cout << ".";
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     print_double(average_spin(lattice, time_size, lattice_size), sf);
-                    measure_double_occcupancy_ii(2, O, lattice_size, df);
-                    measure_n(O, lattice_size, nf);
+                    measure_double_occcupancy_ii(2, OUP, lattice_size, df);
+                    measure_n(OUP, lattice_size, nf);
                     if(count > (total_count / 50)){
                         av_spin += average_spin(lattice, time_size, lattice_size);
                         tot++;
@@ -1018,11 +1018,11 @@ double charge_density(const LaGenMatComplex& OUP, const LaGenMatComplex& ODN, co
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
     /* calculate charge density */
-    double charge_density = n(OUP, lattice_size) + n(ODN, lattice_size);
+    double density = n(OUP, lattice_size) + n(ODN, lattice_size);
     print_double(charge_density, file);
     /* close the file */
     myfile.close();
-    return charge_density;
+    return density;
 }
 void measure_n(const LaGenMatComplex& O, const int lattice_size, const string file){
     /* open the file */
