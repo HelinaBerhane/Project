@@ -771,13 +771,18 @@ void weight_calculation_O(const LaGenMatComplex& lattice, const int lattice_size
 // - sweep
 int judge_acceptance(const double probability){
     double ran = random_double();
-    if(abs(probability) >= 1){
+    if(probability >= 1){
         return 1; // accept
     }else{
-        if(probability > ran){
-            return 1; // accept
-        }else{
+        if(probability < 0){
+            cout << "negative sign" << endl;
             return 0; // reject
+        }else{
+            if(probability > ran){
+                return 1; // accept
+            }else{
+                return 0; // reject
+            }
         }
     }
 }
@@ -844,8 +849,9 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                 // }
 
                 /* calculate the ratio of weights */
-                probability = weightAfter.r / weightBefore.r;
-
+                probability  = weightAfter.r / weightBefore.r;
+                double sgn   = probability / abs(probability);
+                probability *= sgn;
                 /* accept or reject the flip */
                 if(judge_acceptance(probability) == 1){
                     acceptance++;
@@ -863,15 +869,15 @@ void sweep_lattice(LaGenMatComplex& lattice, const int lattice_size, const int t
                     cout << ".";
                     measure_result(count, acceptance, rejection, result, probability, rf);
                     print_double(average_spin(lattice, time_size, lattice_size), sf);
-                    measure_double_occcupancy_ii(2, OUP, lattice_size, df);
-                    measure_n(OUP, lattice_size, nf);
+                    measure_double_occcupancy_ii(2, OUP, lattice_size, df, sgn);
+                    measure_n(OUP, lattice_size, nf, sgn);
                     if(count > (total_count / 50)){
                         av_spin += average_spin(lattice, time_size, lattice_size);
                         tot++;
                         if(av_spin < 0){
                             spin_sign++;
                         }
-                        av_charge += charge_density(OUP, ODN, lattice_size, cf);
+                        av_charge += charge_density(OUP, ODN, lattice_size, cf, sgn);
                     }
                 }
             }
@@ -970,7 +976,7 @@ void measure_av_weight(){
     //!!!
 }
 // -- occupancy
-void measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size, const string file){
+void measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size, const string file, const double sign){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -983,14 +989,14 @@ void measure_double_occcupancy(const LaGenMatComplex& O, const int lattice_size,
     /* close the file */
     myfile.close();
 }
-double double_occupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size){
+double double_occupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size, const double sign){
     /* initialise stuff */
     LaGenMatComplex double_occcupancy = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* calculate double occcupancy */
     matrix_inverse(O, lattice_size, double_occcupancy);
-    return double_occcupancy(i,i).r;
+    return double_occcupancy(i,i).r * sign;
 }
-void measure_double_occcupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size, const string file){
+void measure_double_occcupancy_ii(const int i, const LaGenMatComplex& O, const int lattice_size, const string file, const double sign){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -1000,33 +1006,33 @@ void measure_double_occcupancy_ii(const int i, const LaGenMatComplex& O, const i
     matrix_inverse(O, lattice_size, double_occcupancy);
     /* log stuff */
     // cout << double_occcupancy(i,j) << " - " << double_occcupancy(i,j).r << endl;
-    print_scalar_f(double_occcupancy(i,i).r, file);
+    print_scalar_f(double_occcupancy(i,i).r * sign, file);
     /* close the file */
     myfile.close();
 }
-double n(const LaGenMatComplex& O, const int lattice_size){
+double n(const LaGenMatComplex& O, const int lattice_size, const double sign){
     /* initialise stuff */
     double n = 0;
     LaGenMatComplex double_occcupancy = LaGenMatComplex::zeros(lattice_size, lattice_size);
     /* calculate double occcupancy */
     matrix_inverse(O, lattice_size, double_occcupancy);
     for(int i = 0; i < lattice_size; i++){
-        n += double_occcupancy(i,i).r;
+        n += double_occcupancy(i,i).r * sign;
     }
     return n;
 }
-double charge_density(const LaGenMatComplex& OUP, const LaGenMatComplex& ODN, const int lattice_size, const string file){
+double charge_density(const LaGenMatComplex& OUP, const LaGenMatComplex& ODN, const int lattice_size, const string file, const double sgn){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
     /* calculate charge density */
-    double density = n(OUP, lattice_size) + n(ODN, lattice_size);
+    double density = n(OUP, lattice_size, sgn) + n(ODN, lattice_size, sgn);
     print_double(density, file);
     /* close the file */
     myfile.close();
     return density;
 }
-void measure_n(const LaGenMatComplex& O, const int lattice_size, const string file){
+void measure_n(const LaGenMatComplex& O, const int lattice_size, const string file, const double sign){
     /* open the file */
     ofstream myfile;
     myfile.open(file, std::ios_base::app);
@@ -1037,7 +1043,7 @@ void measure_n(const LaGenMatComplex& O, const int lattice_size, const string fi
     matrix_inverse(O, lattice_size, double_occcupancy);
     /* log stuff */
     for(int i = 0; i < lattice_size; i++){
-        n += double_occcupancy(i,i).r;
+        n += double_occcupancy(i,i).r * sign;
     }
     print_scalar_f(n, file);
     /* close the file */
