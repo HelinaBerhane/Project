@@ -1,0 +1,9 @@
+acceptance
+average spin
+average spin sign
+average charge density
+-0.0794169
+0.934694
+2.29372e-14
+[174766/234] - acceptance ratio = 746.863 - percentage acceptance = 0.998663
+

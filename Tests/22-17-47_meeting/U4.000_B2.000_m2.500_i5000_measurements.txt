@@ -1,0 +1,17 @@
+U
+4
+beta
+2
+mu
+2.5
+iterations
+5000
+acceptance
+average spin
+average spin sign
+average charge density
+-0.00353741
+0.614286
+5.69606
+[60533/14467] - acceptance ratio = 4.18421 - percentage acceptance = 0.807107
+
