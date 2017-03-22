@@ -1019,7 +1019,7 @@ double charge_density(const LaGenMatComplex& OUP, const LaGenMatComplex& ODN, co
     myfile.open(file, std::ios_base::app);
     /* calculate charge density */
     double density = n(OUP, lattice_size) + n(ODN, lattice_size);
-    print_double(charge_density, file);
+    print_double(density, file);
     /* close the file */
     myfile.close();
     return density;
