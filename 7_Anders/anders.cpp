@@ -1456,7 +1456,7 @@ void final_test_i(){
     // test
     initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
     print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
-    for(double i = -1; i < 15; i++){
+    for(double i = -4; i < 11; i++){
         LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
         generate_lattice(lattice_size, time_size, lattice);
         mu = i * U / 4;
