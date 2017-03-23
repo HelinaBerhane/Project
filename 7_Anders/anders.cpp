@@ -1469,5 +1469,8 @@ void final_test_i(){
 
 /* ------ Main QMC Program ------ */
 int main(){
-    test_sweep(5, 2000, 1, 8, -0.5);
+    test_sweep(5, 2000, 1, 8, -1);
+    test_sweep(5, 2000, 8, 1, -4);
+    test_sweep(5, 2000, 8, 1, -8);
+    test_sweep(5, 2000, 1, 1, -0.5);
 }
