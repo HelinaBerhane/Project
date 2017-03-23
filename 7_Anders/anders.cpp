@@ -1294,6 +1294,22 @@ void test_sweep(){
     int stop_s = clock();
     cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
 }
+void test_sweep(const int lattice_size, const int iterations, const double U, const double beta, const double mu){
+    /* initialise everything */
+    int start_s = clock();
+    int time_size;
+    double lambda, delta_tau;
+    /* generate initial conditions */
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    /* generate lattice */
+    LaGenMatComplex lattice = LaGenMatComplex::zeros(time_size, lattice_size);
+    generate_lattice(lattice_size, time_size, lattice);
+    /* sweep the lattice */
+    sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    /* check time */
+    int stop_s = clock();
+    cout << "time: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
+}
 void test_increasing_U(){
     /* initialise everything */
     int lattice_size = 5, time_size, iterations = 10000;
@@ -1429,9 +1445,29 @@ void final_test(){
         sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
     }
 }
+void final_test_i(){
+    /* initialise everything */
+    int lattice_size, time_size, iterations = 5000;
+    double U, beta = 1, lambda, delta_tau, mu;
+    /* 1 */
+    lattice_size = 2;
+    U = 1;
+    beta = 8;
+    // test
+    initial_parameter_calculation(U, beta, lambda, delta_tau, time_size);
+    print_initial_parameters(U, beta, lambda, delta_tau, mu, time_size, lattice_size, iterations);
+    for(double i = -1; i < 15; i++){
+        LaGenMatComplex lattice = LaGenMatComplex::zeros(lattice_size, time_size);
+        generate_lattice(lattice_size, time_size, lattice);
+        mu = i * U / 4;
+        cout << "mu = " << mu << endl;
+        /* sweep across the lattice */
+        sweep_lattice(lattice, lattice_size, time_size, U, beta, lambda, delta_tau, mu, iterations);
+    }
+}
 
 
 /* ------ Main QMC Program ------ */
 int main(){
-    final_test();
+    final_test_i();
 }
